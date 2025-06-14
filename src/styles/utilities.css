@@ -1,0 +1,48 @@
+
+/* Utility classes and helper styles */
+
+@layer utilities {
+  /* Enhanced spacing utilities */
+  .space-y-8 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 2rem;
+  }
+
+  .space-y-12 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 3rem;
+  }
+
+  /* Border radius utilities */
+  .rounded-2xl {
+    border-radius: 1rem;
+  }
+
+  .rounded-3xl {
+    border-radius: 1.5rem;
+  }
+
+  /* Shadow utilities */
+  .shadow-soft {
+    box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
+  }
+
+  .shadow-medium {
+    box-shadow: 0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .shadow-strong {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Text visibility utilities - ensuring dark text */
+  .text-dark {
+    color: #1f2937 !important;
+  }
+
+  .text-darker {
+    color: #111827 !important;
+  }
+
+  .text-darkest {
+    color: #030712 !important;
+  }
+}

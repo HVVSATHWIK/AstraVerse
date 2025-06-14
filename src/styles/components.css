@@ -1,0 +1,118 @@
+
+/* Component-specific styles and effects */
+
+@layer components {
+  /* Enhanced gradient utilities */
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+
+  .gradient-success {
+    background: var(--gradient-success);
+  }
+
+  .gradient-warning {
+    background: var(--gradient-warning);
+  }
+
+  .gradient-dark {
+    background: var(--gradient-dark);
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(249, 250, 251, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+  }
+
+  .glass-dark {
+    backdrop-filter: blur(16px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+  }
+
+  /* Enhanced card styles */
+  .card-elevated {
+    @apply bg-gray-50 backdrop-blur-sm border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300;
+  }
+
+  .card-gradient {
+    background: linear-gradient(145deg, rgba(249,250,251,0.95) 0%, rgba(243,244,246,0.90) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+
+  /* Enhanced button styles */
+  .btn-gradient {
+    background: var(--gradient-primary);
+    @apply text-gray-100 border-0 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200;
+  }
+
+  .btn-glass {
+    @apply glass text-gray-900 hover:bg-gray-100/95 transition-all duration-200;
+  }
+
+  /* Force dark text on light backgrounds */
+  .card-content {
+    color: #111827 !important;
+  }
+
+  .card-content h1,
+  .card-content h2,
+  .card-content h3,
+  .card-content h4,
+  .card-content h5,
+  .card-content h6 {
+    color: #030712 !important;
+  }
+
+  .card-content p {
+    color: #374151 !important;
+  }
+
+  .card-content .text-sm {
+    color: #4b5563 !important;
+  }
+
+  .card-content .text-xs {
+    color: #6b7280 !important;
+  }
+
+  /* Ensure all card text is dark and visible */
+  .card-text-dark {
+    color: #111827 !important;
+  }
+
+  .card-text-darker {
+    color: #030712 !important;
+  }
+
+  /* Text gradient utilities */
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-secondary {
+    background: var(--gradient-secondary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg;
+  }
+
+  .hover-glow {
+    @apply transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(124,58,237,0.3)];
+  }
+}
