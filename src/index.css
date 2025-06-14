@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -158,23 +157,23 @@
   /* Glass morphism effect */
   .glass {
     backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(255, 255, 255, 0.90);
-    border: 1px solid rgba(255, 255, 255, 0.125);
+    background-color: rgba(249, 250, 251, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.125);
   }
 
   .glass-dark {
     backdrop-filter: blur(16px) saturate(180%);
     background-color: rgba(17, 25, 40, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.125);
+    border: 1px solid rgba(0, 0, 0, 0.125);
   }
 
   /* Enhanced card styles */
   .card-elevated {
-    @apply bg-white/95 backdrop-blur-sm border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300;
+    @apply bg-gray-50 backdrop-blur-sm border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300;
   }
 
   .card-gradient {
-    background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.90) 100%);
+    background: linear-gradient(145deg, rgba(249,250,251,0.95) 0%, rgba(243,244,246,0.90) 100%);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0,0,0,0.1);
   }
@@ -182,11 +181,11 @@
   /* Enhanced button styles */
   .btn-gradient {
     background: var(--gradient-primary);
-    @apply text-white border-0 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200;
+    @apply text-gray-100 border-0 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200;
   }
 
   .btn-glass {
-    @apply glass text-gray-900 hover:bg-white/95 transition-all duration-200;
+    @apply glass text-gray-900 hover:bg-gray-100/95 transition-all duration-200;
   }
 
   /* Animation utilities */
@@ -232,7 +231,7 @@
 
   /* Force dark text on light backgrounds */
   .card-content {
-    color: #1f2937 !important;
+    color: #111827 !important;
   }
 
   .card-content h1,
@@ -241,7 +240,7 @@
   .card-content h4,
   .card-content h5,
   .card-content h6 {
-    color: #111827 !important;
+    color: #030712 !important;
   }
 
   .card-content p {
@@ -249,7 +248,20 @@
   }
 
   .card-content .text-sm {
+    color: #4b5563 !important;
+  }
+
+  .card-content .text-xs {
     color: #6b7280 !important;
+  }
+
+  /* Ensure all card text is dark and visible */
+  .card-text-dark {
+    color: #111827 !important;
+  }
+
+  .card-text-darker {
+    color: #030712 !important;
   }
 }
 
@@ -285,13 +297,17 @@
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   }
 
-  /* Text visibility utilities */
+  /* Text visibility utilities - ensuring dark text */
   .text-dark {
     color: #1f2937 !important;
   }
 
   .text-darker {
     color: #111827 !important;
+  }
+
+  .text-darkest {
+    color: #030712 !important;
   }
 }
 
