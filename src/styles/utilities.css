@@ -53,4 +53,19 @@
   .text-darkest {
     color: #030712 !important;
   }
+
+  /* Force all form elements to have rounded corners */
+  input, textarea, select {
+    border-radius: 1rem !important;
+  }
+
+  /* Force all interactive elements to have rounded corners */
+  button, .btn {
+    border-radius: 1rem !important;
+  }
+
+  /* Force all containers to have rounded corners */
+  .container, .box, .panel {
+    border-radius: 1.5rem !important;
+  }
 }

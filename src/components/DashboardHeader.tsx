@@ -16,9 +16,9 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
   const { isConnected, toggleRealtime, isRealtimeEnabled } = useRealtime();
 
   return (
-    <div className="flex items-center justify-between bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-slate-700/50 hover:bg-slate-800/90 transition-all duration-300">
+    <div className="flex items-center justify-between bg-slate-800/80 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-slate-700/50 hover:bg-slate-800/90 transition-all duration-300">
       <div className="flex items-center space-x-4">
-        <div className="p-2 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl shadow-lg">
+        <div className="p-2 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl shadow-lg">
           <AstraLogo size="md" />
         </div>
         <div>
@@ -33,7 +33,7 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
           variant="outline"
           size="sm"
           onClick={toggleRealtime}
-          className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg"
+          className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg rounded-2xl"
         >
           {isConnected && isRealtimeEnabled ? 
             <Wifi className="w-4 h-4 mr-2 text-green-400" /> : 
@@ -42,7 +42,7 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
           {isRealtimeEnabled ? 'Live' : 'Paused'}
         </Button>
         <SettingsDialog>
-          <Button variant="outline" size="sm" className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg">
+          <Button variant="outline" size="sm" className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg rounded-2xl">
             <Settings className="w-4 h-4 mr-2" />
             Settings
           </Button>

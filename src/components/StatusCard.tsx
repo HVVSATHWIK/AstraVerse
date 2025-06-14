@@ -27,7 +27,7 @@ const StatusCard = ({ title, value, status, icon: Icon, description }: StatusCar
   };
 
   return (
-    <Card className="bg-gray-50 border border-gray-300 hover:shadow-md transition-shadow rounded-3xl">
+    <Card className="bg-gray-50 border border-gray-300 hover:shadow-md transition-shadow rounded-4xl">
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <Icon className={cn("w-8 h-8", iconColors[status])} />

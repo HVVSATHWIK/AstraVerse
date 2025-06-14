@@ -28,39 +28,39 @@
     backdrop-filter: blur(16px) saturate(180%);
     background-color: rgba(249, 250, 251, 0.95);
     border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: 1.5rem;
+    border-radius: 2rem;
   }
 
   .glass-dark {
     backdrop-filter: blur(16px) saturate(180%);
     background-color: rgba(17, 25, 40, 0.75);
     border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: 1.5rem;
+    border-radius: 2rem;
   }
 
   /* Enhanced card styles with rounded corners */
   .card-elevated {
     @apply bg-gray-50 backdrop-blur-sm border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300;
-    border-radius: 1.5rem;
+    border-radius: 2rem;
   }
 
   .card-gradient {
     background: linear-gradient(145deg, rgba(249,250,251,0.95) 0%, rgba(243,244,246,0.90) 100%);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 1.5rem;
+    border-radius: 2rem;
   }
 
   /* Enhanced button styles with rounded corners */
   .btn-gradient {
     background: var(--gradient-primary);
     @apply text-gray-100 border-0 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200;
-    border-radius: 1rem;
+    border-radius: 1.5rem;
   }
 
   .btn-glass {
     @apply glass text-gray-900 hover:bg-gray-100/95 transition-all duration-200;
-    border-radius: 1rem;
+    border-radius: 1.5rem;
   }
 
   /* Force dark text on light backgrounds */
@@ -120,5 +120,25 @@
 
   .hover-glow {
     @apply transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(124,58,237,0.3)];
+  }
+
+  /* Force all elements to have rounded corners */
+  * {
+    border-radius: inherit;
+  }
+
+  /* Default rounded corners for common elements */
+  div, section, article, aside, header, footer, nav, main {
+    border-radius: 1rem;
+  }
+
+  /* Extra rounded corners for cards and containers */
+  .card, [class*="card"], .container, [class*="container"] {
+    border-radius: 1.5rem !important;
+  }
+
+  /* Super rounded corners for special elements */
+  .rounded-special {
+    border-radius: 2.5rem !important;
   }
 }

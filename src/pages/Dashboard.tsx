@@ -50,20 +50,20 @@ const DashboardContent = () => {
         <ErrorBoundary>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
             <div className="hidden md:block">
-              <TabsList className="bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 p-1 shadow-xl rounded-3xl">
-                <TabsTrigger value="overview" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-2xl">
+              <TabsList className="bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 p-1 shadow-xl rounded-4xl">
+                <TabsTrigger value="overview" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl">
                   Overview
                 </TabsTrigger>
-                <TabsTrigger value="workflows" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-2xl">
+                <TabsTrigger value="workflows" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl">
                   Workflows
                 </TabsTrigger>
-                <TabsTrigger value="integrations" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-2xl">
+                <TabsTrigger value="integrations" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl">
                   Integrations
                 </TabsTrigger>
-                <TabsTrigger value="analytics" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-2xl">
+                <TabsTrigger value="analytics" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl">
                   Analytics
                 </TabsTrigger>
-                <TabsTrigger value="pilot" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-2xl">
+                <TabsTrigger value="pilot" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl">
                   Pilot Mode
                 </TabsTrigger>
               </TabsList>
