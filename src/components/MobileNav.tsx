@@ -34,18 +34,20 @@ const MobileNav = ({ activeTab, onTabChange }: MobileNavProps) => {
           <Button 
             variant="outline" 
             size="sm" 
-            className="border-gray-200 hover:bg-gray-50"
+            className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg"
           >
             <Menu className="w-4 h-4" />
           </Button>
         </SheetTrigger>
         <SheetContent 
           side="left" 
-          className="bg-white border-gray-200 w-80"
+          className="bg-slate-900/95 backdrop-blur-xl border-slate-700/50 w-80"
         >
           <div className="flex items-center space-x-3 mb-8">
-            <AstraLogo size="md" />
-            <h2 className="text-gray-900 text-xl font-bold">
+            <div className="p-2 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl shadow-lg">
+              <AstraLogo size="md" />
+            </div>
+            <h2 className="text-white text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
               AstraAI
             </h2>
           </div>
@@ -56,11 +58,11 @@ const MobileNav = ({ activeTab, onTabChange }: MobileNavProps) => {
                 key={tab.value}
                 variant="ghost"
                 className={cn(
-                  "w-full justify-start h-12 text-left transition-colors",
+                  "w-full justify-start h-12 text-left transition-all duration-200",
                   activeTab === tab.value 
-                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100',
-                  "rounded-lg"
+                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 shadow-lg' 
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/50',
+                  "rounded-xl"
                 )}
                 onClick={() => handleTabClick(tab.value)}
               >

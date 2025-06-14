@@ -6,41 +6,43 @@ import { BarChart3 } from 'lucide-react';
 
 const SystemHealth = () => {
   return (
-    <Card className="bg-white border border-gray-200">
+    <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
       <CardHeader className="pb-4">
-        <CardTitle className="text-gray-900 text-lg flex items-center">
-          <BarChart3 className="w-5 h-5 mr-2 text-blue-600" />
+        <CardTitle className="text-white text-lg flex items-center">
+          <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg mr-3 shadow-lg">
+            <BarChart3 className="w-5 h-5 text-white" />
+          </div>
           System Health
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
           <div className="flex justify-between text-sm mb-2">
-            <span className="text-gray-600">CPU Usage</span>
-            <span className="text-gray-900 font-medium">67%</span>
+            <span className="text-slate-300">CPU Usage</span>
+            <span className="text-white font-medium">67%</span>
           </div>
-          <Progress value={67} className="h-2" />
+          <Progress value={67} className="h-3 bg-slate-700/50" />
         </div>
         <div>
           <div className="flex justify-between text-sm mb-2">
-            <span className="text-gray-600">Memory Usage</span>
-            <span className="text-gray-900 font-medium">82%</span>
+            <span className="text-slate-300">Memory Usage</span>
+            <span className="text-white font-medium">82%</span>
           </div>
-          <Progress value={82} className="h-2" />
+          <Progress value={82} className="h-3 bg-slate-700/50" />
         </div>
         <div>
           <div className="flex justify-between text-sm mb-2">
-            <span className="text-gray-600">Storage</span>
-            <span className="text-gray-900 font-medium">45%</span>
+            <span className="text-slate-300">Storage</span>
+            <span className="text-white font-medium">45%</span>
           </div>
-          <Progress value={45} className="h-2" />
+          <Progress value={45} className="h-3 bg-slate-700/50" />
         </div>
         <div>
           <div className="flex justify-between text-sm mb-2">
-            <span className="text-gray-600">Network I/O</span>
-            <span className="text-gray-900 font-medium">23%</span>
+            <span className="text-slate-300">Network I/O</span>
+            <span className="text-white font-medium">23%</span>
           </div>
-          <Progress value={23} className="h-2" />
+          <Progress value={23} className="h-3 bg-slate-700/50" />
         </div>
       </CardContent>
     </Card>

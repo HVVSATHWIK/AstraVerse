@@ -11,10 +11,12 @@ interface RecentActivityProps {
 
 const RecentActivity = ({ activityLogs, isLoading }: RecentActivityProps) => {
   return (
-    <Card className="bg-white border border-gray-200">
+    <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
       <CardHeader className="pb-4">
-        <CardTitle className="text-gray-900 text-lg flex items-center">
-          <Activity className="w-5 h-5 mr-2 text-blue-600" />
+        <CardTitle className="text-white text-lg flex items-center">
+          <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg mr-3 shadow-lg">
+            <Activity className="w-5 h-5 text-white" />
+          </div>
           Recent Activity
         </CardTitle>
       </CardHeader>
@@ -22,32 +24,32 @@ const RecentActivity = ({ activityLogs, isLoading }: RecentActivityProps) => {
         {isLoading ? (
           [...Array(4)].map((_, i) => (
             <div key={i} className="flex items-center space-x-3 p-3">
-              <Skeleton className="w-2 h-2 rounded-full" />
-              <Skeleton className="h-4 flex-1" />
-              <Skeleton className="h-3 w-12" />
+              <Skeleton className="w-3 h-3 rounded-full bg-slate-700" />
+              <Skeleton className="h-4 flex-1 bg-slate-700" />
+              <Skeleton className="h-3 w-12 bg-slate-700" />
             </div>
           ))
         ) : (
           <>
-            <div className="flex items-center space-x-3 p-3 border border-gray-100 rounded hover:bg-gray-50">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-gray-700 text-sm flex-1">Zoom meeting transcribed</span>
-              <span className="text-gray-500 text-xs">2m ago</span>
+            <div className="flex items-center space-x-3 p-3 bg-slate-700/30 rounded-lg hover:bg-slate-700/50 transition-colors border border-slate-600/30">
+              <div className="w-3 h-3 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full shadow-lg"></div>
+              <span className="text-slate-200 text-sm flex-1 font-medium">Zoom meeting transcribed</span>
+              <span className="text-slate-400 text-xs">2m ago</span>
             </div>
-            <div className="flex items-center space-x-3 p-3 border border-gray-100 rounded hover:bg-gray-50">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span className="text-gray-700 text-sm flex-1">Slack alert triggered</span>
-              <span className="text-gray-500 text-xs">5m ago</span>
+            <div className="flex items-center space-x-3 p-3 bg-slate-700/30 rounded-lg hover:bg-slate-700/50 transition-colors border border-slate-600/30">
+              <div className="w-3 h-3 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full shadow-lg"></div>
+              <span className="text-slate-200 text-sm flex-1 font-medium">Slack alert triggered</span>
+              <span className="text-slate-400 text-xs">5m ago</span>
             </div>
-            <div className="flex items-center space-x-3 p-3 border border-gray-100 rounded hover:bg-gray-50">
-              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <span className="text-gray-700 text-sm flex-1">Jira ticket created</span>
-              <span className="text-gray-500 text-xs">12m ago</span>
+            <div className="flex items-center space-x-3 p-3 bg-slate-700/30 rounded-lg hover:bg-slate-700/50 transition-colors border border-slate-600/30">
+              <div className="w-3 h-3 bg-gradient-to-r from-purple-400 to-purple-500 rounded-full shadow-lg"></div>
+              <span className="text-slate-200 text-sm flex-1 font-medium">Jira ticket created</span>
+              <span className="text-slate-400 text-xs">12m ago</span>
             </div>
-            <div className="flex items-center space-x-3 p-3 border border-gray-100 rounded hover:bg-gray-50">
-              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-              <span className="text-gray-700 text-sm flex-1">Weekly report generated</span>
-              <span className="text-gray-500 text-xs">1h ago</span>
+            <div className="flex items-center space-x-3 p-3 bg-slate-700/30 rounded-lg hover:bg-slate-700/50 transition-colors border border-slate-600/30">
+              <div className="w-3 h-3 bg-gradient-to-r from-orange-400 to-orange-500 rounded-full shadow-lg"></div>
+              <span className="text-slate-200 text-sm flex-1 font-medium">Weekly report generated</span>
+              <span className="text-slate-400 text-xs">1h ago</span>
             </div>
           </>
         )}

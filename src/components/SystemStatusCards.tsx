@@ -15,11 +15,11 @@ const SystemStatusCards = ({ kpis, isLoading }: SystemStatusCardsProps) => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
-          <Card key={i} className="bg-white border border-gray-200">
+          <Card key={i} className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 shadow-xl">
             <CardContent className="p-6">
-              <Skeleton className="h-4 w-20 mb-2" />
-              <Skeleton className="h-8 w-16 mb-2" />
-              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-4 w-20 mb-2 bg-slate-700" />
+              <Skeleton className="h-8 w-16 mb-2 bg-slate-700" />
+              <Skeleton className="h-3 w-24 bg-slate-700" />
             </CardContent>
           </Card>
         ))}
@@ -29,58 +29,66 @@ const SystemStatusCards = ({ kpis, isLoading }: SystemStatusCardsProps) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <Card className="bg-white border border-gray-200 hover:shadow-md transition-shadow">
+      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 shadow-xl hover:shadow-2xl hover:bg-slate-800/70 transition-all duration-300 transform hover:-translate-y-1">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <Brain className="w-8 h-8 text-blue-600" />
-            <Badge className="bg-green-100 text-green-800 border-green-200">Active</Badge>
+            <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
+              <Brain className="w-6 h-6 text-white" />
+            </div>
+            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-lg">Active</Badge>
           </div>
           <div className="space-y-1">
-            <p className="text-sm font-medium text-gray-600">AI Engines</p>
-            <p className="text-2xl font-bold text-gray-900">{kpis?.activeEngines || 4}/4</p>
-            <p className="text-xs text-gray-500">All systems operational</p>
+            <p className="text-sm font-medium text-slate-300">AI Engines</p>
+            <p className="text-2xl font-bold text-white">{kpis?.activeEngines || 4}/4</p>
+            <p className="text-xs text-slate-400">All systems operational</p>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="bg-white border border-gray-200 hover:shadow-md transition-shadow">
+      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 shadow-xl hover:shadow-2xl hover:bg-slate-800/70 transition-all duration-300 transform hover:-translate-y-1">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <GitBranch className="w-8 h-8 text-purple-600" />
-            <Badge className="bg-green-100 text-green-800 border-green-200">Running</Badge>
+            <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
+              <GitBranch className="w-6 h-6 text-white" />
+            </div>
+            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-lg">Running</Badge>
           </div>
           <div className="space-y-1">
-            <p className="text-sm font-medium text-gray-600">Active Workflows</p>
-            <p className="text-2xl font-bold text-gray-900">{kpis?.activeWorkflows?.toString() || "23"}</p>
-            <p className="text-xs text-gray-500">Real-time processing</p>
+            <p className="text-sm font-medium text-slate-300">Active Workflows</p>
+            <p className="text-2xl font-bold text-white">{kpis?.activeWorkflows?.toString() || "23"}</p>
+            <p className="text-xs text-slate-400">Real-time processing</p>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="bg-white border border-gray-200 hover:shadow-md transition-shadow">
+      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 shadow-xl hover:shadow-2xl hover:bg-slate-800/70 transition-all duration-300 transform hover:-translate-y-1">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <Database className="w-8 h-8 text-orange-600" />
-            <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200">High</Badge>
+            <div className="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg">
+              <Database className="w-6 h-6 text-white" />
+            </div>
+            <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50 shadow-lg">High</Badge>
           </div>
           <div className="space-y-1">
-            <p className="text-sm font-medium text-gray-600">Data Throughput</p>
-            <p className="text-2xl font-bold text-gray-900">{kpis?.throughput || "1.2TB/h"}</p>
-            <p className="text-xs text-gray-500">95% capacity</p>
+            <p className="text-sm font-medium text-slate-300">Data Throughput</p>
+            <p className="text-2xl font-bold text-white">{kpis?.throughput || "1.2TB/h"}</p>
+            <p className="text-xs text-slate-400">95% capacity</p>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="bg-white border border-gray-200 hover:shadow-md transition-shadow">
+      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 shadow-xl hover:shadow-2xl hover:bg-slate-800/70 transition-all duration-300 transform hover:-translate-y-1">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <Clock className="w-8 h-8 text-green-600" />
-            <Badge className="bg-green-100 text-green-800 border-green-200">Optimal</Badge>
+            <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
+              <Clock className="w-6 h-6 text-white" />
+            </div>
+            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-lg">Optimal</Badge>
           </div>
           <div className="space-y-1">
-            <p className="text-sm font-medium text-gray-600">Response Time</p>
-            <p className="text-2xl font-bold text-gray-900">{kpis?.avgResponseTime || 147}ms</p>
-            <p className="text-xs text-gray-500">Average latency</p>
+            <p className="text-sm font-medium text-slate-300">Response Time</p>
+            <p className="text-2xl font-bold text-white">{kpis?.avgResponseTime || 147}ms</p>
+            <p className="text-xs text-slate-400">Average latency</p>
           </div>
         </CardContent>
       </Card>

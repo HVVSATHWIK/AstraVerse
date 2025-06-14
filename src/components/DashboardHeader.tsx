@@ -15,12 +15,16 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
   const { isConnected, toggleRealtime, isRealtimeEnabled } = useRealtime();
 
   return (
-    <div className="flex items-center justify-between bg-white rounded-lg p-6 shadow-sm border">
+    <div className="flex items-center justify-between bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-slate-700/50 hover:bg-slate-800/90 transition-all duration-300">
       <div className="flex items-center space-x-4">
-        <AstraLogo size="md" />
+        <div className="p-2 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl shadow-lg">
+          <AstraLogo size="md" />
+        </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">AstraAI Platform</h1>
-          <p className="text-gray-600">Enterprise AI Management Dashboard</p>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            AstraAI Platform
+          </h1>
+          <p className="text-slate-300">Enterprise AI Management Dashboard</p>
         </div>
       </div>
       <div className="flex items-center space-x-3">
@@ -28,12 +32,15 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
           variant="outline"
           size="sm"
           onClick={toggleRealtime}
-          className="border-gray-200"
+          className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg"
         >
-          {isConnected && isRealtimeEnabled ? <Wifi className="w-4 h-4 mr-2 text-green-600" /> : <WifiOff className="w-4 h-4 mr-2 text-gray-400" />}
+          {isConnected && isRealtimeEnabled ? 
+            <Wifi className="w-4 h-4 mr-2 text-green-400" /> : 
+            <WifiOff className="w-4 h-4 mr-2 text-slate-400" />
+          }
           {isRealtimeEnabled ? 'Live' : 'Paused'}
         </Button>
-        <Button variant="outline" size="sm" className="border-gray-200">
+        <Button variant="outline" size="sm" className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg">
           <Settings className="w-4 h-4 mr-2" />
           Settings
         </Button>
