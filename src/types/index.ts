@@ -1,4 +1,3 @@
-
 export interface AIEngine {
   id: string;
   name: string;
@@ -74,3 +73,13 @@ export interface KPIData {
   memoryUsage: number;
   storageUsage: number;
 }
+
+// Re-export workflow API types from api.ts
+export type {
+  WorkflowCreateRequest,
+  WorkflowUpdateRequest,
+  WorkflowExecuteRequest,
+  WorkflowExecuteResponse,
+  WorkflowTrigger,
+  WorkflowAction
+} from './api';
