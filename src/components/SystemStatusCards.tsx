@@ -3,7 +3,46 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Brain, GitBranch, Database, Clock } from 'lucide-react';
+
+// Custom SVG Icons
+const AIIcon = ({ className = "w-6 h-6" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" fill="none" />
+    <path d="M12 1v6m0 8v6M4.22 4.22l4.24 4.24m8.48 8.48l4.24 4.24M1 12h6m8 0h6M4.22 19.78l4.24-4.24m8.48-8.48l4.24-4.24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <circle cx="12" cy="12" r="1" fill="currentColor" className="animate-pulse" />
+  </svg>
+);
+
+const WorkflowIcon = ({ className = "w-6 h-6" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <rect x="3" y="3" width="6" height="6" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+    <rect x="15" y="3" width="6" height="6" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+    <rect x="9" y="15" width="6" height="6" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+    <path d="M9 6h6M12 9v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    <circle cx="6" cy="6" r="1" fill="currentColor" />
+    <circle cx="18" cy="6" r="1" fill="currentColor" />
+    <circle cx="12" cy="18" r="1" fill="currentColor" />
+  </svg>
+);
+
+const DataIcon = ({ className = "w-6 h-6" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <ellipse cx="12" cy="5" rx="9" ry="3" stroke="currentColor" strokeWidth="2" fill="none" />
+    <path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5" stroke="currentColor" strokeWidth="2" fill="none" />
+    <path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3" stroke="currentColor" strokeWidth="2" fill="none" />
+    <circle cx="12" cy="12" r="1" fill="currentColor" className="animate-pulse" />
+  </svg>
+);
+
+const TimeIcon = ({ className = "w-6 h-6" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" />
+    <polyline points="12,6 12,12 16,14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <circle cx="12" cy="12" r="1" fill="currentColor" />
+    <path d="M18.364 5.636L19.778 4.222" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+    <path d="M5.636 5.636L4.222 4.222" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+  </svg>
+);
 
 interface SystemStatusCardsProps {
   kpis: any;
@@ -33,7 +72,7 @@ const SystemStatusCards = ({ kpis, isLoading }: SystemStatusCardsProps) => {
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg">
-              <Brain className="w-6 h-6 text-white" />
+              <AIIcon className="w-6 h-6 text-white" />
             </div>
             <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-lg">Active</Badge>
           </div>
@@ -49,7 +88,7 @@ const SystemStatusCards = ({ kpis, isLoading }: SystemStatusCardsProps) => {
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg">
-              <GitBranch className="w-6 h-6 text-white" />
+              <WorkflowIcon className="w-6 h-6 text-white" />
             </div>
             <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-lg">Running</Badge>
           </div>
@@ -65,7 +104,7 @@ const SystemStatusCards = ({ kpis, isLoading }: SystemStatusCardsProps) => {
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-lg">
-              <Database className="w-6 h-6 text-white" />
+              <DataIcon className="w-6 h-6 text-white" />
             </div>
             <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/50 shadow-lg">High</Badge>
           </div>
@@ -81,7 +120,7 @@ const SystemStatusCards = ({ kpis, isLoading }: SystemStatusCardsProps) => {
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg">
-              <Clock className="w-6 h-6 text-white" />
+              <TimeIcon className="w-6 h-6 text-white" />
             </div>
             <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-lg">Optimal</Badge>
           </div>

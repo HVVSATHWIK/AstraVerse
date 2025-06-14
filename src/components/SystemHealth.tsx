@@ -3,7 +3,33 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { BarChart3, TrendingUp, AlertTriangle, CheckCircle } from 'lucide-react';
+
+// Custom SVG Icons
+const HealthIcon = ({ className = "w-5 h-5" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" strokeWidth="2" fill="none" />
+    <path d="M7 10l2 2 4-4M7 14l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <circle cx="18" cy="8" r="2" fill="currentColor" className="animate-pulse" />
+  </svg>
+);
+
+const GrowthIcon = ({ className = "w-3 h-3" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <path d="M3 17l6-6 4 4 8-8M21 9v6h-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const AlertIcon = ({ className = "w-3 h-3" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <path d="M12 9v4M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const CheckIcon = ({ className = "w-3 h-3" }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none">
+    <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
 
 const SystemHealth = () => {
   return (
@@ -12,12 +38,12 @@ const SystemHealth = () => {
         <CardTitle className="text-white text-lg flex items-center justify-between">
           <div className="flex items-center">
             <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg mr-3 shadow-lg">
-              <BarChart3 className="w-5 h-5 text-white" />
+              <HealthIcon className="w-5 h-5 text-white" />
             </div>
             System Health
           </div>
           <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/50">
-            <CheckCircle className="w-3 h-3 mr-1" />
+            <CheckIcon className="w-3 h-3 mr-1" />
             Optimal
           </Badge>
         </CardTitle>
@@ -32,7 +58,7 @@ const SystemHealth = () => {
             <div className="text-blue-400 text-sm font-medium">Requests/min</div>
             <div className="text-white text-lg font-bold flex items-center">
               2.4K
-              <TrendingUp className="w-3 h-3 ml-1 text-emerald-400" />
+              <GrowthIcon className="w-3 h-3 ml-1 text-emerald-400" />
             </div>
           </div>
         </div>
@@ -53,7 +79,7 @@ const SystemHealth = () => {
           <div className="flex justify-between text-sm mb-2">
             <span className="text-slate-300">Memory Usage</span>
             <div className="flex items-center">
-              <AlertTriangle className="w-3 h-3 text-yellow-400 mr-1" />
+              <AlertIcon className="w-3 h-3 text-yellow-400 mr-1" />
               <span className="text-white font-medium">82%</span>
             </div>
           </div>
