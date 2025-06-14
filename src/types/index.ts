@@ -16,8 +16,10 @@ export interface Workflow {
   triggers: string[];
   actions: string[];
   runs: number;
+  executions?: number;
   successRate: number;
   averageDuration: number;
+  avgDuration?: string;
   lastRun?: string;
   createdAt: string;
   updatedAt: string;
@@ -38,7 +40,9 @@ export interface SystemMetrics {
   timestamp: string;
   throughput: number;
   latency: number;
+  responseTime: number;
   errors: number;
+  errorRate: number;
   cpuUsage: number;
   memoryUsage: number;
   storageUsage: number;
@@ -56,7 +60,17 @@ export interface ActivityLog {
 export interface KPIData {
   meetingReduction: number;
   taskCompletion: number;
+  taskCompletionRate: number;
   responseLatency: number;
+  avgResponseTime: number;
   customerSatisfaction: number;
   automationRate: number;
+  activeEngines: number;
+  activeWorkflows: number;
+  throughput: string;
+  throughputStatus: string;
+  responseTimeStatus: string;
+  cpuUsage: number;
+  memoryUsage: number;
+  storageUsage: number;
 }
