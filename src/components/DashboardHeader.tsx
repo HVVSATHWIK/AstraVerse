@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Settings, Wifi, WifiOff } from 'lucide-react';
+import { Settings, Wifi, WifiOff, Play } from 'lucide-react';
 import AstraLogo from '@/components/AstraLogo';
 import MobileNav from '@/components/MobileNav';
 import { useRealtime } from '@/contexts/RealtimeContext';
@@ -24,7 +24,7 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
           <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
             AstraAI Platform
           </h1>
-          <p className="text-slate-300">Enterprise AI Management Dashboard</p>
+          <p className="text-slate-300">AI Workflow Orchestration • Meeting Intelligence • Automation Hub</p>
         </div>
       </div>
       <div className="flex items-center space-x-3">

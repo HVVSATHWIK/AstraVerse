@@ -8,6 +8,8 @@ import { Toaster } from '@/components/ui/toaster';
 
 // Import new components
 import DashboardHeader from '@/components/DashboardHeader';
+import MainFeatures from '@/components/MainFeatures';
+import QuickStartGuide from '@/components/QuickStartGuide';
 import SystemStatusCards from '@/components/SystemStatusCards';
 import AIEngineStatus from '@/components/AIEngineStatus';
 import RecentActivity from '@/components/RecentActivity';
@@ -44,11 +46,6 @@ const DashboardContent = () => {
         {/* Header */}
         <DashboardHeader activeTab={activeTab} onTabChange={setActiveTab} />
 
-        {/* Status Cards */}
-        <ErrorBoundary>
-          <SystemStatusCards kpis={kpis} isLoading={kpisLoading} />
-        </ErrorBoundary>
-
         {/* Main Tabs */}
         <ErrorBoundary>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -73,6 +70,24 @@ const DashboardContent = () => {
             </div>
 
             <TabsContent value="overview" className="space-y-6">
+              {/* Main Features - What AstraAI Does */}
+              <MainFeatures />
+              
+              {/* Quick Start Guide */}
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                <div className="xl:col-span-2">
+                  <QuickStartGuide />
+                </div>
+                <div className="xl:col-span-1">
+                  <QuickActions />
+                </div>
+              </div>
+
+              {/* Status Cards */}
+              <ErrorBoundary>
+                <SystemStatusCards kpis={kpis} isLoading={kpisLoading} />
+              </ErrorBoundary>
+              
               <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
                 <div className="xl:col-span-2">
                   <AIEngineStatus aiEngines={aiEngines} isLoading={aiEnginesLoading} />
@@ -81,16 +96,13 @@ const DashboardContent = () => {
                   <RecentActivity activityLogs={activityLogs} isLoading={activityLoading} />
                 </div>
                 <div className="xl:col-span-1">
-                  <QuickActions />
+                  <LiveMetrics />
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 <SystemHealth />
-                <LiveMetrics />
-                <div className="xl:col-span-1">
-                  <MetricsChart />
-                </div>
+                <MetricsChart />
               </div>
             </TabsContent>
 
