@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Settings, Wifi, WifiOff, Play } from 'lucide-react';
 import AstraLogo from '@/components/AstraLogo';
 import MobileNav from '@/components/MobileNav';
+import SettingsDialog from '@/components/SettingsDialog';
 import { useRealtime } from '@/contexts/RealtimeContext';
 
 interface DashboardHeaderProps {
@@ -40,10 +41,12 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
           }
           {isRealtimeEnabled ? 'Live' : 'Paused'}
         </Button>
-        <Button variant="outline" size="sm" className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg">
-          <Settings className="w-4 h-4 mr-2" />
-          Settings
-        </Button>
+        <SettingsDialog>
+          <Button variant="outline" size="sm" className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg">
+            <Settings className="w-4 h-4 mr-2" />
+            Settings
+          </Button>
+        </SettingsDialog>
         <MobileNav activeTab={activeTab} onTabChange={onTabChange} />
       </div>
     </div>
