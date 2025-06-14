@@ -14,15 +14,15 @@ const ActivityFeed = ({ activities, isLoading }: ActivityFeedProps) => {
   const getActivityColor = (type: string) => {
     switch (type) {
       case 'transcription':
-        return 'bg-green-500';
+        return 'bg-emerald-500';
       case 'alert':
         return 'bg-blue-500';
       case 'automation':
         return 'bg-purple-500';
       case 'report':
-        return 'bg-yellow-500';
+        return 'bg-amber-500';
       default:
-        return 'bg-gray-500';
+        return 'bg-slate-500';
     }
   };
 
@@ -38,52 +38,51 @@ const ActivityFeed = ({ activities, isLoading }: ActivityFeedProps) => {
   };
 
   return (
-    <Card className="bg-white border-gray-200 hover:shadow-md transition-shadow">
-      <CardHeader>
-        <CardTitle className="text-gray-800 flex items-center">
-          <Activity className="w-5 h-5 mr-2 text-blue-500" />
+    <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-lg hover:shadow-xl transition-all duration-300">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-slate-800 flex items-center text-lg">
+          <Activity className="w-5 h-5 mr-3 text-indigo-600" />
           Recent Activity
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-4">
         {isLoading ? (
           [...Array(4)].map((_, i) => (
-            <div key={i} className="flex items-center space-x-3">
-              <Skeleton className="w-2 h-2 rounded-full" />
+            <div key={i} className="flex items-center space-x-3 p-2">
+              <Skeleton className="w-3 h-3 rounded-full" />
               <Skeleton className="h-4 flex-1" />
               <Skeleton className="h-3 w-12" />
             </div>
           ))
         ) : activities && activities.length > 0 ? (
           activities.map((activity) => (
-            <div key={activity.id} className="flex items-center space-x-3">
-              <div className={`w-2 h-2 ${getActivityColor(activity.type)} rounded-full`}></div>
-              <span className="text-gray-700 text-sm flex-1">{activity.message}</span>
-              <span className="text-gray-500 text-xs">{formatTimestamp(activity.timestamp)}</span>
+            <div key={activity.id} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-50/50 transition-colors">
+              <div className={`w-3 h-3 ${getActivityColor(activity.type)} rounded-full shadow-sm`}></div>
+              <span className="text-slate-700 text-sm flex-1 font-medium">{activity.message}</span>
+              <span className="text-slate-500 text-xs font-medium">{formatTimestamp(activity.timestamp)}</span>
             </div>
           ))
         ) : (
-          // Fallback activities when no data is available
           <>
-            <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-gray-700 text-sm">Zoom meeting transcribed and analyzed</span>
-              <span className="text-gray-500 text-xs">2m ago</span>
+            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-50/50 transition-colors">
+              <div className="w-3 h-3 bg-emerald-500 rounded-full shadow-sm"></div>
+              <span className="text-slate-700 text-sm flex-1 font-medium">Zoom meeting transcribed and analyzed</span>
+              <span className="text-slate-500 text-xs font-medium">2m ago</span>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span className="text-gray-700 text-sm">Slack alert triggered for customer churn</span>
-              <span className="text-gray-500 text-xs">5m ago</span>
+            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-50/50 transition-colors">
+              <div className="w-3 h-3 bg-blue-500 rounded-full shadow-sm"></div>
+              <span className="text-slate-700 text-sm flex-1 font-medium">Slack alert triggered for customer churn</span>
+              <span className="text-slate-500 text-xs font-medium">5m ago</span>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <span className="text-gray-700 text-sm">Jira ticket auto-created from analysis</span>
-              <span className="text-gray-500 text-xs">12m ago</span>
+            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-50/50 transition-colors">
+              <div className="w-3 h-3 bg-purple-500 rounded-full shadow-sm"></div>
+              <span className="text-slate-700 text-sm flex-1 font-medium">Jira ticket auto-created from analysis</span>
+              <span className="text-slate-500 text-xs font-medium">12m ago</span>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-              <span className="text-gray-700 text-sm">Weekly report generated</span>
-              <span className="text-gray-500 text-xs">1h ago</span>
+            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-50/50 transition-colors">
+              <div className="w-3 h-3 bg-amber-500 rounded-full shadow-sm"></div>
+              <span className="text-slate-700 text-sm flex-1 font-medium">Weekly report generated</span>
+              <span className="text-slate-500 text-xs font-medium">1h ago</span>
             </div>
           </>
         )}
