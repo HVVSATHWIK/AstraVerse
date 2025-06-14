@@ -27,13 +27,13 @@ const StatusCard = ({ title, value, status, icon: Icon, description }: StatusCar
   };
 
   return (
-    <Card className="bg-gray-50 border border-gray-300 hover:shadow-md transition-shadow">
+    <Card className="bg-gray-50 border border-gray-300 hover:shadow-md transition-shadow rounded-3xl">
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <Icon className={cn("w-8 h-8", iconColors[status])} />
           <Badge 
             variant="outline" 
-            className={cn("font-medium capitalize", statusColors[status])}
+            className={cn("font-medium capitalize rounded-full", statusColors[status])}
           >
             {status === 'healthy' ? 'Active' : status}
           </Badge>
