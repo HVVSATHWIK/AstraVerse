@@ -12,6 +12,8 @@ import SystemStatusCards from '@/components/SystemStatusCards';
 import AIEngineStatus from '@/components/AIEngineStatus';
 import RecentActivity from '@/components/RecentActivity';
 import SystemHealth from '@/components/SystemHealth';
+import QuickActions from '@/components/QuickActions';
+import LiveMetrics from '@/components/LiveMetrics';
 import PilotPricing from '@/components/PilotPricing';
 import IntegrationsGrid from '@/components/IntegrationsGrid';
 
@@ -34,6 +36,8 @@ const DashboardContent = () => {
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/20 rounded-full blur-2xl animate-pulse delay-500"></div>
+        <div className="absolute top-10 right-10 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse delay-2000"></div>
+        <div className="absolute bottom-10 left-10 w-40 h-40 bg-pink-500/10 rounded-full blur-xl animate-pulse delay-1500"></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto p-6 space-y-6">
@@ -69,12 +73,25 @@ const DashboardContent = () => {
             </div>
 
             <TabsContent value="overview" className="space-y-6">
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                <AIEngineStatus aiEngines={aiEngines} isLoading={aiEnginesLoading} />
-                <RecentActivity activityLogs={activityLogs} isLoading={activityLoading} />
-                <SystemHealth />
+              <div className="grid grid-cols-1 xl:grid-cols-5 gap-6">
+                <div className="xl:col-span-2">
+                  <AIEngineStatus aiEngines={aiEngines} isLoading={aiEnginesLoading} />
+                </div>
+                <div className="xl:col-span-2">
+                  <RecentActivity activityLogs={activityLogs} isLoading={activityLoading} />
+                </div>
+                <div className="xl:col-span-1">
+                  <QuickActions />
+                </div>
               </div>
-              <MetricsChart />
+              
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                <SystemHealth />
+                <LiveMetrics />
+                <div className="xl:col-span-1">
+                  <MetricsChart />
+                </div>
+              </div>
             </TabsContent>
 
             <TabsContent value="workflows" className="space-y-6">
