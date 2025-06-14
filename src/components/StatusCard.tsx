@@ -40,9 +40,9 @@ const StatusCard = ({ title, value, status, icon: Icon, description }: StatusCar
         </div>
         
         <div className="space-y-1">
-          <p className="text-sm font-medium text-gray-600">{title}</p>
+          <p className="text-sm font-medium text-gray-800">{title}</p>
           <p className="text-2xl font-bold text-gray-900">{value}</p>
-          <p className="text-xs text-gray-500">{description}</p>
+          <p className="text-xs text-gray-600">{description}</p>
         </div>
       </CardContent>
     </Card>
