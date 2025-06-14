@@ -34,46 +34,40 @@ const MobileNav = ({ activeTab, onTabChange }: MobileNavProps) => {
           <Button 
             variant="outline" 
             size="sm" 
-            className={cn(
-              "bg-white/80 border-slate-200 hover:bg-slate-50 transition-all duration-200",
-              "shadow-sm hover:shadow-md"
-            )}
+            className="border-gray-200 hover:bg-gray-50"
           >
             <Menu className="w-4 h-4" />
           </Button>
         </SheetTrigger>
         <SheetContent 
           side="left" 
-          className={cn(
-            "bg-white/95 backdrop-blur-sm border-white/20 w-80"
-          )}
+          className="bg-white border-gray-200 w-80"
         >
           <div className="flex items-center space-x-3 mb-8">
             <AstraLogo size="md" />
-            <h2 className="text-slate-800 text-xl font-bold">
+            <h2 className="text-gray-900 text-xl font-bold">
               AstraAI
             </h2>
           </div>
           
-          <div className="space-y-3">
-            {tabs.map((tab, index) => (
+          <div className="space-y-2">
+            {tabs.map((tab) => (
               <Button
                 key={tab.value}
                 variant="ghost"
                 className={cn(
-                  "w-full justify-start h-12 text-left transition-all duration-200 group relative overflow-hidden",
+                  "w-full justify-start h-12 text-left transition-colors",
                   activeTab === tab.value 
-                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg' 
-                    : 'text-slate-700 hover:text-slate-900 hover:bg-slate-50 border border-transparent',
-                  "rounded-xl"
+                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100',
+                  "rounded-lg"
                 )}
                 onClick={() => handleTabClick(tab.value)}
-                style={{ animationDelay: `${index * 100}ms` }}
               >
-                <span className="text-lg mr-3 group-hover:scale-110 transition-transform duration-200">
+                <span className="text-lg mr-3">
                   {tab.icon}
                 </span>
-                <span className="font-medium relative z-10">{tab.label}</span>
+                <span className="font-medium">{tab.label}</span>
               </Button>
             ))}
           </div>
