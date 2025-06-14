@@ -5,6 +5,7 @@ import Index from '@/pages/Index';
 import Dashboard from '@/pages/Dashboard';
 import NotFound from '@/pages/NotFound';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import env from '@/config/environment';
 import './App.css';
 
 const queryClient = new QueryClient({
@@ -17,7 +18,27 @@ const queryClient = new QueryClient({
   },
 });
 
+// Initialize Mock Service Worker in development
+async function enableMocking() {
+  if (!env.isDev() || !env.get('enableMockApi')) {
+    return;
+  }
+
+  const { worker } = await import('@/mocks/browser');
+  
+  return worker.start({
+    onUnhandledRequest: 'warn',
+  }).then(() => {
+    console.log('🚀 Mock Service Worker started');
+  });
+}
+
 function App() {
+  // Initialize mocking before rendering the app
+  React.useEffect(() => {
+    enableMocking();
+  }, []);
+
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -34,3 +55,4 @@ function App() {
 }
 
 export default App;
+
