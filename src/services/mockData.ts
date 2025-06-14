@@ -1,4 +1,3 @@
-
 import { AIEngine, Workflow, Integration, SystemMetrics, ActivityLog, KPIData } from '@/types';
 
 export const mockAIEngines: AIEngine[] = [
@@ -145,12 +144,12 @@ export const mockIntegrations: Integration[] = [
 ];
 
 export const mockSystemMetrics: SystemMetrics[] = [
-  { timestamp: '2024-06-14T06:00:00Z', throughput: 65, latency: 120, errors: 2, cpuUsage: 45, memoryUsage: 67, storageUsage: 42 },
-  { timestamp: '2024-06-14T07:00:00Z', throughput: 72, latency: 115, errors: 1, cpuUsage: 52, memoryUsage: 69, storageUsage: 43 },
-  { timestamp: '2024-06-14T08:00:00Z', throughput: 85, latency: 110, errors: 3, cpuUsage: 58, memoryUsage: 72, storageUsage: 44 },
-  { timestamp: '2024-06-14T09:00:00Z', throughput: 95, latency: 100, errors: 1, cpuUsage: 65, memoryUsage: 75, storageUsage: 44 },
-  { timestamp: '2024-06-14T10:00:00Z', throughput: 88, latency: 105, errors: 2, cpuUsage: 62, memoryUsage: 78, storageUsage: 45 },
-  { timestamp: '2024-06-14T11:00:00Z', throughput: 92, latency: 102, errors: 1, cpuUsage: 68, memoryUsage: 82, storageUsage: 45 }
+  { timestamp: '2024-06-14T06:00:00Z', throughput: 65, latency: 120, responseTime: 120, errors: 2, errorRate: 3.1, cpuUsage: 45, memoryUsage: 67, storageUsage: 42 },
+  { timestamp: '2024-06-14T07:00:00Z', throughput: 72, latency: 115, responseTime: 115, errors: 1, errorRate: 1.4, cpuUsage: 52, memoryUsage: 69, storageUsage: 43 },
+  { timestamp: '2024-06-14T08:00:00Z', throughput: 85, latency: 110, responseTime: 110, errors: 3, errorRate: 3.5, cpuUsage: 58, memoryUsage: 72, storageUsage: 44 },
+  { timestamp: '2024-06-14T09:00:00Z', throughput: 95, latency: 100, responseTime: 100, errors: 1, errorRate: 1.1, cpuUsage: 65, memoryUsage: 75, storageUsage: 44 },
+  { timestamp: '2024-06-14T10:00:00Z', throughput: 88, latency: 105, responseTime: 105, errors: 2, errorRate: 2.3, cpuUsage: 62, memoryUsage: 78, storageUsage: 45 },
+  { timestamp: '2024-06-14T11:00:00Z', throughput: 92, latency: 102, responseTime: 102, errors: 1, errorRate: 1.1, cpuUsage: 68, memoryUsage: 82, storageUsage: 45 }
 ];
 
 export const mockActivityLogs: ActivityLog[] = [
@@ -191,7 +190,17 @@ export const mockActivityLogs: ActivityLog[] = [
 export const mockKPIData: KPIData = {
   meetingReduction: 23,
   taskCompletion: 87,
+  taskCompletionRate: 87,
   responseLatency: 147,
+  avgResponseTime: 147,
   customerSatisfaction: 92,
-  automationRate: 76
+  automationRate: 76,
+  activeEngines: 4,
+  activeWorkflows: 23,
+  throughput: "1.2TB/h",
+  throughputStatus: "warning",
+  responseTimeStatus: "healthy",
+  cpuUsage: 68,
+  memoryUsage: 82,
+  storageUsage: 45
 };

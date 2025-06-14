@@ -68,8 +68,8 @@ export interface KPIData {
   activeEngines: number;
   activeWorkflows: number;
   throughput: string;
-  throughputStatus: string;
-  responseTimeStatus: string;
+  throughputStatus: 'error' | 'warning' | 'healthy';
+  responseTimeStatus: 'error' | 'warning' | 'healthy';
   cpuUsage: number;
   memoryUsage: number;
   storageUsage: number;
