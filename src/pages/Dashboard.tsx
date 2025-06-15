@@ -1,31 +1,21 @@
+
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs } from '@/components/ui/tabs';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { RealtimeProvider } from '@/contexts/RealtimeContext';
 import { useKPIs, useAIEngines, useActivityLogs } from '@/services/dataService';
 import { Toaster } from '@/components/ui/toaster';
 
-// Import new components
+// Import new dashboard components
 import DashboardHeader from '@/components/DashboardHeader';
-import MainFeatures from '@/components/MainFeatures';
-import QuickStartGuide from '@/components/QuickStartGuide';
-import SystemStatusCards from '@/components/SystemStatusCards';
-import AIEngineStatus from '@/components/AIEngineStatus';
-import RecentActivity from '@/components/RecentActivity';
-import SystemHealth from '@/components/SystemHealth';
-import QuickActions from '@/components/QuickActions';
-import LiveMetrics from '@/components/LiveMetrics';
-import PilotPricing from '@/components/PilotPricing';
-import IntegrationsGrid from '@/components/IntegrationsGrid';
 import Enhanced3DBackground from '@/components/Background3D/Enhanced3DBackground';
-import MetricsChart from '@/components/MetricsChart';
-import WorkflowBuilder from '@/components/WorkflowBuilder';
-import WorkflowControls from '@/components/WorkflowControls';
-import KPIOverview from '@/components/KPIOverview';
-
-// Import new Agent components
-import AgentTimeline from '@/components/AgentTimeline';
-import AgentControlPanel from '@/components/AgentControlPanel';
+import DashboardTabs from '@/components/dashboard/DashboardTabs';
+import OverviewTab from '@/components/dashboard/OverviewTab';
+import WorkflowsTab from '@/components/dashboard/WorkflowsTab';
+import AgentsTab from '@/components/dashboard/AgentsTab';
+import IntegrationsTab from '@/components/dashboard/IntegrationsTab';
+import AnalyticsTab from '@/components/dashboard/AnalyticsTab';
+import PilotTab from '@/components/dashboard/PilotTab';
 
 const DashboardContent = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -54,171 +44,22 @@ const DashboardContent = () => {
         {/* Main Tabs with 3D enhancements */}
         <ErrorBoundary>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8 animate-fade-in-3d">
-            <div className="hidden md:block animate-scale-in-3d stagger-1">
-              <TabsList className="bg-slate-800/80 backdrop-blur-sm border border-slate-700/50 p-1 shadow-xl rounded-4xl glass-dark hover-lift-3d transform-3d">
-                <TabsTrigger value="overview" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl btn-3d transition-all duration-300">
-                  Overview
-                </TabsTrigger>
-                <TabsTrigger value="workflows" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl btn-3d transition-all duration-300">
-                  Workflows
-                </TabsTrigger>
-                <TabsTrigger value="agents" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl btn-3d transition-all duration-300">
-                  Agents
-                </TabsTrigger>
-                <TabsTrigger value="integrations" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl btn-3d transition-all duration-300">
-                  Integrations
-                </TabsTrigger>
-                <TabsTrigger value="analytics" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl btn-3d transition-all duration-300">
-                  Analytics
-                </TabsTrigger>
-                <TabsTrigger value="pilot" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl btn-3d transition-all duration-300">
-                  Pilot Mode
-                </TabsTrigger>
-              </TabsList>
-            </div>
-
-            <TabsContent value="overview" className="space-y-8">
-              {/* Hero Section - What AstraAI Does */}
-              <section className="space-y-6 animate-bounce-in-3d">
-                <MainFeatures />
-              </section>
-              
-              {/* Quick Start Section */}
-              <section className="space-y-6 animate-fade-in-3d stagger-2">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white text-3d">Getting Started</h2>
-                  <div className="h-px bg-gradient-to-r from-purple-500/50 to-transparent flex-1 ml-6"></div>
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                  <div className="lg:col-span-3 animate-scale-in-3d stagger-3">
-                    <QuickStartGuide />
-                  </div>
-                  <div className="lg:col-span-1 animate-scale-in-3d stagger-4">
-                    <QuickActions />
-                  </div>
-                </div>
-              </section>
-
-              {/* System Status Section */}
-              <section className="space-y-6 animate-slide-up-3d stagger-3">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white text-3d">System Overview</h2>
-                  <div className="h-px bg-gradient-to-r from-blue-500/50 to-transparent flex-1 ml-6"></div>
-                </div>
-                <ErrorBoundary>
-                  <div className="animate-bounce-in-3d stagger-4">
-                    <SystemStatusCards kpis={kpis} isLoading={kpisLoading} />
-                  </div>
-                </ErrorBoundary>
-              </section>
-              
-              {/* Operational Details Section */}
-              <section className="space-y-6 animate-fade-in-3d stagger-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white text-3d">Live Operations</h2>
-                  <div className="h-px bg-gradient-to-r from-green-500/50 to-transparent flex-1 ml-6"></div>
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                  <div className="lg:col-span-4 animate-scale-in-3d stagger-5">
-                    <AIEngineStatus aiEngines={aiEngines} isLoading={aiEnginesLoading} />
-                  </div>
-                  <div className="lg:col-span-5 animate-scale-in-3d stagger-6">
-                    <RecentActivity activityLogs={activityLogs} isLoading={activityLoading} />
-                  </div>
-                  <div className="lg:col-span-3 animate-bounce-in-3d stagger-6">
-                    <LiveMetrics />
-                  </div>
-                </div>
-              </section>
-              
-              {/* Performance Analytics Section */}
-              <section className="space-y-6 animate-slide-up-3d stagger-5">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white text-3d">Performance & Health</h2>
-                  <div className="h-px bg-gradient-to-r from-orange-500/50 to-transparent flex-1 ml-6"></div>
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div className="animate-scale-in-3d stagger-6">
-                    <SystemHealth />
-                  </div>
-                  <div className="animate-bounce-in-3d stagger-6">
-                    <MetricsChart />
-                  </div>
-                </div>
-              </section>
-            </TabsContent>
-
-            <TabsContent value="workflows" className="space-y-8">
-              <section className="space-y-6 animate-fade-in-3d">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white text-3d">Workflow Management</h2>
-                  <div className="h-px bg-gradient-to-r from-purple-500/50 to-transparent flex-1 ml-6"></div>
-                </div>
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                  <div className="animate-scale-in-3d stagger-1">
-                    <WorkflowBuilder />
-                  </div>
-                  <div className="animate-scale-in-3d stagger-2">
-                    <WorkflowControls />
-                  </div>
-                </div>
-              </section>
-            </TabsContent>
-
-            <TabsContent value="agents" className="space-y-8">
-              <section className="space-y-6 animate-fade-in-3d">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white text-3d">Agent Management</h2>
-                  <div className="h-px bg-gradient-to-r from-purple-500/50 to-transparent flex-1 ml-6"></div>
-                </div>
-                
-                {/* Agent Control Panel */}
-                <div className="animate-scale-in-3d stagger-1">
-                  <AgentControlPanel />
-                </div>
-                
-                {/* Agent Timeline */}
-                <div className="animate-bounce-in-3d stagger-2">
-                  <AgentTimeline showAllAgents={true} maxHeight="500px" />
-                </div>
-              </section>
-            </TabsContent>
-
-            <TabsContent value="integrations" className="space-y-8">
-              <section className="space-y-6 animate-fade-in-3d">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white text-3d">Connected Services</h2>
-                  <div className="h-px bg-gradient-to-r from-cyan-500/50 to-transparent flex-1 ml-6"></div>
-                </div>
-                <div className="animate-bounce-in-3d">
-                  <IntegrationsGrid />
-                </div>
-              </section>
-            </TabsContent>
-
-            <TabsContent value="analytics" className="space-y-8">
-              <section className="space-y-6 animate-fade-in-3d">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white text-3d">Analytics & Insights</h2>
-                  <div className="h-px bg-gradient-to-r from-emerald-500/50 to-transparent flex-1 ml-6"></div>
-                </div>
-                <div className="animate-scale-in-3d">
-                  <KPIOverview />
-                </div>
-              </section>
-            </TabsContent>
-
-            <TabsContent value="pilot" className="space-y-8">
-              <section className="space-y-6 animate-fade-in-3d">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white text-3d">Pilot Program</h2>
-                  <div className="h-px bg-gradient-to-r from-yellow-500/50 to-transparent flex-1 ml-6"></div>
-                </div>
-                <div className="animate-bounce-in-3d">
-                  <PilotPricing />
-                </div>
-              </section>
-            </TabsContent>
+            <DashboardTabs activeTab={activeTab} onTabChange={setActiveTab} />
+            
+            <OverviewTab
+              kpis={kpis}
+              kpisLoading={kpisLoading}
+              aiEngines={aiEngines}
+              aiEnginesLoading={aiEnginesLoading}
+              activityLogs={activityLogs}
+              activityLoading={activityLoading}
+            />
+            
+            <WorkflowsTab />
+            <AgentsTab />
+            <IntegrationsTab />
+            <AnalyticsTab />
+            <PilotTab />
           </Tabs>
         </ErrorBoundary>
       </div>
