@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { nodeTypes } from '@/constants/nodeTypes';
 
 interface NodePaletteProps {
-  onAddNode: (type: keyof typeof nodeTypes) => void;
+  onAddNode: (type: 'trigger' | 'action' | 'condition' | 'gemini_ai') => void;
 }
 
 const NodePalette = ({ onAddNode }: NodePaletteProps) => {
@@ -20,7 +20,7 @@ const NodePalette = ({ onAddNode }: NodePaletteProps) => {
           return (
             <Button
               key={type}
-              onClick={() => onAddNode(type as keyof typeof nodeTypes)}
+              onClick={() => onAddNode(type as 'trigger' | 'action' | 'condition' | 'gemini_ai')}
               variant="outline"
               className={`w-full justify-start ${config.bgColor} ${config.borderColor} text-white hover:bg-slate-700/50`}
             >

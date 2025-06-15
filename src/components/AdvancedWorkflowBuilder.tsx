@@ -17,10 +17,10 @@ const AdvancedWorkflowBuilder = () => {
 
   const { toast } = useToast();
 
-  const addNode = (type: keyof typeof nodeTypes) => {
+  const addNode = (type: 'trigger' | 'action' | 'condition' | 'gemini_ai') => {
     const newNode: WorkflowNode = {
       id: `node-${Date.now()}`,
-      type: type as 'trigger' | 'action' | 'condition' | 'gemini_ai',
+      type: type,
       name: `New ${type}`,
       config: {},
       position: { x: 50 + Math.random() * 300, y: 50 + Math.random() * 200 },
