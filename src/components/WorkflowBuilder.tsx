@@ -1,28 +1,22 @@
+
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Play, 
-  Pause, 
-  Plus, 
-  Settings, 
   GitBranch, 
   MessageSquare, 
-  Calendar,
-  AlertTriangle,
   FileText,
-  Zap,
-  Sparkles,
-  Bot
+  Sparkles
 } from 'lucide-react';
 import { useWorkflows, useExecuteWorkflow } from '@/services/dataService';
 import { useToast } from '@/hooks/use-toast';
 import GeminiActionCard from './GeminiActionCard';
 import ChatWorkflowBuilder from './ChatWorkflowBuilder';
 import ChatTemplates from './ChatTemplates';
+import WorkflowList from './workflow/WorkflowList';
+import WorkflowDetails from './workflow/WorkflowDetails';
+import EmptyWorkflowState from './workflow/EmptyWorkflowState';
+import AIActionsLibrary from './workflow/AIActionsLibrary';
 
 const WorkflowBuilder = () => {
   const { data: workflows, isLoading } = useWorkflows();
@@ -67,41 +61,33 @@ const WorkflowBuilder = () => {
     });
   };
 
+  const toggleGeminiAction = () => {
+    setShowGeminiAction(!showGeminiAction);
+  };
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-semibold text-white">Active Workflows</h3>
-            <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
-              <Plus className="w-4 h-4 mr-1" />
-              New
-            </Button>
           </div>
           {[...Array(3)].map((_, i) => (
-            <Card key={i} className="bg-slate-800/50 border-slate-700">
-              <CardHeader className="pb-3">
-                <Skeleton className="h-6 w-48" />
-                <Skeleton className="h-4 w-full" />
-              </CardHeader>
-              <CardContent>
-                <div className="flex justify-between text-sm">
-                  <Skeleton className="h-4 w-16" />
-                  <Skeleton className="h-4 w-20" />
-                </div>
-              </CardContent>
-            </Card>
+            <div key={i} className="bg-slate-800/50 border-slate-700 p-4 rounded-lg">
+              <Skeleton className="h-6 w-48 mb-2" />
+              <Skeleton className="h-4 w-full mb-4" />
+              <div className="flex justify-between">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+            </div>
           ))}
         </div>
         <div className="lg:col-span-2">
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardHeader>
-              <Skeleton className="h-8 w-64" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-96 w-full" />
-            </CardContent>
-          </Card>
+          <div className="bg-slate-800/50 border-slate-700 p-6 rounded-lg">
+            <Skeleton className="h-8 w-64 mb-4" />
+            <Skeleton className="h-96 w-full" />
+          </div>
         </div>
       </div>
     );
@@ -131,200 +117,34 @@ const WorkflowBuilder = () => {
 
         <TabsContent value="builder" className="space-y-6">
           {!workflows || workflows.length === 0 ? (
-            <div className="text-center py-12">
-              <h3 className="text-xl font-semibold text-white mb-4">No Workflows Found</h3>
-              <p className="text-slate-400 mb-6">Create your first workflow to get started.</p>
-              <div className="flex justify-center space-x-4">
-                <Button className="bg-purple-600 hover:bg-purple-700">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create Workflow
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="text-purple-400 border-purple-500/50"
-                  onClick={() => setShowGeminiAction(true)}
-                >
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Try Gemini AI
-                </Button>
-              </div>
+            <>
+              <EmptyWorkflowState onToggleGeminiAction={toggleGeminiAction} />
               {showGeminiAction && (
                 <div className="mt-8 max-w-2xl mx-auto">
                   <GeminiActionCard onResult={handleGeminiResult} />
                 </div>
               )}
-            </div>
+            </>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Workflow List */}
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold text-white">Active Workflows</h3>
-                  <div className="flex space-x-2">
-                    <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
-                      <Plus className="w-4 h-4 mr-1" />
-                      New
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="text-purple-400 border-purple-500/50"
-                      onClick={() => setShowGeminiAction(!showGeminiAction)}
-                    >
-                      <Sparkles className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-                
-                {workflows.map((workflow) => (
-                  <Card 
-                    key={workflow.id}
-                    className={`bg-slate-800/50 border-slate-700 backdrop-blur-sm cursor-pointer transition-all duration-200 ${
-                      selectedWorkflow?.id === workflow.id ? 'ring-2 ring-purple-500' : 'hover:bg-slate-800/70'
-                    }`}
-                    onClick={() => setSelectedWorkflow(workflow)}
-                  >
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-white text-lg">{workflow.name}</CardTitle>
-                        <Badge 
-                          variant="outline" 
-                          className={workflow.status === 'active' 
-                            ? 'bg-green-500/20 text-green-400 border-green-500/50'
-                            : 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50'
-                          }
-                        >
-                          {workflow.status}
-                        </Badge>
-                      </div>
-                      <p className="text-slate-400 text-sm">{workflow.description}</p>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-slate-300">{workflow.executions || 0} runs</span>
-                        <span className="text-green-400">{workflow.successRate || 0}% success</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              <WorkflowList
+                workflows={workflows}
+                selectedWorkflow={selectedWorkflow}
+                onSelectWorkflow={setSelectedWorkflow}
+                onToggleGeminiAction={toggleGeminiAction}
+              />
 
-              {/* Workflow Details */}
               <div className="lg:col-span-2 space-y-6">
                 {showGeminiAction && (
                   <GeminiActionCard onResult={handleGeminiResult} />
                 )}
                 
                 {selectedWorkflow && (
-                  <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-white">{selectedWorkflow.name}</CardTitle>
-                        <div className="flex space-x-2">
-                          <Button 
-                            size="sm" 
-                            variant="outline" 
-                            className="text-slate-300 border-slate-600"
-                            onClick={() => handleExecuteWorkflow(selectedWorkflow.id)}
-                            disabled={executeWorkflow.isPending}
-                          >
-                            <Play className="w-4 h-4" />
-                          </Button>
-                          <Button size="sm" variant="outline" className="text-slate-300 border-slate-600">
-                            <Settings className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      {/* Triggers */}
-                      <div>
-                        <h4 className="text-lg font-semibold text-white mb-3 flex items-center">
-                          <Zap className="w-5 h-5 mr-2 text-yellow-400" />
-                          Triggers
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          {selectedWorkflow.triggers?.map((trigger: any, index: number) => (
-                            <div key={index} className="bg-slate-700/50 p-3 rounded-lg border border-slate-600">
-                              <div className="flex items-center space-x-2">
-                                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                                <span className="text-slate-300">{trigger.name || trigger}</span>
-                              </div>
-                            </div>
-                          )) || (
-                            <div className="bg-slate-700/50 p-3 rounded-lg border border-slate-600">
-                              <div className="flex items-center space-x-2">
-                                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                                <span className="text-slate-300">Manual Trigger</span>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Actions */}
-                      <div>
-                        <h4 className="text-lg font-semibold text-white mb-3 flex items-center">
-                          <GitBranch className="w-5 h-5 mr-2 text-blue-400" />
-                          Actions
-                        </h4>
-                        <div className="space-y-3">
-                          {selectedWorkflow.actions?.map((action: any, index: number) => (
-                            <div key={index} className="flex items-center space-x-4 bg-slate-700/50 p-3 rounded-lg border border-slate-600">
-                              <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full text-white text-sm font-bold">
-                                {index + 1}
-                              </div>
-                              <span className="text-slate-300 flex-1">{action.name || action}</span>
-                              {action.type === 'gemini_ai' && (
-                                <Sparkles className="w-4 h-4 text-purple-400" />
-                              )}
-                              <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/50">
-                                Active
-                              </Badge>
-                            </div>
-                          )) || (
-                            <>
-                              <div className="flex items-center space-x-4 bg-slate-700/50 p-3 rounded-lg border border-slate-600">
-                                <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full text-white text-sm font-bold">
-                                  1
-                                </div>
-                                <span className="text-slate-300 flex-1">Execute Action</span>
-                                <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/50">
-                                  Active
-                                </Badge>
-                              </div>
-                              <div className="flex items-center space-x-4 bg-slate-700/50 p-3 rounded-lg border border-slate-600">
-                                <div className="flex items-center justify-center w-8 h-8 bg-purple-600 rounded-full text-white text-sm font-bold">
-                                  2
-                                </div>
-                                <span className="text-slate-300 flex-1">Gemini AI Processing</span>
-                                <Sparkles className="w-4 h-4 text-purple-400" />
-                                <Badge variant="outline" className="bg-purple-500/20 text-purple-400 border-purple-500/50">
-                                  AI
-                                </Badge>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Statistics */}
-                      <div className="grid grid-cols-3 gap-4">
-                        <div className="bg-slate-700/50 p-4 rounded-lg border border-slate-600 text-center">
-                          <div className="text-2xl font-bold text-white">{selectedWorkflow.executions || 0}</div>
-                          <div className="text-slate-400 text-sm">Total Runs</div>
-                        </div>
-                        <div className="bg-slate-700/50 p-4 rounded-lg border border-slate-600 text-center">
-                          <div className="text-2xl font-bold text-green-400">{selectedWorkflow.successRate || 0}%</div>
-                          <div className="text-slate-400 text-sm">Success Rate</div>
-                        </div>
-                        <div className="bg-slate-700/50 p-4 rounded-lg border border-slate-600 text-center">
-                          <div className="text-2xl font-bold text-blue-400">{selectedWorkflow.avgDuration || '2.3s'}</div>
-                          <div className="text-slate-400 text-sm">Avg Duration</div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <WorkflowDetails
+                    workflow={selectedWorkflow}
+                    onExecuteWorkflow={handleExecuteWorkflow}
+                    isExecuting={executeWorkflow.isPending}
+                  />
                 )}
               </div>
             </div>
@@ -342,30 +162,7 @@ const WorkflowBuilder = () => {
         <TabsContent value="ai-actions" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <GeminiActionCard onResult={handleGeminiResult} />
-            <Card className="bg-slate-800/50 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center space-x-2">
-                  <Bot className="w-5 h-5 text-purple-400" />
-                  <span>AI Action Library</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="p-3 bg-slate-700/50 rounded-lg border border-slate-600">
-                    <h4 className="text-white font-medium">Content Generation</h4>
-                    <p className="text-slate-400 text-sm">Generate marketing copy, emails, and documents</p>
-                  </div>
-                  <div className="p-3 bg-slate-700/50 rounded-lg border border-slate-600">
-                    <h4 className="text-white font-medium">Data Analysis</h4>
-                    <p className="text-slate-400 text-sm">Analyze data and generate insights</p>
-                  </div>
-                  <div className="p-3 bg-slate-700/50 rounded-lg border border-slate-600">
-                    <h4 className="text-white font-medium">Code Review</h4>
-                    <p className="text-slate-400 text-sm">Review and improve code quality</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <AIActionsLibrary />
           </div>
         </TabsContent>
       </Tabs>
