@@ -1,0 +1,60 @@
+
+/* Enhanced gradient utilities with 3D effects */
+
+@layer components {
+  .gradient-primary {
+    background: var(--gradient-primary);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gradient-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent, rgba(255,255,255,0.1));
+    transform: translateX(-100%) skewX(-15deg);
+    transition: transform 0.8s ease;
+  }
+
+  .gradient-primary:hover::before {
+    transform: translateX(100%) skewX(-15deg);
+  }
+
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+
+  .gradient-success {
+    background: var(--gradient-success);
+  }
+
+  .gradient-warning {
+    background: var(--gradient-warning);
+  }
+
+  .gradient-dark {
+    background: var(--gradient-dark);
+  }
+
+  /* Enhanced text gradient utilities with 3D effects */
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(124, 58, 237, 0.3);
+    position: relative;
+  }
+
+  .text-gradient-secondary {
+    background: var(--gradient-secondary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+  }
+}

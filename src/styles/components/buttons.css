@@ -1,0 +1,51 @@
+
+/* Enhanced button styles with 3D effects */
+
+@layer components {
+  .btn-gradient {
+    background: var(--gradient-primary);
+    @apply text-gray-100 border-0 shadow-lg transition-all duration-300;
+    border-radius: 1.5rem;
+    transform-style: preserve-3d;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.2), transparent, rgba(255,255,255,0.2));
+    transform: translateX(-100%) skewX(-15deg);
+    transition: transform 0.6s ease;
+  }
+
+  .btn-gradient:hover::before {
+    transform: translateX(100%) skewX(-15deg);
+  }
+
+  .btn-gradient:hover {
+    transform: translateY(-3px) rotateX(5deg) translateZ(10px) scale(1.02);
+    box-shadow: 
+      0 15px 30px rgba(124, 58, 237, 0.4),
+      0 0 25px rgba(124, 58, 237, 0.3);
+  }
+
+  .btn-gradient:active {
+    transform: translateY(-1px) rotateX(2deg) translateZ(5px) scale(0.98);
+  }
+
+  .btn-glass {
+    @apply glass text-gray-900 transition-all duration-300;
+    border-radius: 1.5rem;
+    transform-style: preserve-3d;
+  }
+
+  .btn-glass:hover {
+    transform: translateY(-2px) rotateX(3deg) translateZ(8px);
+    color: #1f2937;
+  }
+}

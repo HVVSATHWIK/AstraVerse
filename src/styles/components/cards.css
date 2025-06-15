@@ -1,0 +1,104 @@
+
+/* Enhanced card styles with 3D effects */
+
+@layer components {
+  .card-elevated {
+    @apply bg-gray-50 backdrop-blur-sm border border-gray-200 shadow-lg transition-all duration-500;
+    border-radius: 2rem;
+    transform-style: preserve-3d;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-elevated::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .card-elevated:hover::before {
+    opacity: 1;
+  }
+
+  .card-elevated:hover {
+    transform: translateY(-8px) rotateX(5deg) rotateY(2deg) translateZ(15px);
+    box-shadow: 
+      0 25px 50px rgba(0, 0, 0, 0.15),
+      0 0 30px rgba(124, 58, 237, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .card-gradient {
+    background: linear-gradient(145deg, rgba(249,250,251,0.95) 0%, rgba(243,244,246,0.90) 100%);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 2rem;
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-gradient::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.1), transparent 70%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .card-gradient:hover::after {
+    opacity: 1;
+  }
+
+  .card-gradient:hover {
+    transform: translateY(-6px) rotateX(4deg) translateZ(12px);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.12),
+      0 0 25px rgba(124, 58, 237, 0.15);
+  }
+
+  /* Interactive 3D cards */
+  .interactive-card {
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .interactive-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+      rgba(124, 58, 237, 0.1) 0%, 
+      transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .interactive-card:hover::before {
+    opacity: 1;
+  }
+
+  .interactive-card:hover {
+    transform: translateY(-8px) rotateX(var(--rotate-x, 5deg)) rotateY(var(--rotate-y, 2deg)) translateZ(15px);
+  }
+}
