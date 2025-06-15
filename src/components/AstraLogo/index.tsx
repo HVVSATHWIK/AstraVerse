@@ -1,0 +1,44 @@
+
+import React from 'react';
+import HolographicEffects from './HolographicEffects';
+import MatrixRain from './MatrixRain';
+import CyberpunkFrame from './CyberpunkFrame';
+import CentralLogo from './CentralLogo';
+import EnergyOrbs from './EnergyOrbs';
+import GridOverlay from './GridOverlay';
+import SVGDefinitions from './SVGDefinitions';
+
+interface AstraLogoProps {
+  className?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+}
+
+const AstraLogo = ({ className = '', size = 'md' }: AstraLogoProps) => {
+  const sizeClasses = {
+    sm: 'w-8 h-8',
+    md: 'w-12 h-12',
+    lg: 'w-16 h-16',
+    xl: 'w-24 h-24'
+  };
+
+  return (
+    <div className={`${sizeClasses[size]} ${className} relative`}>
+      <svg
+        viewBox="0 0 120 120"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full"
+      >
+        <HolographicEffects />
+        <MatrixRain />
+        <CyberpunkFrame />
+        <CentralLogo />
+        <EnergyOrbs />
+        <GridOverlay />
+        <SVGDefinitions />
+      </svg>
+    </div>
+  );
+};
+
+export default AstraLogo;
