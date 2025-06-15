@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import { AuthContext } from '@/hooks/useAuth';
+import { AuthContext } from '@/contexts/AuthContext';
 import { AuthContextType, UserProfile, SignUpMetadata } from '@/types/auth';
 
 interface AuthProviderProps {
