@@ -158,10 +158,10 @@ const AgentTimeline = ({ agentId, showAllAgents = false, maxHeight = "600px" }: 
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-white font-medium truncate">{task.title}</h4>
             <div className="flex items-center space-x-2">
-              <Badge className={getPriorityColor(task.priority)} size="sm">
+              <Badge className={getPriorityColor(task.priority)}>
                 {task.priority}
               </Badge>
-              <Badge className={getStatusColor(task.status)} size="sm">
+              <Badge className={getStatusColor(task.status)}>
                 {task.status}
               </Badge>
             </div>
@@ -219,7 +219,7 @@ const AgentTimeline = ({ agentId, showAllAgents = false, maxHeight = "600px" }: 
             {showAllAgents && agent && (
               <span>Agent: {agent.name}</span>
             )}
-            <Badge className={getStatusColor(event.severity)} size="sm">
+            <Badge className={getStatusColor(event.severity)}>
               {event.severity}
             </Badge>
           </div>

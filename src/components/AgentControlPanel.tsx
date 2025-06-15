@@ -85,7 +85,7 @@ const AgentControlPanel = () => {
               <p className="text-slate-400 text-xs">{agent.type}</p>
             </div>
           </div>
-          <Badge className={getStatusColor(agent.status)} size="sm">
+          <Badge className={getStatusColor(agent.status)}>
             {agent.status}
           </Badge>
         </div>
