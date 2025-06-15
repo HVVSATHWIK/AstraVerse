@@ -24,7 +24,7 @@ import { AIEngine, Workflow, Integration, SystemMetrics, ActivityLog, KPIData } 
 // Environment flag to use mock data during development
 const USE_MOCK_DATA = import.meta.env.DEV;
 
-// Enhanced mock AI engines to include Gemini with updated metrics
+// Enhanced mock AI engines to include both Gemini and OpenAI with updated metrics
 const enhancedMockAIEngines = [
   ...mockAIEngines,
   {
@@ -55,15 +55,63 @@ const enhancedMockAIEngines = [
         dangerousContent: 'BLOCK_MEDIUM_AND_ABOVE'
       }
     }
+  },
+  {
+    id: 'gpt-4o-mini',
+    name: 'GPT-4o Mini',
+    type: 'text-generation',
+    status: 'active',
+    usage: {
+      requests: 156,
+      tokens: 45234,
+      cost: 12.45
+    },
+    performance: {
+      latency: 520,
+      accuracy: 94,
+      uptime: 99.8
+    },
+    config: {
+      model: 'gpt-4o-mini',
+      temperature: 0.7,
+      maxTokens: 2048,
+      topP: 1.0,
+      frequencyPenalty: 0.0,
+      presencePenalty: 0.0
+    }
+  },
+  {
+    id: 'gpt-4o',
+    name: 'GPT-4o',
+    type: 'text-generation',
+    status: 'active',
+    usage: {
+      requests: 89,
+      tokens: 34567,
+      cost: 28.90
+    },
+    performance: {
+      latency: 890,
+      accuracy: 98,
+      uptime: 99.9
+    },
+    config: {
+      model: 'gpt-4o',
+      temperature: 0.7,
+      maxTokens: 4096,
+      topP: 1.0,
+      frequencyPenalty: 0.0,
+      presencePenalty: 0.0
+    }
   }
 ];
 
-// Enhanced mock workflows to include Gemini-powered workflows
+// Enhanced mock workflows to include both Gemini and OpenAI-powered workflows
 const enhancedMockWorkflows = [
   ...mockWorkflows,
   {
     id: 'gemini-content-workflow',
-    name: 'AI Content Generation',
+    name: 'AI Content Generation (Gemini)',
     description: 'Generate high-quality content using Gemini AI',
     status: 'active',
     triggers: ['Manual', 'Schedule', 'Webhook'],
@@ -80,26 +128,45 @@ const enhancedMockWorkflows = [
     updatedAt: new Date().toISOString(),
   },
   {
-    id: 'gemini-analysis-workflow',
-    name: 'Data Analysis Pipeline',
-    description: 'Automated data analysis and insights using Gemini AI',
+    id: 'openai-content-workflow',
+    name: 'AI Content Generation (OpenAI)',
+    description: 'Generate creative content using OpenAI GPT models',
+    status: 'active',
+    triggers: ['Manual', 'Schedule', 'API Call'],
+    actions: [
+      { name: 'Prompt Engineering', type: 'openai_ai' },
+      { name: 'Content Generation', type: 'openai_ai' },
+      { name: 'Content Refinement', type: 'openai_ai' },
+      { name: 'Content Publishing', type: 'integration' }
+    ],
+    executions: 124,
+    successRate: 95,
+    avgDuration: '2.8s',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'multi-ai-workflow',
+    name: 'Multi-AI Analysis Pipeline',
+    description: 'Compare results from both Gemini and OpenAI models',
     status: 'active',
     triggers: ['Data Upload', 'API Call'],
     actions: [
       { name: 'Data Preprocessing', type: 'data_transform' },
-      { name: 'AI Analysis', type: 'gemini_ai' },
-      { name: 'Report Generation', type: 'gemini_ai' },
-      { name: 'Results Distribution', type: 'notification' }
+      { name: 'Gemini Analysis', type: 'gemini_ai' },
+      { name: 'OpenAI Analysis', type: 'openai_ai' },
+      { name: 'Results Comparison', type: 'data_analysis' },
+      { name: 'Report Generation', type: 'document_generation' }
     ],
-    executions: 156,
-    successRate: 94,
-    avgDuration: '5.8s',
+    executions: 67,
+    successRate: 92,
+    avgDuration: '8.5s',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   }
 ];
 
-// AI Engines - enhanced with Gemini
+// AI Engines - enhanced with both Gemini and OpenAI
 export const useAIEngines = () => {
   return useQuery({
     queryKey: ['ai-engines'],
@@ -108,7 +175,7 @@ export const useAIEngines = () => {
   });
 };
 
-// Workflows - use enhanced mock data with Gemini workflows when not authenticated
+// Workflows - use enhanced mock data with both Gemini and OpenAI workflows when not authenticated
 export const useWorkflows = () => {
   const { user } = useAuth();
   const realDataQuery = useUserWorkflows();
