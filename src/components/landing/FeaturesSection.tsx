@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Brain, Zap, Shield, Workflow, BarChart3, Cog } from 'lucide-react';
+import InteractiveCard3D from '@/components/3D/InteractiveCard3D';
 
 const FeaturesSection = () => {
   const features = [
@@ -63,27 +64,26 @@ const FeaturesSection = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {features.map((feature, index) => (
-          <Card 
-            key={feature.title} 
-            className={`bg-gradient-to-br ${feature.color} backdrop-blur-sm card-3d hover-lift-3d interactive-card stagger-${(index % 6) + 1}`}
-          >
-            <CardHeader className="text-center">
-              <div className="flex justify-center mb-4">
-                <div className="p-3 bg-gradient-to-br from-white/10 to-white/5 rounded-xl backdrop-blur-sm animate-float-3d">
-                  <feature.icon className="w-8 h-8 text-white" />
+          <InteractiveCard3D key={feature.title} delay={index * 100}>
+            <Card className={`bg-gradient-to-br ${feature.color} backdrop-blur-sm border-2 transition-all duration-500 h-full`}>
+              <CardHeader className="text-center">
+                <div className="flex justify-center mb-4">
+                  <div className="p-3 bg-gradient-to-br from-white/10 to-white/5 rounded-xl backdrop-blur-sm animate-float-3d">
+                    <feature.icon className="w-8 h-8 text-white" />
+                  </div>
                 </div>
-              </div>
-              <Badge className="mx-auto mb-2 bg-white/10 text-white border-white/20 hover-glow">
-                {feature.badge}
-              </Badge>
-              <CardTitle className="text-white text-xl">{feature.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-slate-300 text-center leading-relaxed">
-                {feature.description}
-              </CardDescription>
-            </CardContent>
-          </Card>
+                <Badge className="mx-auto mb-2 bg-white/10 text-white border-white/20 hover-glow">
+                  {feature.badge}
+                </Badge>
+                <CardTitle className="text-white text-xl">{feature.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-slate-300 text-center leading-relaxed">
+                  {feature.description}
+                </CardDescription>
+              </CardContent>
+            </Card>
+          </InteractiveCard3D>
         ))}
       </div>
     </div>

@@ -5,6 +5,7 @@ import FeaturesSection from '@/components/landing/FeaturesSection';
 import PricingSection from '@/components/landing/PricingSection';
 import CTASection from '@/components/landing/CTASection';
 import Enhanced3DBackground from '@/components/Background3D/Enhanced3DBackground';
+import ScrollTriggeredEffects from '@/components/3D/ScrollTriggeredEffects';
 
 const Index = () => {
   return (
@@ -15,9 +16,12 @@ const Index = () => {
         enableShapes={true}
         enableGrid={true}
         enableInteractive={true}
-        particleCount={40}
+        particleCount={50}
         performance="high"
       />
+
+      {/* Scroll-triggered parallax effects */}
+      <ScrollTriggeredEffects />
 
       {/* Hero Section */}
       <div className="relative z-10">

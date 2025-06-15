@@ -12,6 +12,8 @@ interface Particle {
   maxLife: number;
   size: number;
   color: string;
+  mass: number;
+  gravity: number;
 }
 
 interface ParticleSystemProps {
@@ -21,25 +23,28 @@ interface ParticleSystemProps {
 }
 
 const ParticleSystem = ({ 
-  particleCount = 50, 
-  speed = 0.5, 
-  colors = ['rgba(124, 58, 237, 0.3)', 'rgba(59, 130, 246, 0.3)', 'rgba(16, 185, 129, 0.3)']
+  particleCount = 60, 
+  speed = 0.8, 
+  colors = ['rgba(124, 58, 237, 0.4)', 'rgba(59, 130, 246, 0.4)', 'rgba(16, 185, 129, 0.4)', 'rgba(236, 72, 153, 0.3)']
 }: ParticleSystemProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationRef = useRef<number>();
+  const mouseRef = useRef({ x: 0, y: 0 });
 
   const createParticle = (): Particle => ({
     x: Math.random() * window.innerWidth,
     y: Math.random() * window.innerHeight,
-    z: Math.random() * 100,
+    z: Math.random() * 200 - 100,
     vx: (Math.random() - 0.5) * speed,
     vy: (Math.random() - 0.5) * speed,
-    vz: (Math.random() - 0.5) * speed,
+    vz: (Math.random() - 0.5) * speed * 0.5,
     life: 0,
-    maxLife: 200 + Math.random() * 300,
-    size: 1 + Math.random() * 3,
-    color: colors[Math.floor(Math.random() * colors.length)]
+    maxLife: 300 + Math.random() * 500,
+    size: 1 + Math.random() * 4,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    mass: 0.1 + Math.random() * 0.5,
+    gravity: -0.002 + Math.random() * 0.004
   });
 
   useEffect(() => {
@@ -52,6 +57,10 @@ const ParticleSystem = ({
     // Initialize particles
     particlesRef.current = Array.from({ length: particleCount }, createParticle);
 
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current = { x: e.clientX, y: e.clientY };
+    };
+
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -61,17 +70,34 @@ const ParticleSystem = ({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       particlesRef.current.forEach((particle, index) => {
-        // Update particle position
+        // Mouse attraction force
+        const dx = mouseRef.current.x - particle.x;
+        const dy = mouseRef.current.y - particle.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        if (distance < 150) {
+          const force = (150 - distance) / 150;
+          particle.vx += (dx / distance) * force * 0.005;
+          particle.vy += (dy / distance) * force * 0.005;
+        }
+
+        // Physics-based movement
+        particle.vy += particle.gravity;
         particle.x += particle.vx;
         particle.y += particle.vy;
         particle.z += particle.vz;
         particle.life++;
 
-        // Boundary wrapping
-        if (particle.x < 0) particle.x = canvas.width;
-        if (particle.x > canvas.width) particle.x = 0;
-        if (particle.y < 0) particle.y = canvas.height;
-        if (particle.y > canvas.height) particle.y = 0;
+        // Apply drag
+        particle.vx *= 0.998;
+        particle.vy *= 0.998;
+        particle.vz *= 0.998;
+
+        // Boundary wrapping with smooth transition
+        if (particle.x < -50) particle.x = canvas.width + 50;
+        if (particle.x > canvas.width + 50) particle.x = -50;
+        if (particle.y < -50) particle.y = canvas.height + 50;
+        if (particle.y > canvas.height + 50) particle.y = -50;
 
         // Reset particle if life exceeded
         if (particle.life > particle.maxLife) {
@@ -79,31 +105,43 @@ const ParticleSystem = ({
           return;
         }
 
-        // 3D depth effect
-        const scale = 1 + particle.z * 0.01;
-        const alpha = 1 - (particle.life / particle.maxLife);
+        // Enhanced 3D depth effect
+        const scale = 1 + (particle.z * 0.008);
+        const alpha = (1 - (particle.life / particle.maxLife)) * (0.3 + Math.sin(particle.life * 0.02) * 0.2);
         
-        // Draw particle
+        // Draw particle with enhanced effects
         ctx.save();
         ctx.globalAlpha = alpha;
         ctx.fillStyle = particle.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = particle.color;
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size * scale, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
-        // Draw connections to nearby particles
+        // Enhanced connection system
         particlesRef.current.slice(index + 1).forEach(otherParticle => {
           const dx = particle.x - otherParticle.x;
           const dy = particle.y - otherParticle.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
+          const dz = particle.z - otherParticle.z;
+          const distance3D = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-          if (distance < 100) {
-            const connectionAlpha = (1 - distance / 100) * alpha * 0.3;
+          if (distance3D < 120) {
+            const connectionAlpha = (1 - distance3D / 120) * alpha * 0.4;
+            const gradient = ctx.createLinearGradient(
+              particle.x, particle.y, 
+              otherParticle.x, otherParticle.y
+            );
+            gradient.addColorStop(0, particle.color);
+            gradient.addColorStop(1, otherParticle.color);
+            
             ctx.save();
             ctx.globalAlpha = connectionAlpha;
-            ctx.strokeStyle = particle.color;
-            ctx.lineWidth = 0.5;
+            ctx.strokeStyle = gradient;
+            ctx.lineWidth = 0.8;
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = particle.color;
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(otherParticle.x, otherParticle.y);
@@ -120,9 +158,11 @@ const ParticleSystem = ({
     animate();
 
     window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('mousemove', handleMouseMove);
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
