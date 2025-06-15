@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
-import { AuthContext, AuthContextType, UserProfile } from '@/hooks/useAuth';
+import { AuthContext } from '@/hooks/useAuth';
+import { AuthContextType, UserProfile, SignUpMetadata } from '@/types/auth';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -17,10 +18,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     let mounted = true;
 
-    // Get initial session
-    const getInitialSession = async () => {
+    const initializeAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        console.log('Initializing auth...');
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error);
+          throw error;
+        }
         
         if (mounted) {
           setSession(session);
@@ -31,21 +37,22 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           }
           
           setLoading(false);
+          console.log('Auth initialized successfully');
         }
       } catch (error) {
-        console.error('Error getting initial session:', error);
+        console.error('Error initializing auth:', error);
         if (mounted) {
           setLoading(false);
         }
       }
     };
 
-    getInitialSession();
+    initializeAuth();
 
-    // Listen for auth changes
+    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session);
+        console.log('Auth state changed:', event, session?.user?.id);
         
         if (mounted) {
           setSession(session);
@@ -68,8 +75,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     };
   }, []);
 
-  const fetchUserProfile = async (userId: string) => {
+  const fetchUserProfile = async (userId: string): Promise<void> => {
     try {
+      console.log('Fetching user profile for:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -81,24 +89,34 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         return;
       }
 
-      setProfile(data);
+      if (data) {
+        console.log('Profile fetched successfully');
+        setProfile(data);
+      } else {
+        console.log('No profile found, user may need to complete setup');
+      }
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error('Unexpected error fetching profile:', error);
     }
   };
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = async (email: string, password: string): Promise<void> => {
+    console.log('Attempting sign in for:', email);
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
+      console.error('Sign in error:', error);
       throw error;
     }
+    
+    console.log('Sign in successful');
   };
 
-  const signUp = async (email: string, password: string, metadata?: { fullName: string }) => {
+  const signUp = async (email: string, password: string, metadata?: SignUpMetadata): Promise<void> => {
+    console.log('Attempting sign up for:', email);
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -110,33 +128,43 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     });
 
     if (error) {
+      console.error('Sign up error:', error);
       throw error;
     }
+    
+    console.log('Sign up successful');
   };
 
-  const signOut = async () => {
+  const signOut = async (): Promise<void> => {
+    console.log('Attempting sign out');
     const { error } = await supabase.auth.signOut();
     if (error) {
+      console.error('Sign out error:', error);
       throw error;
     }
+    
+    console.log('Sign out successful');
   };
 
-  const updateProfile = async (updates: Partial<UserProfile>) => {
+  const updateProfile = async (updates: Partial<UserProfile>): Promise<void> => {
     if (!user) {
       throw new Error('No user logged in');
     }
 
+    console.log('Updating profile for user:', user.id);
     const { error } = await supabase
       .from('profiles')
       .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', user.id);
 
     if (error) {
+      console.error('Profile update error:', error);
       throw error;
     }
 
     // Refresh profile data
     await fetchUserProfile(user.id);
+    console.log('Profile updated successfully');
   };
 
   const value: AuthContextType = {

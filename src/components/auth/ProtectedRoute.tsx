@@ -10,8 +10,13 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, loading } = useAuth();
 
-  console.log('ProtectedRoute render:', { user: !!user, loading });
+  console.log('ProtectedRoute - Auth Status:', { 
+    hasUser: !!user, 
+    loading,
+    userId: user?.id 
+  });
 
+  // Show loading state while authentication is being determined
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
@@ -24,12 +29,14 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
+  // Redirect to auth page if user is not authenticated
   if (!user) {
-    console.log('No user found, showing auth page');
+    console.log('ProtectedRoute - No user found, redirecting to auth');
     return <AuthPage />;
   }
 
-  console.log('User authenticated, showing protected content');
+  // User is authenticated, render protected content
+  console.log('ProtectedRoute - User authenticated, rendering protected content');
   return <>{children}</>;
 };
 
