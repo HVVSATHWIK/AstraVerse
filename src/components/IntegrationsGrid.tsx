@@ -1,10 +1,12 @@
 
 import React from 'react';
 import IntegrationCard from '@/components/IntegrationCard';
+import GeminiIntegrationCard from '@/components/GeminiIntegrationCard';
 
 const IntegrationsGrid = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <GeminiIntegrationCard />
       <IntegrationCard
         name="Zoom"
         description="Video transcription and meeting insights"
