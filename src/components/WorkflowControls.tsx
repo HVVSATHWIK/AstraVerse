@@ -21,7 +21,7 @@ const WorkflowControls = () => {
     try {
       await updateWorkflow.mutateAsync({
         id: workflowId,
-        data: { status: newStatus as 'active' | 'paused' | 'error' }
+        updates: { status: newStatus as 'active' | 'paused' | 'error' }
       });
       
       toast({
