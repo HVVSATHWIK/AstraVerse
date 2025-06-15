@@ -18,12 +18,14 @@ import LiveMetrics from '@/components/LiveMetrics';
 import PilotPricing from '@/components/PilotPricing';
 import IntegrationsGrid from '@/components/IntegrationsGrid';
 import Enhanced3DBackground from '@/components/Background3D/Enhanced3DBackground';
-
-// Import existing components
 import MetricsChart from '@/components/MetricsChart';
 import WorkflowBuilder from '@/components/WorkflowBuilder';
 import WorkflowControls from '@/components/WorkflowControls';
 import KPIOverview from '@/components/KPIOverview';
+
+// Import new Agent components
+import AgentTimeline from '@/components/AgentTimeline';
+import AgentControlPanel from '@/components/AgentControlPanel';
 
 const DashboardContent = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -59,6 +61,9 @@ const DashboardContent = () => {
                 </TabsTrigger>
                 <TabsTrigger value="workflows" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl btn-3d transition-all duration-300">
                   Workflows
+                </TabsTrigger>
+                <TabsTrigger value="agents" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl btn-3d transition-all duration-300">
+                  Agents
                 </TabsTrigger>
                 <TabsTrigger value="integrations" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl btn-3d transition-all duration-300">
                   Integrations
@@ -156,6 +161,25 @@ const DashboardContent = () => {
                   <div className="animate-scale-in-3d stagger-2">
                     <WorkflowControls />
                   </div>
+                </div>
+              </section>
+            </TabsContent>
+
+            <TabsContent value="agents" className="space-y-8">
+              <section className="space-y-6 animate-fade-in-3d">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-white text-3d">Agent Management</h2>
+                  <div className="h-px bg-gradient-to-r from-purple-500/50 to-transparent flex-1 ml-6"></div>
+                </div>
+                
+                {/* Agent Control Panel */}
+                <div className="animate-scale-in-3d stagger-1">
+                  <AgentControlPanel />
+                </div>
+                
+                {/* Agent Timeline */}
+                <div className="animate-bounce-in-3d stagger-2">
+                  <AgentTimeline showAllAgents={true} maxHeight="500px" />
                 </div>
               </section>
             </TabsContent>

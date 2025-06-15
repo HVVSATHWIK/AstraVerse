@@ -1,4 +1,3 @@
-
 import { http, HttpResponse } from 'msw';
 import { 
   APIResponse, 
@@ -10,6 +9,13 @@ import {
   PilotAnalytics
 } from '@/types/api';
 import { mockWorkflows, mockIntegrations, mockKPIData } from '@/services/mockData';
+import { 
+  mockAgents, 
+  mockAgentTasks, 
+  mockAgentEvents, 
+  mockAgentStats,
+  mockAgentClusters 
+} from '@/services/mockAgentData';
 
 // Helper function to create API responses
 const createAPIResponse = <T>(data: T, success = true): APIResponse<T> => ({
@@ -240,53 +246,154 @@ export const handlers = [
     return HttpResponse.json(createAPIResponse(response));
   }),
 
-  // Pilot Features endpoints
-  http.get('/api/pilot/features', () => {
-    const features: PilotFeature[] = [
-      {
-        id: 'advanced-ai',
-        name: 'Advanced AI Processing',
-        description: 'Enhanced AI capabilities with custom models',
-        enabled: true,
-        rolloutPercentage: 25,
-        config: { maxTokens: 4000 },
-        createdAt: '2024-05-01T00:00:00Z',
-      },
-      {
-        id: 'real-time-collab',
-        name: 'Real-time Collaboration',
-        description: 'Live collaborative workflow editing',
-        enabled: false,
-        rolloutPercentage: 0,
-        createdAt: '2024-06-01T00:00:00Z',
-      },
-    ];
-
-    return HttpResponse.json(createAPIResponse(features));
+  // Agent Management endpoints
+  http.get('/api/agents', () => {
+    return HttpResponse.json(createAPIResponse(mockAgents));
   }),
 
-  http.get('/api/pilot/analytics/:featureId', ({ params }) => {
-    const analytics: PilotAnalytics = {
-      featureId: params.featureId as string,
-      metrics: {
-        adoption: 23,
-        usage: 156,
-        feedback: 4.2,
-        performance: 0.95,
-      },
-      trends: {
-        daily: Array.from({ length: 7 }, (_, i) => ({
-          timestamp: new Date(Date.now() - (6 - i) * 24 * 3600000).toISOString(),
-          value: Math.floor(Math.random() * 50) + 10,
-        })),
-        weekly: Array.from({ length: 4 }, (_, i) => ({
-          timestamp: new Date(Date.now() - (3 - i) * 7 * 24 * 3600000).toISOString(),
-          value: Math.floor(Math.random() * 200) + 50,
-        })),
-      },
+  http.get('/api/agents/:id', ({ params }) => {
+    const agent = mockAgents.find(a => a.id === params.id);
+    if (!agent) {
+      return HttpResponse.json(
+        createErrorResponse('AGENT_NOT_FOUND', 'Agent not found'),
+        { status: 404 }
+      );
+    }
+    return HttpResponse.json(createAPIResponse(agent));
+  }),
+
+  http.put('/api/agents/:id', async ({ params, request }) => {
+    const body = await request.json() as any;
+    const agent = mockAgents.find(a => a.id === params.id);
+    
+    if (!agent) {
+      return HttpResponse.json(
+        createErrorResponse('AGENT_NOT_FOUND', 'Agent not found'),
+        { status: 404 }
+      );
+    }
+
+    Object.assign(agent, body, { lastActive: new Date().toISOString() });
+    return HttpResponse.json(createAPIResponse(agent));
+  }),
+
+  http.post('/api/agents/:id/commands', async ({ params, request }) => {
+    const body = await request.json() as { command: string; parameters?: any };
+    
+    // Simulate command execution
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    const response = {
+      commandId: `cmd-${Date.now()}`,
+      agentId: params.id,
+      command: body.command,
+      status: 'completed',
+      result: `Command ${body.command} executed successfully`,
+      executedAt: new Date().toISOString(),
     };
 
-    return HttpResponse.json(createAPIResponse(analytics));
+    return HttpResponse.json(createAPIResponse(response));
+  }),
+
+  // Agent Tasks endpoints
+  http.get('/api/agents/:id/tasks', ({ params }) => {
+    const tasks = mockAgentTasks.filter(t => t.agentId === params.id);
+    return HttpResponse.json(createAPIResponse(tasks));
+  }),
+
+  http.get('/api/tasks', () => {
+    return HttpResponse.json(createAPIResponse(mockAgentTasks));
+  }),
+
+  http.post('/api/tasks', async ({ request }) => {
+    const body = await request.json() as any;
+    
+    const newTask = {
+      id: `task-${Date.now()}`,
+      ...body,
+      status: 'queued',
+      progress: 0,
+      createdAt: new Date().toISOString(),
+      retryCount: 0,
+    };
+
+    mockAgentTasks.unshift(newTask);
+    return HttpResponse.json(createAPIResponse(newTask));
+  }),
+
+  http.put('/api/tasks/:id', async ({ params, request }) => {
+    const body = await request.json() as any;
+    const task = mockAgentTasks.find(t => t.id === params.id);
+    
+    if (!task) {
+      return HttpResponse.json(
+        createErrorResponse('TASK_NOT_FOUND', 'Task not found'),
+        { status: 404 }
+      );
+    }
+
+    Object.assign(task, body);
+    return HttpResponse.json(createAPIResponse(task));
+  }),
+
+  // Agent Events endpoints
+  http.get('/api/agents/:id/events', ({ params, request }) => {
+    const url = new URL(request.url);
+    const limit = parseInt(url.searchParams.get('limit') || '50');
+    
+    const events = mockAgentEvents
+      .filter(e => e.agentId === params.id)
+      .slice(0, limit);
+    
+    return HttpResponse.json(createAPIResponse(events));
+  }),
+
+  http.get('/api/events', ({ request }) => {
+    const url = new URL(request.url);
+    const limit = parseInt(url.searchParams.get('limit') || '100');
+    
+    const events = mockAgentEvents.slice(0, limit);
+    return HttpResponse.json(createAPIResponse(events));
+  }),
+
+  // Agent Statistics endpoints
+  http.get('/api/agents/stats', () => {
+    return HttpResponse.json(createAPIResponse(mockAgentStats));
+  }),
+
+  http.get('/api/agents/:id/metrics', ({ params, request }) => {
+    const url = new URL(request.url);
+    const timeRange = url.searchParams.get('range') || '1h';
+    
+    // Generate mock metrics data
+    const metrics = Array.from({ length: 20 }, (_, i) => ({
+      agentId: params.id,
+      timestamp: new Date(Date.now() - (19 - i) * 60000).toISOString(),
+      cpuUsage: Math.floor(Math.random() * 100),
+      memoryUsage: Math.floor(Math.random() * 100),
+      taskQueue: Math.floor(Math.random() * 10),
+      activeConnections: Math.floor(Math.random() * 50),
+      responseTime: Math.floor(Math.random() * 1000) + 100,
+      throughput: Math.floor(Math.random() * 100) + 20,
+    }));
+
+    return HttpResponse.json(createAPIResponse(metrics));
+  }),
+
+  // Agent Clusters endpoints
+  http.get('/api/clusters', () => {
+    return HttpResponse.json(createAPIResponse(mockAgentClusters));
+  }),
+
+  http.get('/api/clusters/:id', ({ params }) => {
+    const cluster = mockAgentClusters.find(c => c.id === params.id);
+    if (!cluster) {
+      return HttpResponse.json(
+        createErrorResponse('CLUSTER_NOT_FOUND', 'Cluster not found'),
+        { status: 404 }
+      );
+    }
+    return HttpResponse.json(createAPIResponse(cluster));
   }),
 
   // Health check
@@ -303,4 +410,3 @@ export const handlers = [
     }));
   }),
 ];
-
