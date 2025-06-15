@@ -1,11 +1,8 @@
 
 import React from 'react';
-import HolographicEffects from './HolographicEffects';
-import MatrixRain from './MatrixRain';
-import CyberpunkFrame from './CyberpunkFrame';
 import CentralLogo from './CentralLogo';
-import EnergyOrbs from './EnergyOrbs';
-import GridOverlay from './GridOverlay';
+import BrandFrame from './BrandFrame';
+import BrandElements from './BrandElements';
 import SVGDefinitions from './SVGDefinitions';
 
 interface AstraLogoProps {
@@ -29,13 +26,10 @@ const AstraLogo = ({ className = '', size = 'md' }: AstraLogoProps) => {
         xmlns="http://www.w3.org/2000/svg"
         className="w-full h-full"
       >
-        <HolographicEffects />
-        <MatrixRain />
-        <CyberpunkFrame />
-        <CentralLogo />
-        <EnergyOrbs />
-        <GridOverlay />
         <SVGDefinitions />
+        <BrandFrame />
+        <BrandElements />
+        <CentralLogo />
       </svg>
     </div>
   );
