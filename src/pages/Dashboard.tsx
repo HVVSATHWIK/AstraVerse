@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -18,6 +17,7 @@ import QuickActions from '@/components/QuickActions';
 import LiveMetrics from '@/components/LiveMetrics';
 import PilotPricing from '@/components/PilotPricing';
 import IntegrationsGrid from '@/components/IntegrationsGrid';
+import Enhanced3DBackground from '@/components/Background3D/Enhanced3DBackground';
 
 // Import existing components
 import MetricsChart from '@/components/MetricsChart';
@@ -33,16 +33,15 @@ const DashboardContent = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden transform-3d perspective-container">
-      {/* Enhanced animated background elements with 3D effects */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-background-float"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-float-3d"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/20 rounded-full blur-2xl animate-pulse-3d"></div>
-        <div className="absolute top-10 right-10 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-background-float"></div>
-        <div className="absolute bottom-10 left-10 w-40 h-40 bg-pink-500/10 rounded-full blur-xl animate-float-3d"></div>
-        <div className="absolute top-1/3 right-1/3 w-24 h-24 bg-green-500/15 rounded-full blur-2xl animate-wiggle-3d"></div>
-        <div className="absolute bottom-1/3 left-1/3 w-20 h-20 bg-yellow-500/15 rounded-full blur-xl animate-pulse-3d"></div>
-      </div>
+      {/* Enhanced 3D Background System */}
+      <Enhanced3DBackground
+        enableParticles={true}
+        enableShapes={true}
+        enableGrid={true}
+        enableInteractive={true}
+        particleCount={35}
+        performance="medium"
+      />
 
       <div className="relative z-10 max-w-7xl mx-auto p-4 md:p-6 space-y-6">
         {/* Header with enhanced 3D effects */}

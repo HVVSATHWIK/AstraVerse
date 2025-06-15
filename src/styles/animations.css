@@ -107,13 +107,23 @@
 
 @keyframes backgroundFloat {
   0%, 100% {
-    transform: translateX(0) translateY(0) scale(1);
+    transform: translateX(0) translateY(0) scale(1) rotateZ(0deg);
   }
-  33% {
-    transform: translateX(30px) translateY(-30px) scale(1.1);
+  25% {
+    transform: translateX(30px) translateY(-30px) scale(1.05) rotateZ(1deg);
   }
-  66% {
-    transform: translateX(-20px) translateY(20px) scale(0.9);
+  50% {
+    transform: translateX(15px) translateY(20px) scale(0.95) rotateZ(-0.5deg);
+  }
+  75% {
+    transform: translateX(-20px) translateY(10px) scale(1.02) rotateZ(0.8deg);
+  }
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
   }
 }
 
@@ -152,7 +162,11 @@
   }
 
   .animate-background-float {
-    animation: backgroundFloat 20s ease-in-out infinite;
+    animation: backgroundFloat 25s ease-in-out infinite;
+  }
+
+  .animate-ping {
+    animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
 
   /* 3D Transform utilities */
@@ -181,6 +195,11 @@
       0 20px 40px rgba(0, 0, 0, 0.15),
       0 0 25px rgba(124, 58, 237, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* Gradient utilities */
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
   }
 
   /* Staggered animations */
