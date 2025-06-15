@@ -24,7 +24,7 @@ import { AIEngine, Workflow, Integration, SystemMetrics, ActivityLog, KPIData } 
 // Environment flag to use mock data during development
 const USE_MOCK_DATA = import.meta.env.DEV;
 
-// Enhanced mock AI engines to include Gemini
+// Enhanced mock AI engines to include Gemini with updated metrics
 const enhancedMockAIEngines = [
   ...mockAIEngines,
   {
@@ -33,22 +33,69 @@ const enhancedMockAIEngines = [
     type: 'text-generation',
     status: 'active',
     usage: {
-      requests: 156,
-      tokens: 45231,
-      cost: 12.45
+      requests: 234,
+      tokens: 67891,
+      cost: 18.75
     },
     performance: {
-      latency: 850,
-      accuracy: 94,
-      uptime: 99.8
+      latency: 680,
+      accuracy: 96,
+      uptime: 99.9
     },
     config: {
       model: 'gemini-1.5-flash',
       temperature: 0.7,
       maxTokens: 2048,
       topK: 40,
-      topP: 0.95
+      topP: 0.95,
+      safetySettings: {
+        harassment: 'BLOCK_MEDIUM_AND_ABOVE',
+        hateSpeech: 'BLOCK_MEDIUM_AND_ABOVE',
+        sexuallyExplicit: 'BLOCK_MEDIUM_AND_ABOVE',
+        dangerousContent: 'BLOCK_MEDIUM_AND_ABOVE'
+      }
     }
+  }
+];
+
+// Enhanced mock workflows to include Gemini-powered workflows
+const enhancedMockWorkflows = [
+  ...mockWorkflows,
+  {
+    id: 'gemini-content-workflow',
+    name: 'AI Content Generation',
+    description: 'Generate high-quality content using Gemini AI',
+    status: 'active',
+    triggers: ['Manual', 'Schedule', 'Webhook'],
+    actions: [
+      { name: 'Content Analysis', type: 'gemini_ai' },
+      { name: 'Content Generation', type: 'gemini_ai' },
+      { name: 'Quality Review', type: 'gemini_ai' },
+      { name: 'Content Delivery', type: 'integration' }
+    ],
+    executions: 89,
+    successRate: 97,
+    avgDuration: '3.2s',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'gemini-analysis-workflow',
+    name: 'Data Analysis Pipeline',
+    description: 'Automated data analysis and insights using Gemini AI',
+    status: 'active',
+    triggers: ['Data Upload', 'API Call'],
+    actions: [
+      { name: 'Data Preprocessing', type: 'data_transform' },
+      { name: 'AI Analysis', type: 'gemini_ai' },
+      { name: 'Report Generation', type: 'gemini_ai' },
+      { name: 'Results Distribution', type: 'notification' }
+    ],
+    executions: 156,
+    successRate: 94,
+    avgDuration: '5.8s',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   }
 ];
 
@@ -61,15 +108,15 @@ export const useAIEngines = () => {
   });
 };
 
-// Workflows - use real data when authenticated, mock data otherwise
+// Workflows - use enhanced mock data with Gemini workflows when not authenticated
 export const useWorkflows = () => {
   const { user } = useAuth();
   const realDataQuery = useUserWorkflows();
   const mockDataQuery = useQuery({
     queryKey: ['workflows-mock'],
-    queryFn: () => Promise.resolve(mockWorkflows),
+    queryFn: () => Promise.resolve(enhancedMockWorkflows),
     staleTime: 30000,
-    enabled: !user, // Only run when not authenticated
+    enabled: !user,
   });
 
   if (user) {
