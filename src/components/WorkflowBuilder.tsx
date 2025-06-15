@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,16 +13,19 @@ import {
   Calendar,
   AlertTriangle,
   FileText,
-  Zap
+  Zap,
+  Sparkles
 } from 'lucide-react';
 import { useWorkflows, useExecuteWorkflow } from '@/services/dataService';
 import { useToast } from '@/hooks/use-toast';
+import GeminiActionCard from './GeminiActionCard';
 
 const WorkflowBuilder = () => {
   const { data: workflows, isLoading } = useWorkflows();
   const executeWorkflow = useExecuteWorkflow();
   const { toast } = useToast();
   const [selectedWorkflow, setSelectedWorkflow] = useState<any>(null);
+  const [showGeminiAction, setShowGeminiAction] = useState(false);
 
   React.useEffect(() => {
     if (workflows && workflows.length > 0 && !selectedWorkflow) {
@@ -45,6 +47,13 @@ const WorkflowBuilder = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleGeminiResult = (result: any) => {
+    toast({
+      title: "Gemini AI Action Complete",
+      description: `Generated ${result.content.length} characters of content.`,
+    });
   };
 
   if (isLoading) {
@@ -92,10 +101,25 @@ const WorkflowBuilder = () => {
       <div className="text-center py-12">
         <h3 className="text-xl font-semibold text-white mb-4">No Workflows Found</h3>
         <p className="text-slate-400 mb-6">Create your first workflow to get started.</p>
-        <Button className="bg-purple-600 hover:bg-purple-700">
-          <Plus className="w-4 h-4 mr-2" />
-          Create Workflow
-        </Button>
+        <div className="flex justify-center space-x-4">
+          <Button className="bg-purple-600 hover:bg-purple-700">
+            <Plus className="w-4 h-4 mr-2" />
+            Create Workflow
+          </Button>
+          <Button 
+            variant="outline" 
+            className="text-purple-400 border-purple-500/50"
+            onClick={() => setShowGeminiAction(true)}
+          >
+            <Sparkles className="w-4 h-4 mr-2" />
+            Try Gemini AI
+          </Button>
+        </div>
+        {showGeminiAction && (
+          <div className="mt-8 max-w-2xl mx-auto">
+            <GeminiActionCard onResult={handleGeminiResult} />
+          </div>
+        )}
       </div>
     );
   }
@@ -106,10 +130,20 @@ const WorkflowBuilder = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-semibold text-white">Active Workflows</h3>
-          <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
-            <Plus className="w-4 h-4 mr-1" />
-            New
-          </Button>
+          <div className="flex space-x-2">
+            <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
+              <Plus className="w-4 h-4 mr-1" />
+              New
+            </Button>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="text-purple-400 border-purple-500/50"
+              onClick={() => setShowGeminiAction(!showGeminiAction)}
+            >
+              <Sparkles className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
         
         {workflows.map((workflow) => (
@@ -145,8 +179,12 @@ const WorkflowBuilder = () => {
         ))}
       </div>
 
-      {/* Workflow Details */}
+      {/* Workflow Details and Gemini Action */}
       <div className="lg:col-span-2 space-y-6">
+        {showGeminiAction && (
+          <GeminiActionCard onResult={handleGeminiResult} />
+        )}
+        
         {selectedWorkflow && (
           <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
             <CardHeader>
@@ -207,20 +245,35 @@ const WorkflowBuilder = () => {
                         {index + 1}
                       </div>
                       <span className="text-slate-300 flex-1">{action.name || action}</span>
+                      {action.type === 'gemini_ai' && (
+                        <Sparkles className="w-4 h-4 text-purple-400" />
+                      )}
                       <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/50">
                         Active
                       </Badge>
                     </div>
                   )) || (
-                    <div className="flex items-center space-x-4 bg-slate-700/50 p-3 rounded-lg border border-slate-600">
-                      <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full text-white text-sm font-bold">
-                        1
+                    <>
+                      <div className="flex items-center space-x-4 bg-slate-700/50 p-3 rounded-lg border border-slate-600">
+                        <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full text-white text-sm font-bold">
+                          1
+                        </div>
+                        <span className="text-slate-300 flex-1">Execute Action</span>
+                        <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/50">
+                          Active
+                        </Badge>
                       </div>
-                      <span className="text-slate-300 flex-1">Execute Action</span>
-                      <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/50">
-                        Active
-                      </Badge>
-                    </div>
+                      <div className="flex items-center space-x-4 bg-slate-700/50 p-3 rounded-lg border border-slate-600">
+                        <div className="flex items-center justify-center w-8 h-8 bg-purple-600 rounded-full text-white text-sm font-bold">
+                          2
+                        </div>
+                        <span className="text-slate-300 flex-1">Gemini AI Processing</span>
+                        <Sparkles className="w-4 h-4 text-purple-400" />
+                        <Badge variant="outline" className="bg-purple-500/20 text-purple-400 border-purple-500/50">
+                          AI
+                        </Badge>
+                      </div>
+                    </>
                   )}
                 </div>
               </div>

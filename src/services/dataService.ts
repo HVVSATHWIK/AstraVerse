@@ -24,11 +24,39 @@ import { AIEngine, Workflow, Integration, SystemMetrics, ActivityLog, KPIData } 
 // Environment flag to use mock data during development
 const USE_MOCK_DATA = import.meta.env.DEV;
 
-// AI Engines - still using mock data as this is system-level data
+// Enhanced mock AI engines to include Gemini
+const enhancedMockAIEngines = [
+  ...mockAIEngines,
+  {
+    id: 'gemini-1.5-flash',
+    name: 'Gemini 1.5 Flash',
+    type: 'text-generation',
+    status: 'active',
+    usage: {
+      requests: 156,
+      tokens: 45231,
+      cost: 12.45
+    },
+    performance: {
+      latency: 850,
+      accuracy: 94,
+      uptime: 99.8
+    },
+    config: {
+      model: 'gemini-1.5-flash',
+      temperature: 0.7,
+      maxTokens: 2048,
+      topK: 40,
+      topP: 0.95
+    }
+  }
+];
+
+// AI Engines - enhanced with Gemini
 export const useAIEngines = () => {
   return useQuery({
     queryKey: ['ai-engines'],
-    queryFn: () => USE_MOCK_DATA ? Promise.resolve(mockAIEngines) : apiService.getAIEngines(),
+    queryFn: () => USE_MOCK_DATA ? Promise.resolve(enhancedMockAIEngines) : apiService.getAIEngines(),
     staleTime: 30000,
   });
 };
