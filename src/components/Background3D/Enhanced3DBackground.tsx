@@ -1,6 +1,6 @@
 
 import React, { memo } from 'react';
-import ParticleSystem from './ParticleSystem';
+import OptimizedParticleSystem from './OptimizedParticleSystem';
 import GeometricShapes from './GeometricShapes';
 import GradientMesh from './GradientMesh';
 import DepthGrid from './DepthGrid';
@@ -28,17 +28,20 @@ const Enhanced3DBackground = memo(({
     switch (performance) {
       case 'low':
         return {
-          particles: Math.min(particleCount, 20),
+          particles: Math.min(particleCount, 15),
+          quality: 'basic' as const,
           enableAdvancedEffects: false
         };
       case 'high':
         return {
           particles: particleCount,
+          quality: 'premium' as const,
           enableAdvancedEffects: true
         };
       default:
         return {
-          particles: Math.min(particleCount, 40),
+          particles: Math.min(particleCount, 30),
+          quality: 'enhanced' as const,
           enableAdvancedEffects: true
         };
     }
@@ -48,25 +51,26 @@ const Enhanced3DBackground = memo(({
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-      {/* Base gradient mesh - always enabled */}
+      {/* Base gradient mesh - always enabled but simplified for low performance */}
       <GradientMesh />
       
-      {/* Geometric shapes layer */}
-      {enableShapes && <GeometricShapes />}
+      {/* Geometric shapes layer - only for medium+ performance */}
+      {enableShapes && performance !== 'low' && <GeometricShapes />}
       
-      {/* Depth grid layer */}
-      {enableGrid && settings.enableAdvancedEffects && <DepthGrid />}
+      {/* Depth grid layer - only for high performance */}
+      {enableGrid && settings.enableAdvancedEffects && performance === 'high' && <DepthGrid />}
       
-      {/* Particle system layer */}
+      {/* Optimized particle system layer */}
       {enableParticles && (
-        <ParticleSystem 
+        <OptimizedParticleSystem 
           particleCount={settings.particles}
-          speed={performance === 'low' ? 0.3 : 0.5}
+          speed={performance === 'low' ? 0.2 : 0.5}
+          quality={settings.quality}
         />
       )}
       
-      {/* Interactive layer */}
-      {enableInteractive && settings.enableAdvancedEffects && <InteractiveLayer />}
+      {/* Interactive layer - only for medium+ performance */}
+      {enableInteractive && performance !== 'low' && <InteractiveLayer />}
     </div>
   );
 });
