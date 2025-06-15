@@ -6,6 +6,7 @@ import QuickStartSection from './sections/QuickStartSection';
 import SystemOverviewSection from './sections/SystemOverviewSection';
 import LiveOperationsSection from './sections/LiveOperationsSection';
 import PerformanceSection from './sections/PerformanceSection';
+import TutorialTrigger from '@/components/tutorial/TutorialTrigger';
 
 interface OverviewTabProps {
   kpis: any;
@@ -26,14 +27,23 @@ const OverviewTab = ({
 }: OverviewTabProps) => {
   return (
     <TabsContent value="overview" className="space-y-8">
+      {/* Tutorial Trigger */}
+      <div className="flex justify-end">
+        <TutorialTrigger variant="dashboard" />
+      </div>
+
       {/* Hero Section - What AstraAI Does */}
-      <HeroSection />
+      <div data-tutorial="main-features">
+        <HeroSection />
+      </div>
       
       {/* Quick Start Section */}
       <QuickStartSection />
 
       {/* System Status Section */}
-      <SystemOverviewSection kpis={kpis} kpisLoading={kpisLoading} />
+      <div data-tutorial="system-overview">
+        <SystemOverviewSection kpis={kpis} kpisLoading={kpisLoading} />
+      </div>
       
       {/* Operational Details Section */}
       <LiveOperationsSection 

@@ -56,7 +56,7 @@ const QuickStartGuide = () => {
   ];
 
   return (
-    <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 shadow-xl">
+    <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 shadow-xl" data-tutorial="quick-start-guide">
       <CardHeader>
         <CardTitle className="text-white text-lg flex items-center">
           <div className="p-2 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg mr-3 shadow-lg">

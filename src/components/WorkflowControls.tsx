@@ -69,7 +69,7 @@ const WorkflowControls = () => {
 
   return (
     <ErrorBoundary>
-      <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
+      <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm" data-tutorial="workflow-controls">
         <CardHeader>
           <CardTitle className="text-white">Workflow Controls</CardTitle>
         </CardHeader>
