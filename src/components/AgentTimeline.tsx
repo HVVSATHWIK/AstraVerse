@@ -9,7 +9,9 @@ import {
   Zap
 } from 'lucide-react';
 import { Agent, AgentTask, AgentEvent } from '@/types/agents';
-import { useAgents, useAgentTasks, useAgentEvents } from '@/hooks/useAgents';
+import { useAgents } from '@/hooks/useAgents';
+import { useAgentTasks } from '@/hooks/useAgentTasks';
+import { useAgentEvents } from '@/hooks/useAgentEvents';
 import AgentTimelineCard from './AgentTimelineCard';
 import TaskTimelineItem from './TaskTimelineItem';
 import EventTimelineItem from './EventTimelineItem';
