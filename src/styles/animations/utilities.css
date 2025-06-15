@@ -1,0 +1,113 @@
+
+/* 3D transform utilities, hover effects, and interactive elements */
+
+@layer components {
+  /* 3D Transform utilities */
+  .transform-3d {
+    transform-style: preserve-3d;
+    perspective: 1000px;
+  }
+
+  .perspective-container {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+  /* Card and hover effects */
+  .hover-lift-3d {
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .hover-lift-3d:hover {
+    animation: cardHover3D 0.4s ease-out forwards;
+  }
+
+  .card-3d {
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backface-visibility: hidden;
+  }
+
+  .card-3d:hover {
+    transform: translateY(-8px) rotateX(5deg) rotateY(2deg) translateZ(15px);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.15),
+      0 0 25px rgba(124, 58, 237, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  /* Interactive 3D button effects */
+  .btn-3d {
+    transform-style: preserve-3d;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-3d::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.2));
+    transform: translateX(-100%) skewX(-15deg);
+    transition: transform 0.6s ease;
+  }
+
+  .btn-3d:hover::before {
+    transform: translateX(100%) skewX(-15deg);
+  }
+
+  .btn-3d:hover {
+    transform: translateY(-3px) rotateX(5deg) translateZ(10px);
+    box-shadow: 
+      0 10px 25px rgba(0, 0, 0, 0.2),
+      0 0 20px rgba(124, 58, 237, 0.4);
+  }
+
+  .btn-3d:active {
+    transform: translateY(-1px) rotateX(2deg) translateZ(5px);
+  }
+
+  /* Text effects */
+  .text-3d {
+    text-shadow: 
+      1px 1px 0 rgba(0,0,0,0.1),
+      2px 2px 0 rgba(0,0,0,0.1),
+      3px 3px 0 rgba(0,0,0,0.1),
+      4px 4px 10px rgba(0,0,0,0.3);
+    transform: perspective(500px) rotateX(5deg);
+  }
+
+  /* Gradient utilities */
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+
+  /* Glass effects */
+  .glass-dark {
+    backdrop-filter: blur(16px);
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .interactive-card {
+    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Parallax effects */
+  .parallax-slow {
+    transform: translateZ(-1px) scale(2);
+  }
+
+  .parallax-medium {
+    transform: translateZ(-2px) scale(3);
+  }
+
+  .parallax-fast {
+    transform: translateZ(-3px) scale(4);
+  }
+}

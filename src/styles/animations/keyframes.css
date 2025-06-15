@@ -1,0 +1,128 @@
+
+/* Keyframe definitions for all animations */
+
+/* Enhanced 3D keyframe animations with transforms */
+@keyframes fadeIn3D {
+  from {
+    opacity: 0;
+    transform: translateY(30px) rotateX(15deg) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+  }
+}
+
+@keyframes slideUp3D {
+  from {
+    opacity: 0;
+    transform: translateY(40px) rotateX(20deg) perspective(1000px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) perspective(1000px);
+  }
+}
+
+@keyframes scaleIn3D {
+  from {
+    opacity: 0;
+    transform: scale(0.8) rotateY(15deg) translateZ(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg) translateZ(0);
+  }
+}
+
+@keyframes float3D {
+  0%, 100% {
+    transform: translateY(0px) rotateX(0deg) translateZ(0);
+  }
+  50% {
+    transform: translateY(-15px) rotateX(2deg) translateZ(10px);
+  }
+}
+
+@keyframes rotate3D {
+  from {
+    transform: rotateY(0deg) rotateX(0deg);
+  }
+  to {
+    transform: rotateY(360deg) rotateX(360deg);
+  }
+}
+
+@keyframes pulse3D {
+  0%, 100% {
+    transform: scale(1) translateZ(0);
+    box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.7);
+  }
+  50% {
+    transform: scale(1.05) translateZ(20px);
+    box-shadow: 0 0 0 20px rgba(124, 58, 237, 0);
+  }
+}
+
+@keyframes wiggle3D {
+  0%, 100% {
+    transform: rotate(0deg) translateZ(0);
+  }
+  25% {
+    transform: rotate(1deg) translateZ(5px);
+  }
+  75% {
+    transform: rotate(-1deg) translateZ(-5px);
+  }
+}
+
+@keyframes bounceIn3D {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotateY(180deg) translateZ(-100px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) rotateY(90deg) translateZ(20px);
+  }
+  70% {
+    transform: scale(0.9) rotateY(45deg) translateZ(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg) translateZ(0);
+  }
+}
+
+@keyframes cardHover3D {
+  from {
+    transform: translateY(0) rotateX(0deg) rotateY(0deg) translateZ(0);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  to {
+    transform: translateY(-10px) rotateX(5deg) rotateY(2deg) translateZ(20px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 30px rgba(124, 58, 237, 0.3);
+  }
+}
+
+@keyframes backgroundFloat {
+  0%, 100% {
+    transform: translateX(0) translateY(0) scale(1) rotateZ(0deg);
+  }
+  25% {
+    transform: translateX(30px) translateY(-30px) scale(1.05) rotateZ(1deg);
+  }
+  50% {
+    transform: translateX(15px) translateY(20px) scale(0.95) rotateZ(-0.5deg);
+  }
+  75% {
+    transform: translateX(-20px) translateY(10px) scale(1.02) rotateZ(0.8deg);
+  }
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
