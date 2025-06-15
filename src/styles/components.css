@@ -1,10 +1,28 @@
 
-/* Component-specific styles and effects */
+/* Enhanced 3D Component-specific styles and effects */
 
 @layer components {
-  /* Enhanced gradient utilities */
+  /* Enhanced gradient utilities with 3D effects */
   .gradient-primary {
     background: var(--gradient-primary);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gradient-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent, rgba(255,255,255,0.1));
+    transform: translateX(-100%) skewX(-15deg);
+    transition: transform 0.8s ease;
+  }
+
+  .gradient-primary:hover::before {
+    transform: translateX(100%) skewX(-15deg);
   }
 
   .gradient-secondary {
@@ -23,49 +41,168 @@
     background: var(--gradient-dark);
   }
 
-  /* Glass morphism effect */
+  /* Enhanced glass morphism effect with 3D depth */
   .glass {
-    backdrop-filter: blur(16px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
     background-color: rgba(249, 250, 251, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 2rem;
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .glass:hover {
+    transform: translateY(-5px) rotateX(3deg) translateZ(10px);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 0 30px rgba(124, 58, 237, 0.2);
   }
 
   .glass-dark {
-    backdrop-filter: blur(16px) saturate(180%);
-    background-color: rgba(17, 25, 40, 0.75);
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    backdrop-filter: blur(20px) saturate(180%);
+    background-color: rgba(17, 25, 40, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 2rem;
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  /* Enhanced card styles with rounded corners */
+  .glass-dark:hover {
+    transform: translateY(-5px) rotateX(3deg) translateZ(10px);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 0 30px rgba(124, 58, 237, 0.3);
+  }
+
+  /* Enhanced card styles with 3D effects */
   .card-elevated {
-    @apply bg-gray-50 backdrop-blur-sm border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300;
+    @apply bg-gray-50 backdrop-blur-sm border border-gray-200 shadow-lg transition-all duration-500;
     border-radius: 2rem;
+    transform-style: preserve-3d;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-elevated::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .card-elevated:hover::before {
+    opacity: 1;
+  }
+
+  .card-elevated:hover {
+    transform: translateY(-8px) rotateX(5deg) rotateY(2deg) translateZ(15px);
+    box-shadow: 
+      0 25px 50px rgba(0, 0, 0, 0.15),
+      0 0 30px rgba(124, 58, 237, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
   .card-gradient {
     background: linear-gradient(145deg, rgba(249,250,251,0.95) 0%, rgba(243,244,246,0.90) 100%);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(0,0,0,0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.2);
     border-radius: 2rem;
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
   }
 
-  /* Enhanced button styles with rounded corners */
+  .card-gradient::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.1), transparent 70%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .card-gradient:hover::after {
+    opacity: 1;
+  }
+
+  .card-gradient:hover {
+    transform: translateY(-6px) rotateX(4deg) translateZ(12px);
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.12),
+      0 0 25px rgba(124, 58, 237, 0.15);
+  }
+
+  /* Enhanced button styles with 3D effects */
   .btn-gradient {
     background: var(--gradient-primary);
-    @apply text-gray-100 border-0 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200;
+    @apply text-gray-100 border-0 shadow-lg transition-all duration-300;
     border-radius: 1.5rem;
+    transform-style: preserve-3d;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.2), transparent, rgba(255,255,255,0.2));
+    transform: translateX(-100%) skewX(-15deg);
+    transition: transform 0.6s ease;
+  }
+
+  .btn-gradient:hover::before {
+    transform: translateX(100%) skewX(-15deg);
+  }
+
+  .btn-gradient:hover {
+    transform: translateY(-3px) rotateX(5deg) translateZ(10px) scale(1.02);
+    box-shadow: 
+      0 15px 30px rgba(124, 58, 237, 0.4),
+      0 0 25px rgba(124, 58, 237, 0.3);
+  }
+
+  .btn-gradient:active {
+    transform: translateY(-1px) rotateX(2deg) translateZ(5px) scale(0.98);
   }
 
   .btn-glass {
-    @apply glass text-gray-900 hover:bg-gray-100/95 transition-all duration-200;
+    @apply glass text-gray-900 transition-all duration-300;
     border-radius: 1.5rem;
+    transform-style: preserve-3d;
   }
 
-  /* Force dark text on light backgrounds */
+  .btn-glass:hover {
+    transform: translateY(-2px) rotateX(3deg) translateZ(8px);
+    color: #1f2937;
+  }
+
+  /* Enhanced text styles with 3D effects */
   .card-content {
     color: #111827 !important;
+    position: relative;
   }
 
   .card-content h1,
@@ -75,6 +212,7 @@
   .card-content h5,
   .card-content h6 {
     color: #030712 !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
   }
 
   .card-content p {
@@ -89,7 +227,7 @@
     color: #6b7280 !important;
   }
 
-  /* Ensure all card text is dark and visible */
+  /* Enhanced text utilities */
   .card-text-dark {
     color: #111827 !important;
   }
@@ -98,12 +236,14 @@
     color: #030712 !important;
   }
 
-  /* Text gradient utilities */
+  /* Enhanced text gradient utilities with 3D effects */
   .text-gradient {
     background: var(--gradient-primary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: 0 2px 4px rgba(124, 58, 237, 0.3);
+    position: relative;
   }
 
   .text-gradient-secondary {
@@ -111,34 +251,105 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
   }
 
-  /* Hover effects */
+  /* Enhanced hover effects with 3D transforms */
   .hover-lift {
-    @apply transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg;
+    @apply transition-all duration-400;
+    transform-style: preserve-3d;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-6px) rotateX(3deg) translateZ(10px);
+    box-shadow: 
+      0 15px 30px rgba(0, 0, 0, 0.15),
+      0 0 20px rgba(124, 58, 237, 0.2);
   }
 
   .hover-glow {
-    @apply transition-shadow duration-300 hover:shadow-[0_0_20px_rgba(124,58,237,0.3)];
+    @apply transition-all duration-400;
+    transform-style: preserve-3d;
   }
 
-  /* Force all elements to have rounded corners */
+  .hover-glow:hover {
+    transform: translateY(-3px) translateZ(5px);
+    box-shadow: 
+      0 10px 25px rgba(124, 58, 237, 0.3),
+      0 0 30px rgba(124, 58, 237, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  /* 3D perspective containers */
+  .perspective-container {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+  /* Floating elements */
+  .float-element {
+    animation: float3D 4s ease-in-out infinite;
+  }
+
+  /* Interactive 3D cards */
+  .interactive-card {
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .interactive-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+      rgba(124, 58, 237, 0.1) 0%, 
+      transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .interactive-card:hover::before {
+    opacity: 1;
+  }
+
+  .interactive-card:hover {
+    transform: translateY(-8px) rotateX(var(--rotate-x, 5deg)) rotateY(var(--rotate-y, 2deg)) translateZ(15px);
+  }
+
+  /* Morphing shapes */
+  .morph-shape {
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: center;
+  }
+
+  .morph-shape:hover {
+    border-radius: 50%;
+    transform: rotate(180deg) scale(1.1);
+  }
+
+  /* Enhanced rounded corners with 3D depth */
   * {
     border-radius: inherit;
   }
 
-  /* Default rounded corners for common elements */
   div, section, article, aside, header, footer, nav, main {
     border-radius: 1rem;
   }
 
-  /* Extra rounded corners for cards and containers */
   .card, [class*="card"], .container, [class*="container"] {
     border-radius: 1.5rem !important;
+    transform-style: preserve-3d;
   }
 
-  /* Super rounded corners for special elements */
   .rounded-special {
     border-radius: 2.5rem !important;
+    transform-style: preserve-3d;
   }
 }

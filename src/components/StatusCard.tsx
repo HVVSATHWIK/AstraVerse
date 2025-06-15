@@ -27,13 +27,13 @@ const StatusCard = ({ title, value, status, icon: Icon, description }: StatusCar
   };
 
   return (
-    <Card className="bg-gray-50 border border-gray-300 hover:shadow-md transition-shadow rounded-4xl">
-      <CardContent className="p-6">
+    <Card className="bg-gray-50 border border-gray-300 hover-lift-3d card-3d interactive-card rounded-4xl animate-scale-in-3d transform-3d perspective-container">
+      <CardContent className="p-6 relative">
         <div className="flex items-center justify-between mb-4">
-          <Icon className={cn("w-8 h-8", iconColors[status])} />
+          <Icon className={cn("w-8 h-8 animate-float-3d", iconColors[status])} />
           <Badge 
             variant="outline" 
-            className={cn("font-medium capitalize rounded-full", statusColors[status])}
+            className={cn("font-medium capitalize rounded-full animate-pulse-3d", statusColors[status])}
           >
             {status === 'healthy' ? 'Active' : status}
           </Badge>
@@ -41,9 +41,12 @@ const StatusCard = ({ title, value, status, icon: Icon, description }: StatusCar
         
         <div className="space-y-1">
           <p className="text-sm font-medium text-gray-900">{title}</p>
-          <p className="text-2xl font-bold text-gray-950">{value}</p>
+          <p className="text-2xl font-bold text-gray-950 text-3d">{value}</p>
           <p className="text-xs text-gray-700">{description}</p>
         </div>
+
+        {/* 3D decorative element */}
+        <div className="absolute top-2 right-2 w-12 h-12 bg-gradient-to-br from-purple-400/20 to-blue-400/20 rounded-full blur-xl animate-pulse-3d opacity-50"></div>
       </CardContent>
     </Card>
   );
