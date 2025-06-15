@@ -1,11 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Settings, Wifi, WifiOff, Play } from 'lucide-react';
+import { Settings, Wifi, WifiOff, Play, User } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import AstraLogo from '@/components/AstraLogo';
 import MobileNav from '@/components/MobileNav';
 import SettingsDialog from '@/components/SettingsDialog';
+import UserProfile from '@/components/UserProfile';
 import { useRealtime } from '@/contexts/RealtimeContext';
+import { useAuth } from '@/hooks/useAuth';
 
 interface DashboardHeaderProps {
   activeTab: string;
@@ -14,6 +17,8 @@ interface DashboardHeaderProps {
 
 const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
   const { isConnected, toggleRealtime, isRealtimeEnabled } = useRealtime();
+  const { user, profile } = useAuth();
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   return (
     <div className="flex items-center justify-between bg-slate-800/80 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-slate-700/50 glass-dark hover-lift-3d card-3d animate-slide-up-3d transform-3d perspective-container relative overflow-hidden">
@@ -29,7 +34,9 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
           <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent text-3d animate-scale-in-3d">
             AstraAI Platform
           </h1>
-          <p className="text-slate-300 animate-fade-in-3d stagger-1">AI Workflow Orchestration • Meeting Intelligence • Automation Hub</p>
+          <p className="text-slate-300 animate-fade-in-3d stagger-1">
+            Welcome, {profile?.full_name || user?.email} • AI Workflow Orchestration
+          </p>
         </div>
       </div>
       
@@ -46,12 +53,26 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
           }
           {isRealtimeEnabled ? 'Live' : 'Paused'}
         </Button>
+        
         <SettingsDialog>
           <Button variant="outline" size="sm" className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg rounded-2xl btn-3d animate-scale-in-3d stagger-3">
             <Settings className="w-4 h-4 mr-2 animate-rotate-3d" />
             Settings
           </Button>
         </SettingsDialog>
+
+        <Popover open={showUserMenu} onOpenChange={setShowUserMenu}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="sm" className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg rounded-2xl btn-3d animate-scale-in-3d stagger-4">
+              <User className="w-4 h-4 mr-2" />
+              Profile
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80 p-0 bg-slate-800/95 border-slate-700" align="end">
+            <UserProfile />
+          </PopoverContent>
+        </Popover>
+        
         <MobileNav activeTab={activeTab} onTabChange={onTabChange} />
       </div>
 

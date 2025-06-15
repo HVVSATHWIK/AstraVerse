@@ -6,6 +6,8 @@ import Index from '@/pages/Index';
 import Dashboard from '@/pages/Dashboard';
 import NotFound from '@/pages/NotFound';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import AuthProvider from '@/contexts/AuthProvider';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import env from '@/config/environment';
 import './App.css';
 
@@ -42,15 +44,21 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <Router>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Router>
-      </QueryClientProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <Router>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Router>
+        </QueryClientProvider>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }
