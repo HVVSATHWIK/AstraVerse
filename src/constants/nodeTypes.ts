@@ -29,12 +29,5 @@ export const nodeTypes = {
     bgColor: 'bg-green-500/20',
     borderColor: 'border-green-500/30',
     description: 'Google Gemini AI actions'
-  },
-  openai_ai: {
-    icon: Brain,
-    color: 'text-cyan-400',
-    bgColor: 'bg-cyan-500/20',
-    borderColor: 'border-cyan-500/30',
-    description: 'OpenAI GPT actions'
   }
 } as const;
