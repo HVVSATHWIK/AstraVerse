@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { WorkflowNode, WorkflowConnection } from '@/types/workflow';
@@ -21,7 +20,7 @@ const AdvancedWorkflowBuilder = () => {
   const addNode = (type: keyof typeof nodeTypes) => {
     const newNode: WorkflowNode = {
       id: `node-${Date.now()}`,
-      type,
+      type: type as 'trigger' | 'action' | 'condition' | 'gemini_ai',
       name: `New ${type}`,
       config: {},
       position: { x: 50 + Math.random() * 300, y: 50 + Math.random() * 200 },
