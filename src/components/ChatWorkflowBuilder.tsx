@@ -1,26 +1,14 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Plus, 
-  MessageSquare, 
-  Settings, 
-  Play, 
-  Pause,
-  Edit,
-  Trash2,
-  Bot,
-  Users,
-  Calendar,
-  BarChart3
-} from 'lucide-react';
+import { Plus, MessageSquare } from 'lucide-react';
 import AIChatWorkflow from './AIChatWorkflow';
+import ChatWorkflowForm from './workflow/ChatWorkflowForm';
+import ChatWorkflowCard from './workflow/ChatWorkflowCard';
+import ChatWorkflowAnalytics from './workflow/ChatWorkflowAnalytics';
+import ChatWorkflowSettings from './workflow/ChatWorkflowSettings';
 import { useToast } from '@/hooks/use-toast';
 
 interface ChatWorkflow {
@@ -80,6 +68,10 @@ const ChatWorkflowBuilder = () => {
 
   const { toast } = useToast();
 
+  const handleNewWorkflowChange = (field: string, value: string) => {
+    setNewWorkflow(prev => ({ ...prev, [field]: value }));
+  };
+
   const createWorkflow = () => {
     if (!newWorkflow.name.trim()) {
       toast({
@@ -135,19 +127,6 @@ const ChatWorkflowBuilder = () => {
     });
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'bg-green-500/20 text-green-400 border-green-500/50';
-      case 'paused':
-        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/50';
-      case 'draft':
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
-      default:
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/50';
-    }
-  };
-
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Workflow List */}
@@ -166,113 +145,24 @@ const ChatWorkflowBuilder = () => {
 
         {/* Create New Workflow Form */}
         {isCreating && (
-          <Card className="bg-slate-800/50 border-slate-700">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-white text-lg">Create Chat Workflow</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label className="text-slate-300">Name</Label>
-                <Input
-                  value={newWorkflow.name}
-                  onChange={(e) => setNewWorkflow(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="Enter workflow name..."
-                  className="bg-slate-700/50 border-slate-600 text-white"
-                />
-              </div>
-              <div>
-                <Label className="text-slate-300">Description</Label>
-                <Input
-                  value={newWorkflow.description}
-                  onChange={(e) => setNewWorkflow(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="Brief description..."
-                  className="bg-slate-700/50 border-slate-600 text-white"
-                />
-              </div>
-              <div>
-                <Label className="text-slate-300">AI Context</Label>
-                <Textarea
-                  value={newWorkflow.context}
-                  onChange={(e) => setNewWorkflow(prev => ({ ...prev, context: e.target.value }))}
-                  placeholder="Define the AI's role and behavior..."
-                  className="bg-slate-700/50 border-slate-600 text-white"
-                  rows={3}
-                />
-              </div>
-              <div className="flex space-x-2">
-                <Button onClick={createWorkflow} className="bg-purple-600 hover:bg-purple-700">
-                  Create
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => setIsCreating(false)}
-                  className="text-slate-300 border-slate-600"
-                >
-                  Cancel
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <ChatWorkflowForm
+            newWorkflow={newWorkflow}
+            onNewWorkflowChange={handleNewWorkflowChange}
+            onCreateWorkflow={createWorkflow}
+            onCancel={() => setIsCreating(false)}
+          />
         )}
 
         {/* Workflow Cards */}
         {workflows.map((workflow) => (
-          <Card
+          <ChatWorkflowCard
             key={workflow.id}
-            className={`bg-slate-800/50 border-slate-700 backdrop-blur-sm cursor-pointer transition-all duration-200 ${
-              selectedWorkflow?.id === workflow.id ? 'ring-2 ring-purple-500' : 'hover:bg-slate-800/70'
-            }`}
-            onClick={() => setSelectedWorkflow(workflow)}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-white text-lg flex items-center space-x-2">
-                  <MessageSquare className="w-5 h-5 text-blue-400" />
-                  <span>{workflow.name}</span>
-                </CardTitle>
-                <Badge variant="outline" className={getStatusColor(workflow.status)}>
-                  {workflow.status}
-                </Badge>
-              </div>
-              <p className="text-slate-400 text-sm">{workflow.description}</p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-slate-400">Chats:</span>
-                  <span className="text-white ml-2">{workflow.stats.totalChats}</span>
-                </div>
-                <div>
-                  <span className="text-slate-400">Messages:</span>
-                  <span className="text-white ml-2">{workflow.stats.totalMessages}</span>
-                </div>
-              </div>
-              <div className="flex justify-between mt-4">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleWorkflowStatus(workflow.id);
-                  }}
-                  className="text-white border-slate-600"
-                >
-                  {workflow.status === 'active' ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deleteWorkflow(workflow.id);
-                  }}
-                  className="text-red-400 border-slate-600"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+            workflow={workflow}
+            isSelected={selectedWorkflow?.id === workflow.id}
+            onSelect={setSelectedWorkflow}
+            onToggleStatus={toggleWorkflowStatus}
+            onDelete={deleteWorkflow}
+          />
         ))}
       </div>
 
@@ -291,75 +181,11 @@ const ChatWorkflowBuilder = () => {
             </TabsContent>
             
             <TabsContent value="analytics" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card className="bg-slate-800/50 border-slate-700">
-                  <CardContent className="p-6 text-center">
-                    <Users className="w-8 h-8 mx-auto mb-2 text-blue-400" />
-                    <div className="text-2xl font-bold text-white">{selectedWorkflow.stats.totalChats}</div>
-                    <div className="text-slate-400 text-sm">Total Conversations</div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-slate-800/50 border-slate-700">
-                  <CardContent className="p-6 text-center">
-                    <MessageSquare className="w-8 h-8 mx-auto mb-2 text-green-400" />
-                    <div className="text-2xl font-bold text-white">{selectedWorkflow.stats.totalMessages}</div>
-                    <div className="text-slate-400 text-sm">Total Messages</div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-slate-800/50 border-slate-700">
-                  <CardContent className="p-6 text-center">
-                    <BarChart3 className="w-8 h-8 mx-auto mb-2 text-purple-400" />
-                    <div className="text-2xl font-bold text-white">{selectedWorkflow.stats.avgResponseTime}ms</div>
-                    <div className="text-slate-400 text-sm">Avg Response Time</div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-slate-800/50 border-slate-700">
-                  <CardContent className="p-6 text-center">
-                    <Bot className="w-8 h-8 mx-auto mb-2 text-yellow-400" />
-                    <div className="text-2xl font-bold text-white">{selectedWorkflow.stats.satisfaction}/5</div>
-                    <div className="text-slate-400 text-sm">Satisfaction Score</div>
-                  </CardContent>
-                </Card>
-              </div>
+              <ChatWorkflowAnalytics workflow={selectedWorkflow} />
             </TabsContent>
             
             <TabsContent value="settings" className="space-y-4">
-              <Card className="bg-slate-800/50 border-slate-700">
-                <CardHeader>
-                  <CardTitle className="text-white">Workflow Configuration</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label className="text-slate-300">Name</Label>
-                    <Input
-                      value={selectedWorkflow.name}
-                      className="bg-slate-700/50 border-slate-600 text-white"
-                      readOnly
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-slate-300">Description</Label>
-                    <Input
-                      value={selectedWorkflow.description}
-                      className="bg-slate-700/50 border-slate-600 text-white"
-                      readOnly
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-slate-300">AI Context</Label>
-                    <Textarea
-                      value={selectedWorkflow.context}
-                      className="bg-slate-700/50 border-slate-600 text-white"
-                      rows={4}
-                      readOnly
-                    />
-                  </div>
-                  <Button className="bg-purple-600 hover:bg-purple-700">
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit Configuration
-                  </Button>
-                </CardContent>
-              </Card>
+              <ChatWorkflowSettings workflow={selectedWorkflow} />
             </TabsContent>
           </Tabs>
         ) : (
