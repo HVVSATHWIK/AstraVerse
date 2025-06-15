@@ -6,7 +6,11 @@ import {
   GitBranch, 
   MessageSquare, 
   FileText,
-  Sparkles
+  Sparkles,
+  Store,
+  Lightbulb,
+  BarChart3,
+  Workflow
 } from 'lucide-react';
 import { useWorkflows, useExecuteWorkflow } from '@/services/dataService';
 import { useToast } from '@/hooks/use-toast';
@@ -17,6 +21,11 @@ import WorkflowList from './workflow/WorkflowList';
 import WorkflowDetails from './workflow/WorkflowDetails';
 import EmptyWorkflowState from './workflow/EmptyWorkflowState';
 import AIActionsLibrary from './workflow/AIActionsLibrary';
+import DocumentProcessor from './document/DocumentProcessor';
+import MeetingAutomation from './meeting/MeetingAutomation';
+import AdvancedAnalytics from './analytics/AdvancedAnalytics';
+import SmartWorkflowRecommendations from './workflow/SmartWorkflowRecommendations';
+import WorkflowMarketplace from './workflow/WorkflowMarketplace';
 
 const WorkflowBuilder = () => {
   const { data: workflows, isLoading } = useWorkflows();
@@ -96,22 +105,38 @@ const WorkflowBuilder = () => {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="builder" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 bg-slate-800/50">
-          <TabsTrigger value="builder" className="text-slate-300">
-            <GitBranch className="w-4 h-4 mr-2" />
-            Builder
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 xl:grid-cols-8 bg-slate-800/50 gap-1">
+          <TabsTrigger value="builder" className="text-slate-300 flex items-center space-x-1 text-xs lg:text-sm">
+            <GitBranch className="w-3 h-3 lg:w-4 lg:h-4" />
+            <span>Builder</span>
           </TabsTrigger>
-          <TabsTrigger value="chat" className="text-slate-300">
-            <MessageSquare className="w-4 h-4 mr-2" />
-            AI Chat
+          <TabsTrigger value="chat" className="text-slate-300 flex items-center space-x-1 text-xs lg:text-sm">
+            <MessageSquare className="w-3 h-3 lg:w-4 lg:h-4" />
+            <span>AI Chat</span>
           </TabsTrigger>
-          <TabsTrigger value="templates" className="text-slate-300">
-            <FileText className="w-4 h-4 mr-2" />
-            Templates
+          <TabsTrigger value="documents" className="text-slate-300 flex items-center space-x-1 text-xs lg:text-sm">
+            <FileText className="w-3 h-3 lg:w-4 lg:h-4" />
+            <span>Documents</span>
           </TabsTrigger>
-          <TabsTrigger value="ai-actions" className="text-slate-300">
-            <Sparkles className="w-4 h-4 mr-2" />
-            AI Actions
+          <TabsTrigger value="meetings" className="text-slate-300 flex items-center space-x-1 text-xs lg:text-sm">
+            <Workflow className="w-3 h-3 lg:w-4 lg:h-4" />
+            <span>Meetings</span>
+          </TabsTrigger>
+          <TabsTrigger value="marketplace" className="text-slate-300 flex items-center space-x-1 text-xs lg:text-sm">
+            <Store className="w-3 h-3 lg:w-4 lg:h-4" />
+            <span>Market</span>
+          </TabsTrigger>
+          <TabsTrigger value="recommendations" className="text-slate-300 flex items-center space-x-1 text-xs lg:text-sm">
+            <Lightbulb className="w-3 h-3 lg:w-4 lg:h-4" />
+            <span>Smart</span>
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="text-slate-300 flex items-center space-x-1 text-xs lg:text-sm">
+            <BarChart3 className="w-3 h-3 lg:w-4 lg:h-4" />
+            <span>Analytics</span>
+          </TabsTrigger>
+          <TabsTrigger value="ai-actions" className="text-slate-300 flex items-center space-x-1 text-xs lg:text-sm">
+            <Sparkles className="w-3 h-3 lg:w-4 lg:h-4" />
+            <span>AI Actions</span>
           </TabsTrigger>
         </TabsList>
 
@@ -155,8 +180,24 @@ const WorkflowBuilder = () => {
           <ChatWorkflowBuilder />
         </TabsContent>
 
-        <TabsContent value="templates" className="space-y-6">
-          <ChatTemplates onSelectTemplate={handleTemplateSelect} />
+        <TabsContent value="documents" className="space-y-6">
+          <DocumentProcessor />
+        </TabsContent>
+
+        <TabsContent value="meetings" className="space-y-6">
+          <MeetingAutomation />
+        </TabsContent>
+
+        <TabsContent value="marketplace" className="space-y-6">
+          <WorkflowMarketplace />
+        </TabsContent>
+
+        <TabsContent value="recommendations" className="space-y-6">
+          <SmartWorkflowRecommendations />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-6">
+          <AdvancedAnalytics />
         </TabsContent>
 
         <TabsContent value="ai-actions" className="space-y-6">
