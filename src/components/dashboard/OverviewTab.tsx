@@ -7,6 +7,8 @@ import SystemOverviewSection from './sections/SystemOverviewSection';
 import LiveOperationsSection from './sections/LiveOperationsSection';
 import PerformanceSection from './sections/PerformanceSection';
 import TutorialTrigger from '@/components/tutorial/TutorialTrigger';
+import DemoDataSeeder from '@/components/DemoDataSeeder';
+import { useAuth } from '@/hooks/useAuth';
 
 interface OverviewTabProps {
   kpis: any;
@@ -25,6 +27,8 @@ const OverviewTab = ({
   activityLogs,
   activityLoading
 }: OverviewTabProps) => {
+  const { user } = useAuth();
+
   return (
     <TabsContent value="overview" className="space-y-8">
       {/* Tutorial Trigger */}
@@ -36,6 +40,11 @@ const OverviewTab = ({
       <div data-tutorial="main-features">
         <HeroSection />
       </div>
+      
+      {/* Demo Data Setup for Authenticated Users */}
+      {user && (
+        <DemoDataSeeder />
+      )}
       
       {/* Quick Start Section */}
       <QuickStartSection />

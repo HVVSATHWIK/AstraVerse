@@ -9,49 +9,87 @@ import {
   mockActivityLogs, 
   mockKPIData 
 } from './mockData';
+import { 
+  useUserWorkflows, 
+  useUserIntegrations, 
+  useUserActivityLogs,
+  useCreateWorkflow,
+  useUpdateWorkflow,
+  useCreateIntegration,
+  useLogActivity
+} from './supabaseDataService';
+import { useAuth } from '@/hooks/useAuth';
 import { AIEngine, Workflow, Integration, SystemMetrics, ActivityLog, KPIData } from '@/types';
 
 // Environment flag to use mock data during development
 const USE_MOCK_DATA = import.meta.env.DEV;
 
-// Query hooks for data fetching
+// AI Engines - still using mock data as this is system-level data
 export const useAIEngines = () => {
   return useQuery({
     queryKey: ['ai-engines'],
     queryFn: () => USE_MOCK_DATA ? Promise.resolve(mockAIEngines) : apiService.getAIEngines(),
-    staleTime: 30000, // 30 seconds
+    staleTime: 30000,
   });
 };
 
+// Workflows - use real data when authenticated, mock data otherwise
 export const useWorkflows = () => {
-  return useQuery({
-    queryKey: ['workflows'],
-    queryFn: () => USE_MOCK_DATA ? Promise.resolve(mockWorkflows) : apiService.getWorkflows(),
+  const { user } = useAuth();
+  const realDataQuery = useUserWorkflows();
+  const mockDataQuery = useQuery({
+    queryKey: ['workflows-mock'],
+    queryFn: () => Promise.resolve(mockWorkflows),
     staleTime: 30000,
+    enabled: !user, // Only run when not authenticated
   });
+
+  if (user) {
+    return realDataQuery;
+  }
+  return mockDataQuery;
 };
 
+// Integrations - use real data when authenticated, mock data otherwise
 export const useIntegrations = () => {
-  return useQuery({
-    queryKey: ['integrations'],
-    queryFn: () => USE_MOCK_DATA ? Promise.resolve(mockIntegrations) : apiService.getIntegrations(),
+  const { user } = useAuth();
+  const realDataQuery = useUserIntegrations();
+  const mockDataQuery = useQuery({
+    queryKey: ['integrations-mock'],
+    queryFn: () => Promise.resolve(mockIntegrations),
     staleTime: 30000,
+    enabled: !user,
   });
+
+  if (user) {
+    return realDataQuery;
+  }
+  return mockDataQuery;
 };
 
+// Activity Logs - use real data when authenticated, mock data otherwise
+export const useActivityLogs = (limit: number = 50) => {
+  const { user } = useAuth();
+  const realDataQuery = useUserActivityLogs(limit);
+  const mockDataQuery = useQuery({
+    queryKey: ['activity-logs-mock', limit],
+    queryFn: () => Promise.resolve(mockActivityLogs),
+    refetchInterval: 30000,
+    enabled: !user,
+  });
+
+  if (user) {
+    return realDataQuery;
+  }
+  return mockDataQuery;
+};
+
+// System metrics and KPIs - still using mock data as this is system-level
 export const useSystemMetrics = (timeRange: '1h' | '24h' | '7d' | '30d' = '24h') => {
   return useQuery({
     queryKey: ['system-metrics', timeRange],
     queryFn: () => USE_MOCK_DATA ? Promise.resolve(mockSystemMetrics) : apiService.getSystemMetrics(timeRange),
-    refetchInterval: 60000, // Refetch every minute
-  });
-};
-
-export const useActivityLogs = (limit: number = 50) => {
-  return useQuery({
-    queryKey: ['activity-logs', limit],
-    queryFn: () => USE_MOCK_DATA ? Promise.resolve(mockActivityLogs) : apiService.getActivityLogs(limit),
-    refetchInterval: 30000, // Refetch every 30 seconds
+    refetchInterval: 60000,
   });
 };
 
@@ -59,19 +97,23 @@ export const useKPIs = () => {
   return useQuery({
     queryKey: ['kpis'],
     queryFn: () => USE_MOCK_DATA ? Promise.resolve(mockKPIData) : apiService.getKPIs(),
-    staleTime: 300000, // 5 minutes
+    staleTime: 300000,
   });
 };
 
-// Mutation hooks for data modifications
-export const useUpdateWorkflow = () => {
+// Export the real data mutations for authenticated users
+export { useCreateWorkflow, useUpdateWorkflow, useCreateIntegration, useLogActivity };
+
+// Legacy mutation hooks for backward compatibility
+export const useUpdateIntegration = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<Workflow> }) => 
-      USE_MOCK_DATA ? Promise.resolve({ ...mockWorkflows.find(w => w.id === id)!, ...data }) : apiService.updateWorkflow(id, data),
+    mutationFn: ({ id, data }: { id: string; data: Partial<Integration> }) => 
+      USE_MOCK_DATA ? Promise.resolve({ ...mockIntegrations.find(i => i.id === id)!, ...data }) : apiService.updateIntegration(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['workflows'] });
+      queryClient.invalidateQueries({ queryKey: ['integrations'] });
+      queryClient.invalidateQueries({ queryKey: ['user-integrations'] });
     },
   });
 };
@@ -84,19 +126,9 @@ export const useExecuteWorkflow = () => {
       USE_MOCK_DATA ? Promise.resolve({ executionId: `exec-${Date.now()}` }) : apiService.executeWorkflow(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['workflows'] });
+      queryClient.invalidateQueries({ queryKey: ['user-workflows'] });
       queryClient.invalidateQueries({ queryKey: ['activity-logs'] });
-    },
-  });
-};
-
-export const useUpdateIntegration = () => {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<Integration> }) => 
-      USE_MOCK_DATA ? Promise.resolve({ ...mockIntegrations.find(i => i.id === id)!, ...data }) : apiService.updateIntegration(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['integrations'] });
+      queryClient.invalidateQueries({ queryKey: ['user-activity-logs'] });
     },
   });
 };

@@ -1,17 +1,15 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// Configuration with fallback values for development
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
+// Use the actual Supabase project configuration
+const supabaseUrl = 'https://hiwbmeaiwrusuvtkabyz.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhpd2JtZWFpd3J1c3V2dGthYnl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk5ODM4ODcsImV4cCI6MjA2NTU1OTg4N30.Np7LGLxtzUs--Cymu9D3zWyToJgpYWqgSEPrGkHCjFI';
 
 // Log configuration status for debugging
-const isPlaceholder = supabaseUrl.includes('placeholder');
 console.log('Supabase Configuration:', { 
   url: supabaseUrl, 
   hasKey: !!supabaseAnonKey,
-  isPlaceholder,
-  status: isPlaceholder ? 'Using placeholder values' : 'Using environment variables'
+  status: 'Using production Supabase project'
 });
 
 // Create and export the Supabase client
@@ -19,13 +17,14 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
+    detectSessionInUrl: true,
+    storage: localStorage
   }
 });
 
 // Export configuration status for other modules
 export const supabaseConfig = {
-  isConfigured: !isPlaceholder,
+  isConfigured: true,
   url: supabaseUrl,
-  isPlaceholder
+  isPlaceholder: false
 };

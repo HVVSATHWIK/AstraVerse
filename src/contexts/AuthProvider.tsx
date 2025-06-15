@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { AuthContext } from '@/contexts/AuthContext';
 import { AuthContextType, UserProfile, SignUpMetadata } from '@/types/auth';
 
@@ -18,6 +18,30 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     let mounted = true;
 
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.id);
+        
+        if (mounted) {
+          setSession(session);
+          setUser(session?.user ?? null);
+          
+          if (session?.user) {
+            // Defer profile fetch to avoid potential deadlocks
+            setTimeout(() => {
+              fetchUserProfile(session.user.id);
+            }, 0);
+          } else {
+            setProfile(null);
+          }
+          
+          setLoading(false);
+        }
+      }
+    );
+
+    // THEN check for existing session
     const initializeAuth = async () => {
       try {
         console.log('Initializing auth...');
@@ -48,26 +72,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     initializeAuth();
-
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.id);
-        
-        if (mounted) {
-          setSession(session);
-          setUser(session?.user ?? null);
-          
-          if (session?.user) {
-            await fetchUserProfile(session.user.id);
-          } else {
-            setProfile(null);
-          }
-          
-          setLoading(false);
-        }
-      }
-    );
 
     return () => {
       mounted = false;
@@ -117,10 +121,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signUp = async (email: string, password: string, metadata?: SignUpMetadata): Promise<void> => {
     console.log('Attempting sign up for:', email);
+    const redirectUrl = `${window.location.origin}/`;
+    
     const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
+        emailRedirectTo: redirectUrl,
         data: {
           full_name: metadata?.fullName,
         },
