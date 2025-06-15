@@ -1,136 +1,90 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  Brain, 
-  Database, 
-  GitBranch, 
-  MessageSquare, 
-  Shield, 
-  Zap,
-  CheckCircle
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Brain, Zap, Shield, Workflow, BarChart3, Cog } from 'lucide-react';
 
 const FeaturesSection = () => {
+  const features = [
+    {
+      icon: Brain,
+      title: "AI-Powered Automation",
+      description: "Intelligent workflows that adapt and learn from your business patterns",
+      badge: "Smart",
+      color: "from-purple-600/10 to-purple-800/10 border-purple-500/30"
+    },
+    {
+      icon: Zap,
+      title: "Real-time Processing",
+      description: "Lightning-fast data processing and instant insights across all channels",
+      badge: "Fast",
+      color: "from-blue-600/10 to-blue-800/10 border-blue-500/30"
+    },
+    {
+      icon: Shield,
+      title: "Enterprise Security",
+      description: "Bank-grade security with end-to-end encryption and compliance",
+      badge: "Secure",
+      color: "from-green-600/10 to-green-800/10 border-green-500/30"
+    },
+    {
+      icon: Workflow,
+      title: "Seamless Integration",
+      description: "Connect with 1000+ tools and platforms without any code",
+      badge: "Connected",
+      color: "from-orange-600/10 to-orange-800/10 border-orange-500/30"
+    },
+    {
+      icon: BarChart3,
+      title: "Advanced Analytics",
+      description: "Deep insights and predictive analytics for better decision making",
+      badge: "Insights",
+      color: "from-cyan-600/10 to-cyan-800/10 border-cyan-500/30"
+    },
+    {
+      icon: Cog,
+      title: "Custom Workflows",
+      description: "Build and deploy custom AI workflows tailored to your needs",
+      badge: "Custom",
+      color: "from-pink-600/10 to-pink-800/10 border-pink-500/30"
+    }
+  ];
+
   return (
-    <div className="max-w-7xl mx-auto px-6 py-24">
-      <div className="text-center mb-16">
-        <h2 className="text-4xl font-bold text-white mb-4">
-          Powerful AI Orchestration Features
+    <div className="max-w-7xl mx-auto px-6 py-24 relative">
+      <div className="text-center mb-16 animate-fade-in-3d">
+        <h2 className="text-4xl font-bold text-white mb-4 text-3d">
+          Powerful Features for Modern Enterprises
         </h2>
         <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-          Everything you need to transform your enterprise operations with intelligent automation
+          Everything you need to orchestrate AI workflows at enterprise scale
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {/* AI Engines */}
-        <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300">
-          <CardHeader>
-            <Brain className="w-12 h-12 text-purple-400 mb-4" />
-            <CardTitle className="text-white text-xl">Multi-AI Engines</CardTitle>
-            <CardDescription className="text-slate-400">
-              Combine rule-based Drools, LLM processing, and multi-modal pipelines
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-slate-300">
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Drools Business Rules</li>
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />LLM Integration</li>
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Multi-modal Processing</li>
-            </ul>
-          </CardContent>
-        </Card>
-
-        {/* Real-time Integrations */}
-        <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300">
-          <CardHeader>
-            <MessageSquare className="w-12 h-12 text-blue-400 mb-4" />
-            <CardTitle className="text-white text-xl">Smart Integrations</CardTitle>
-            <CardDescription className="text-slate-400">
-              Connect with Zoom, Slack, Jira, and more with intelligent workflows
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-slate-300">
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Zoom Transcription</li>
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Slack Automation</li>
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Jira Integration</li>
-            </ul>
-          </CardContent>
-        </Card>
-
-        {/* Advanced Analytics */}
-        <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300">
-          <CardHeader>
-            <Database className="w-12 h-12 text-green-400 mb-4" />
-            <CardTitle className="text-white text-xl">Enterprise Data</CardTitle>
-            <CardDescription className="text-slate-400">
-              MongoDB, InfluxDB, and Milvus for comprehensive data management
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-slate-300">
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Metadata Storage</li>
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Time-series Analytics</li>
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Vector Embeddings</li>
-            </ul>
-          </CardContent>
-        </Card>
-
-        {/* Workflow Automation */}
-        <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300">
-          <CardHeader>
-            <GitBranch className="w-12 h-12 text-yellow-400 mb-4" />
-            <CardTitle className="text-white text-xl">Workflow Builder</CardTitle>
-            <CardDescription className="text-slate-400">
-              Visual workflow designer with pre-built templates for common scenarios
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-slate-300">
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Drag & Drop Designer</li>
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Pre-built Templates</li>
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Real-time Monitoring</li>
-            </ul>
-          </CardContent>
-        </Card>
-
-        {/* Enterprise Security */}
-        <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300">
-          <CardHeader>
-            <Shield className="w-12 h-12 text-red-400 mb-4" />
-            <CardTitle className="text-white text-xl">Enterprise Security</CardTitle>
-            <CardDescription className="text-slate-400">
-              SOC2 compliant with end-to-end encryption and audit trails
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-slate-300">
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />SOC2 Compliance</li>
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />End-to-end Encryption</li>
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Audit Trails</li>
-            </ul>
-          </CardContent>
-        </Card>
-
-        {/* Performance & Scale */}
-        <Card className="bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300">
-          <CardHeader>
-            <Zap className="w-12 h-12 text-cyan-400 mb-4" />
-            <CardTitle className="text-white text-xl">Cloud Scale</CardTitle>
-            <CardDescription className="text-slate-400">
-              Kubernetes-native with auto-scaling and multi-cloud deployment
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-slate-300">
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Auto-scaling</li>
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />Multi-cloud Ready</li>
-              <li className="flex items-center"><CheckCircle className="w-4 h-4 text-green-400 mr-2" />99.9% Uptime SLA</li>
-            </ul>
-          </CardContent>
-        </Card>
+        {features.map((feature, index) => (
+          <Card 
+            key={feature.title} 
+            className={`bg-gradient-to-br ${feature.color} backdrop-blur-sm card-3d hover-lift-3d interactive-card stagger-${(index % 6) + 1}`}
+          >
+            <CardHeader className="text-center">
+              <div className="flex justify-center mb-4">
+                <div className="p-3 bg-gradient-to-br from-white/10 to-white/5 rounded-xl backdrop-blur-sm animate-float-3d">
+                  <feature.icon className="w-8 h-8 text-white" />
+                </div>
+              </div>
+              <Badge className="mx-auto mb-2 bg-white/10 text-white border-white/20 hover-glow">
+                {feature.badge}
+              </Badge>
+              <CardTitle className="text-white text-xl">{feature.title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription className="text-slate-300 text-center leading-relaxed">
+                {feature.description}
+              </CardDescription>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   );
