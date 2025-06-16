@@ -31,7 +31,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   // Redirect to auth page if user is not authenticated
   if (!user) {
-    console.log('ProtectedRoute - No user found, redirecting to auth');
+    console.log('ProtectedRoute - No user found, showing auth page');
     return <AuthPage />;
   }
 

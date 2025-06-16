@@ -30,8 +30,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
           if (session?.user) {
             // Defer profile fetch to avoid potential deadlocks
             setTimeout(() => {
-              fetchUserProfile(session.user.id);
-            }, 0);
+              if (mounted) {
+                fetchUserProfile(session.user.id);
+              }
+            }, 100);
           } else {
             setProfile(null);
           }
@@ -49,7 +51,10 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         
         if (error) {
           console.error('Error getting session:', error);
-          throw error;
+          if (mounted) {
+            setLoading(false);
+          }
+          return;
         }
         
         if (mounted) {
@@ -106,7 +111,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const signIn = async (email: string, password: string): Promise<void> => {
     console.log('Attempting sign in for:', email);
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -116,20 +121,20 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       throw error;
     }
     
-    console.log('Sign in successful');
+    console.log('Sign in successful', data);
   };
 
   const signUp = async (email: string, password: string, metadata?: SignUpMetadata): Promise<void> => {
     console.log('Attempting sign up for:', email);
     const redirectUrl = `${window.location.origin}/`;
     
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: redirectUrl,
         data: {
-          full_name: metadata?.fullName,
+          full_name: metadata?.fullName || 'User',
         },
       },
     });
@@ -139,7 +144,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       throw error;
     }
     
-    console.log('Sign up successful');
+    console.log('Sign up successful', data);
   };
 
   const signOut = async (): Promise<void> => {

@@ -39,15 +39,32 @@ const LoginForm = ({ onToggleMode }: LoginFormProps) => {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
+      console.log('Login form submitted with email:', data.email);
       await signIn(data.email, data.password);
       toast({
         title: 'Welcome back!',
         description: 'You have successfully signed in.',
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Login form error:', error);
+      
+      let errorMessage = 'An unexpected error occurred';
+      
+      if (error?.message) {
+        if (error.message.includes('Invalid login credentials')) {
+          errorMessage = 'Invalid email or password. Please check your credentials and try again.';
+        } else if (error.message.includes('Email not confirmed')) {
+          errorMessage = 'Please check your email and click the confirmation link before signing in.';
+        } else if (error.message.includes('Too many requests')) {
+          errorMessage = 'Too many login attempts. Please wait a moment before trying again.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         title: 'Sign in failed',
-        description: error instanceof Error ? error.message : 'An unexpected error occurred',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
