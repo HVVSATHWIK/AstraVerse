@@ -12,6 +12,7 @@ import GeminiPlayground from '@/components/GeminiPlayground';
 import DocumentProcessor from '@/components/document/DocumentProcessor';
 import MeetingAutomation from '@/components/meeting/MeetingAutomation';
 import AdvancedAnalytics from '@/components/analytics/AdvancedAnalytics';
+import WorkflowTemplateManager from '@/components/workflow/WorkflowTemplateManager';
 
 const WorkflowsTab = () => {
   const [activeSubTab, setActiveSubTab] = useState('builder');
@@ -30,10 +31,11 @@ const WorkflowsTab = () => {
         
         {/* Enhanced Workflow Tabs with All Features */}
         <Tabs value={activeSubTab} onValueChange={setActiveSubTab} className="space-y-6">
-          <TabsList className="bg-slate-800/50 border border-slate-700 grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-8 gap-1">
+          <TabsList className="bg-slate-800/50 border border-slate-700 grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-9 gap-1">
             <TabsTrigger value="builder" className="text-slate-300 text-xs lg:text-sm">Builder</TabsTrigger>
             <TabsTrigger value="advanced" className="text-slate-300 text-xs lg:text-sm">Advanced</TabsTrigger>
             <TabsTrigger value="templates" className="text-slate-300 text-xs lg:text-sm">Templates</TabsTrigger>
+            <TabsTrigger value="manager" className="text-slate-300 text-xs lg:text-sm">Template Manager</TabsTrigger>
             <TabsTrigger value="playground" className="text-slate-300 text-xs lg:text-sm">Playground</TabsTrigger>
             <TabsTrigger value="documents" className="text-slate-300 text-xs lg:text-sm">Documents</TabsTrigger>
             <TabsTrigger value="meetings" className="text-slate-300 text-xs lg:text-sm">Meetings</TabsTrigger>
@@ -75,6 +77,13 @@ const WorkflowsTab = () => {
             {/* AI Templates and Prompt Management */}
             <div className="animate-scale-in-3d">
               <GeminiTemplateLibrary />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="manager" className="space-y-6">
+            {/* Workflow Template Manager */}
+            <div className="animate-scale-in-3d">
+              <WorkflowTemplateManager />
             </div>
           </TabsContent>
 

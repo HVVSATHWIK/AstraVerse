@@ -1,83 +1,106 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Settings, Wifi, WifiOff, Play, User } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import AstraLogo from '@/components/AstraLogo';
-import MobileNav from '@/components/MobileNav';
-import SettingsDialog from '@/components/SettingsDialog';
-import UserProfile from '@/components/UserProfile';
-import { useRealtime } from '@/contexts/RealtimeContext';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Settings, Bell, User, LogOut, Search } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import UserProfileModal from '@/components/profile/UserProfileModal';
+import MobileNav from '@/components/MobileNav';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface DashboardHeaderProps {
   activeTab: string;
-  onTabChange: (value: string) => void;
+  onTabChange: (tab: string) => void;
 }
 
 const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
-  const { isConnected, toggleRealtime, isRealtimeEnabled } = useRealtime();
-  const { user, profile } = useAuth();
-  const [showUserMenu, setShowUserMenu] = useState(false);
+  const { user, profile, signOut } = useAuth();
+  const isMobile = useIsMobile();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
+  };
+
+  if (isMobile) {
+    return <MobileNav activeTab={activeTab} onTabChange={onTabChange} />;
+  }
 
   return (
-    <div className="flex items-center justify-between bg-slate-800/80 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-slate-700/50 glass-dark hover-lift-3d card-3d animate-slide-up-3d transform-3d perspective-container relative overflow-hidden">
-      {/* 3D Background elements */}
-      <div className="absolute -top-10 -left-10 w-32 h-32 bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-full blur-3xl animate-background-float opacity-50"></div>
-      <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-gradient-to-br from-cyan-600/20 to-purple-600/20 rounded-full blur-3xl animate-float-3d opacity-40"></div>
-      
-      <div className="flex items-center space-x-4 relative z-10">
-        <div className="p-2 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl shadow-lg animate-float-3d btn-3d">
-          <AstraLogo size="md" />
+    <div className="flex items-center justify-between p-6 bg-slate-800/30 backdrop-blur-sm rounded-4xl border border-slate-700/50 shadow-2xl glass-dark mb-6">
+      <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 rounded-2xl flex items-center justify-center shadow-xl transform-3d">
+            <span className="text-white font-bold text-xl">A</span>
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
+              AstraAI Dashboard
+            </h1>
+            <p className="text-slate-400 text-sm">Intelligent Automation Platform</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent text-3d animate-scale-in-3d">
-            AstraAI Platform
-          </h1>
-          <p className="text-slate-300 animate-fade-in-3d stagger-1">
-            Welcome, {profile?.full_name || user?.email} • AI Workflow Orchestration
-          </p>
+        
+        <div className="flex items-center space-x-2">
+          <Badge className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-400 border-green-500/30 shadow-lg">
+            System Online
+          </Badge>
+          <Badge className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 text-blue-400 border-blue-500/30 shadow-lg">
+            12 Active Workflows
+          </Badge>
         </div>
       </div>
-      
-      <div className="flex items-center space-x-3 relative z-10">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={toggleRealtime}
-          className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg rounded-2xl btn-3d animate-scale-in-3d stagger-2"
-        >
-          {isConnected && isRealtimeEnabled ? 
-            <Wifi className="w-4 h-4 mr-2 text-green-400 animate-pulse-3d" /> : 
-            <WifiOff className="w-4 h-4 mr-2 text-slate-400 animate-wiggle-3d" />
-          }
-          {isRealtimeEnabled ? 'Live' : 'Paused'}
+
+      <div className="flex items-center space-x-4">
+        <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-2xl">
+          <Search className="w-4 h-4" />
         </Button>
         
-        <SettingsDialog>
-          <Button variant="outline" size="sm" className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg rounded-2xl btn-3d animate-scale-in-3d stagger-3">
-            <Settings className="w-4 h-4 mr-2 animate-rotate-3d" />
-            Settings
+        <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-2xl relative">
+          <Bell className="w-4 h-4" />
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+        </Button>
+
+        <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-2xl">
+          <Settings className="w-4 h-4" />
+        </Button>
+
+        <div className="flex items-center space-x-3 pl-4 border-l border-slate-700">
+          <UserProfileModal
+            trigger={
+              <Button variant="ghost" className="flex items-center space-x-3 p-2 hover:bg-slate-700/50 rounded-2xl">
+                <Avatar className="w-8 h-8 border-2 border-purple-500/30">
+                  <AvatarImage src={profile?.avatar_url || ''} />
+                  <AvatarFallback className="bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm">
+                    {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="text-left">
+                  <div className="text-white text-sm font-medium">
+                    {profile?.full_name || 'User'}
+                  </div>
+                  <div className="text-slate-400 text-xs">
+                    {user?.email}
+                  </div>
+                </div>
+              </Button>
+            }
+          />
+          
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleSignOut}
+            className="text-slate-400 hover:text-white hover:bg-slate-700/50 rounded-2xl"
+          >
+            <LogOut className="w-4 h-4" />
           </Button>
-        </SettingsDialog>
-
-        <Popover open={showUserMenu} onOpenChange={setShowUserMenu}>
-          <PopoverTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-slate-700/50 border-slate-600 text-slate-200 hover:bg-slate-600/50 backdrop-blur-sm shadow-lg rounded-2xl btn-3d animate-scale-in-3d stagger-4">
-              <User className="w-4 h-4 mr-2" />
-              Profile
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80 p-0 bg-slate-800/95 border-slate-700" align="end">
-            <UserProfile />
-          </PopoverContent>
-        </Popover>
-        
-        <MobileNav activeTab={activeTab} onTabChange={onTabChange} />
+        </div>
       </div>
-
-      {/* 3D floating decorative elements */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-yellow-400/10 to-orange-400/10 rounded-full blur-2xl animate-pulse-3d opacity-30"></div>
     </div>
   );
 };
