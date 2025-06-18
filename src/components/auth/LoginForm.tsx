@@ -41,6 +41,7 @@ const LoginForm = ({ onToggleMode }: LoginFormProps) => {
     try {
       console.log('Login form submitted with email:', data.email);
       await signIn(data.email, data.password);
+      console.log('Login successful');
       toast({
         title: 'Welcome back!',
         description: 'You have successfully signed in.',
@@ -54,9 +55,11 @@ const LoginForm = ({ onToggleMode }: LoginFormProps) => {
         if (error.message.includes('Invalid login credentials')) {
           errorMessage = 'Invalid email or password. Please check your credentials and try again.';
         } else if (error.message.includes('Email not confirmed')) {
-          errorMessage = 'Please check your email and click the confirmation link before signing in.';
+          errorMessage = 'Please check your email and click the confirmation link before signing in. If you didn\'t receive an email, try signing up again.';
         } else if (error.message.includes('Too many requests')) {
           errorMessage = 'Too many login attempts. Please wait a moment before trying again.';
+        } else if (error.message.includes('Signup requires a valid password')) {
+          errorMessage = 'Please enter a valid password.';
         } else {
           errorMessage = error.message;
         }
@@ -146,6 +149,13 @@ const LoginForm = ({ onToggleMode }: LoginFormProps) => {
             </Button>
           </form>
         </Form>
+        
+        <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+          <p className="text-blue-300 text-sm">
+            💡 <strong>Testing tip:</strong> Email confirmation is enabled. Check your email for the confirmation link after signing up.
+          </p>
+        </div>
+        
         <div className="mt-6 text-center">
           <p className="text-slate-400">
             Don't have an account?{' '}

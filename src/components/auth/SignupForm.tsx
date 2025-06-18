@@ -47,15 +47,38 @@ const SignupForm = ({ onToggleMode }: SignupFormProps) => {
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
     try {
+      console.log('Signup form submitted with email:', data.email);
       await signUp(data.email, data.password, { fullName: data.fullName });
+      console.log('Signup successful');
       toast({
-        title: 'Account created!',
-        description: 'Please check your email to verify your account.',
+        title: 'Account created successfully!',
+        description: 'Please check your email and click the confirmation link to activate your account.',
       });
-    } catch (error) {
+      
+      // Reset form after successful signup
+      form.reset();
+    } catch (error: any) {
+      console.error('Signup form error:', error);
+      
+      let errorMessage = 'An unexpected error occurred';
+      
+      if (error?.message) {
+        if (error.message.includes('User already registered')) {
+          errorMessage = 'An account with this email already exists. Please try signing in instead.';
+        } else if (error.message.includes('Password should be at least 6 characters')) {
+          errorMessage = 'Password must be at least 6 characters long.';
+        } else if (error.message.includes('Unable to validate email address')) {
+          errorMessage = 'Please enter a valid email address.';
+        } else if (error.message.includes('Signup requires a valid password')) {
+          errorMessage = 'Please enter a valid password.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         title: 'Sign up failed',
-        description: error instanceof Error ? error.message : 'An unexpected error occurred',
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
@@ -190,6 +213,13 @@ const SignupForm = ({ onToggleMode }: SignupFormProps) => {
             </Button>
           </form>
         </Form>
+        
+        <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+          <p className="text-amber-300 text-sm">
+            📧 <strong>Important:</strong> You'll receive a confirmation email. Please click the link to activate your account before signing in.
+          </p>
+        </div>
+        
         <div className="mt-6 text-center">
           <p className="text-slate-400">
             Already have an account?{' '}

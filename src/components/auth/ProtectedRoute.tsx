@@ -13,7 +13,8 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   console.log('ProtectedRoute - Auth Status:', { 
     hasUser: !!user, 
     loading,
-    userId: user?.id 
+    userId: user?.id,
+    userEmail: user?.email 
   });
 
   // Show loading state while authentication is being determined
