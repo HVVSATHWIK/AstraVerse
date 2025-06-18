@@ -8,6 +8,7 @@ import LiveOperationsSection from './sections/LiveOperationsSection';
 import PerformanceSection from './sections/PerformanceSection';
 import TutorialTrigger from '@/components/tutorial/TutorialTrigger';
 import DemoDataSeeder from '@/components/DemoDataSeeder';
+import NotificationCenter from '@/components/NotificationCenter';
 import { useAuth } from '@/hooks/useAuth';
 
 interface OverviewTabProps {
@@ -41,9 +42,12 @@ const OverviewTab = ({
         <HeroSection />
       </div>
       
-      {/* Demo Data Setup for Authenticated Users */}
+      {/* Demo Data Setup and Notifications for Authenticated Users */}
       {user && (
-        <DemoDataSeeder />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <DemoDataSeeder />
+          <NotificationCenter />
+        </div>
       )}
       
       {/* Quick Start Section */}

@@ -2,9 +2,9 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Zap, Database, CheckCircle } from 'lucide-react';
+import { Zap, Database, CheckCircle, AlertCircle } from 'lucide-react';
 import { useCreateWorkflow, useCreateIntegration, useLogActivity } from '@/services/dataService';
-import { toast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 
 const DemoDataSeeder = () => {
   const createWorkflow = useCreateWorkflow();
@@ -13,7 +13,11 @@ const DemoDataSeeder = () => {
 
   const seedDemoData = async () => {
     try {
-      toast.info('Setting up your demo data...');
+      console.log('Starting demo data setup...');
+      toast({
+        title: 'Setting up demo data...',
+        description: 'This may take a few moments',
+      });
 
       // Create sample workflows
       const workflows = [
@@ -46,14 +50,17 @@ const DemoDataSeeder = () => {
         }
       ];
 
+      console.log('Creating workflows...');
       for (const workflow of workflows) {
-        await createWorkflow.mutateAsync(workflow);
+        console.log('Creating workflow:', workflow);
+        const result = await createWorkflow.mutateAsync(workflow);
+        console.log('Workflow created:', result);
       }
 
       // Create sample integrations
       const integrations = [
         {
-          integration_type: 'email',
+          integration_type: 'email' as const,
           name: 'Gmail Integration',
           config: {
             provider: 'gmail',
@@ -62,7 +69,7 @@ const DemoDataSeeder = () => {
           enabled: true
         },
         {
-          integration_type: 'calendar',
+          integration_type: 'calendar' as const,
           name: 'Google Calendar',
           config: {
             provider: 'google_calendar',
@@ -71,7 +78,7 @@ const DemoDataSeeder = () => {
           enabled: true
         },
         {
-          integration_type: 'storage',
+          integration_type: 'storage' as const,
           name: 'Dropbox Storage',
           config: {
             provider: 'dropbox',
@@ -81,12 +88,16 @@ const DemoDataSeeder = () => {
         }
       ];
 
+      console.log('Creating integrations...');
       for (const integration of integrations) {
-        await createIntegration.mutateAsync(integration);
+        console.log('Creating integration:', integration);
+        const result = await createIntegration.mutateAsync(integration);
+        console.log('Integration created:', result);
       }
 
       // Log demo setup activity
-      await logActivity.mutateAsync({
+      console.log('Logging activity...');
+      const activityResult = await logActivity.mutateAsync({
         action: 'demo_data_setup',
         description: 'Demo data successfully created for user account',
         metadata: {
@@ -95,22 +106,31 @@ const DemoDataSeeder = () => {
           timestamp: new Date().toISOString()
         }
       });
+      console.log('Activity logged:', activityResult);
 
-      toast.success('Demo data has been set up successfully!');
+      toast({
+        title: 'Demo data setup complete!',
+        description: `Created ${workflows.length} workflows and ${integrations.length} integrations`,
+      });
     } catch (error) {
       console.error('Error seeding demo data:', error);
-      toast.error('Failed to set up demo data. Please try again.');
+      toast({
+        title: 'Demo data setup failed',
+        description: error instanceof Error ? error.message : 'An unexpected error occurred',
+        variant: 'destructive',
+      });
     }
   };
 
   const isLoading = createWorkflow.isPending || createIntegration.isPending || logActivity.isPending;
 
   return (
-    <Card className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 border-purple-500/30">
+    <Card className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 border-purple-500/30 dark:bg-gradient-to-br dark:from-purple-900/30 dark:to-blue-900/30">
       <CardHeader>
         <CardTitle className="text-white flex items-center space-x-2">
           <Database className="w-5 h-5 text-purple-400" />
           <span>Demo Data Setup</span>
+          {isLoading && <div className="w-4 h-4 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -133,10 +153,17 @@ const DemoDataSeeder = () => {
           </div>
         </div>
 
+        {(createWorkflow.isError || createIntegration.isError || logActivity.isError) && (
+          <div className="flex items-center space-x-2 text-red-400 text-sm">
+            <AlertCircle className="w-4 h-4" />
+            <span>Error occurred during setup. Please try again.</span>
+          </div>
+        )}
+
         <Button
           onClick={seedDemoData}
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Zap className="w-4 h-4 mr-2" />
           {isLoading ? 'Setting up...' : 'Setup Demo Data'}

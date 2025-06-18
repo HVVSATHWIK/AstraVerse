@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
+import { realtimeService } from '@/services/realtimeService';
 
 interface RealtimeContextType {
   isConnected: boolean;
@@ -29,27 +30,86 @@ export const RealtimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     if (!isRealtimeEnabled) return;
 
-    const interval = setInterval(() => {
-      // Simulate real-time updates by invalidating queries
+    console.log('Setting up realtime subscriptions...');
+
+    // Subscribe to various real-time events
+    const unsubscribeMetrics = realtimeService.subscribe('metrics-update', (data: any) => {
+      console.log('Received metrics update:', data);
       queryClient.invalidateQueries({ queryKey: ['system-metrics'] });
-      queryClient.invalidateQueries({ queryKey: ['activity-logs'] });
       queryClient.invalidateQueries({ queryKey: ['kpis'] });
-      
       setLastUpdate(new Date());
       setIsConnected(true);
-    }, 30000); // Update every 30 seconds
+    });
 
-    return () => clearInterval(interval);
+    const unsubscribeActivity = realtimeService.subscribe('activity-update', (data: any) => {
+      console.log('Received activity update:', data);
+      queryClient.invalidateQueries({ queryKey: ['activity-logs'] });
+      queryClient.invalidateQueries({ queryKey: ['user-activity-logs'] });
+      setLastUpdate(new Date());
+    });
+
+    const unsubscribeNotifications = realtimeService.subscribe('notification', (data: any) => {
+      console.log('Received notification:', data);
+      if (data.type === 'error') {
+        toast({
+          title: data.title || "System Alert",
+          description: data.message,
+          variant: "destructive",
+        });
+      } else if (data.type === 'success') {
+        toast({
+          title: data.title || "Success",
+          description: data.message,
+        });
+      }
+      setLastUpdate(new Date());
+    });
+
+    const unsubscribeSystemStatus = realtimeService.subscribe('system-status', (data: any) => {
+      console.log('Received system status:', data);
+      setIsConnected(data.status === 'online');
+      setLastUpdate(new Date());
+    });
+
+    // Periodic refresh for queries
+    const interval = setInterval(() => {
+      if (isRealtimeEnabled) {
+        queryClient.invalidateQueries({ queryKey: ['system-metrics'] });
+        queryClient.invalidateQueries({ queryKey: ['activity-logs'] });
+        queryClient.invalidateQueries({ queryKey: ['kpis'] });
+        queryClient.invalidateQueries({ queryKey: ['user-activity-logs'] });
+        setLastUpdate(new Date());
+      }
+    }, 30000);
+
+    return () => {
+      console.log('Cleaning up realtime subscriptions...');
+      unsubscribeMetrics();
+      unsubscribeActivity();
+      unsubscribeNotifications();
+      unsubscribeSystemStatus();
+      clearInterval(interval);
+    };
   }, [queryClient, isRealtimeEnabled]);
 
   const toggleRealtime = () => {
-    setIsRealtimeEnabled(!isRealtimeEnabled);
+    const newState = !isRealtimeEnabled;
+    setIsRealtimeEnabled(newState);
+    
     toast({
-      title: isRealtimeEnabled ? "Real-time updates disabled" : "Real-time updates enabled",
-      description: isRealtimeEnabled 
-        ? "Dashboard will no longer auto-refresh" 
-        : "Dashboard will refresh every 30 seconds",
+      title: newState ? "Real-time updates enabled" : "Real-time updates disabled",
+      description: newState 
+        ? "Dashboard will refresh automatically" 
+        : "Dashboard will no longer auto-refresh",
     });
+
+    if (newState) {
+      // Immediately refresh data when re-enabling
+      queryClient.invalidateQueries({ queryKey: ['system-metrics'] });
+      queryClient.invalidateQueries({ queryKey: ['activity-logs'] });
+      queryClient.invalidateQueries({ queryKey: ['kpis'] });
+      queryClient.invalidateQueries({ queryKey: ['user-activity-logs'] });
+    }
   };
 
   return (

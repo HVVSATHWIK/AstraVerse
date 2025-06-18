@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Bell, X, CheckCircle, AlertTriangle, Info } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Bell, X, CheckCircle, AlertTriangle, Info, MoreVertical } from 'lucide-react';
 import { useRealtime } from '@/contexts/RealtimeContext';
+import { toast } from '@/hooks/use-toast';
 
 interface Notification {
   id: string;
@@ -50,10 +52,34 @@ const NotificationCenter = () => {
     setNotifications(prev => 
       prev.map(n => n.id === id ? { ...n, read: true } : n)
     );
+    toast({
+      title: "Notification marked as read",
+      duration: 2000,
+    });
+  };
+
+  const markAllAsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    toast({
+      title: "All notifications marked as read",
+      duration: 2000,
+    });
   };
 
   const removeNotification = (id: string) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
+    toast({
+      title: "Notification removed",
+      duration: 2000,
+    });
+  };
+
+  const clearAllNotifications = () => {
+    setNotifications([]);
+    toast({
+      title: "All notifications cleared",
+      duration: 2000,
+    });
   };
 
   const getIcon = (type: string) => {
@@ -80,9 +106,9 @@ const NotificationCenter = () => {
   };
 
   return (
-    <Card className="bg-white border-gray-200 hover:shadow-md transition-shadow">
+    <Card className="bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 hover:shadow-md transition-shadow">
       <CardHeader>
-        <CardTitle className="text-gray-800 flex items-center justify-between">
+        <CardTitle className="text-gray-800 dark:text-white flex items-center justify-between">
           <div className="flex items-center">
             <Bell className="w-5 h-5 mr-2 text-blue-500" />
             Notifications
@@ -94,9 +120,28 @@ const NotificationCenter = () => {
           </div>
           <div className="flex items-center space-x-2">
             <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-gray-500 dark:text-slate-400">
               {isRealtimeEnabled ? (lastUpdate ? `Updated ${formatTimestamp(lastUpdate)}` : 'Live') : 'Paused'}
             </span>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200"
+                >
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={markAllAsRead} disabled={unreadCount === 0}>
+                  Mark all as read
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={clearAllNotifications} disabled={notifications.length === 0}>
+                  Clear all notifications
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </CardTitle>
       </CardHeader>
@@ -105,17 +150,20 @@ const NotificationCenter = () => {
           notifications.map((notification) => (
             <div
               key={notification.id}
-              className={`p-3 border rounded-lg ${
-                notification.read ? 'border-gray-200 bg-gray-50' : 'border-blue-200 bg-blue-50'
+              className={`p-3 border rounded-lg transition-colors cursor-pointer ${
+                notification.read 
+                  ? 'border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50' 
+                  : 'border-blue-200 dark:border-blue-700 bg-blue-50 dark:bg-blue-900/20'
               }`}
+              onClick={() => !notification.read && markAsRead(notification.id)}
             >
               <div className="flex items-start justify-between">
-                <div className="flex items-start space-x-3">
+                <div className="flex items-start space-x-3 flex-1">
                   {getIcon(notification.type)}
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-gray-800 text-sm font-medium">{notification.title}</h4>
-                    <p className="text-gray-600 text-xs mt-1">{notification.message}</p>
-                    <span className="text-gray-500 text-xs">{formatTimestamp(notification.timestamp)}</span>
+                    <h4 className="text-gray-800 dark:text-white text-sm font-medium">{notification.title}</h4>
+                    <p className="text-gray-600 dark:text-slate-300 text-xs mt-1">{notification.message}</p>
+                    <span className="text-gray-500 dark:text-slate-400 text-xs">{formatTimestamp(notification.timestamp)}</span>
                   </div>
                 </div>
                 <div className="flex items-center space-x-1">
@@ -123,8 +171,11 @@ const NotificationCenter = () => {
                     <Button
                       size="sm"
                       variant="ghost"
-                      onClick={() => markAsRead(notification.id)}
-                      className="text-blue-600 hover:text-blue-700 p-1 h-auto"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        markAsRead(notification.id);
+                      }}
+                      className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 p-1 h-auto"
                     >
                       Mark read
                     </Button>
@@ -132,8 +183,11 @@ const NotificationCenter = () => {
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => removeNotification(notification.id)}
-                    className="text-gray-500 hover:text-gray-700 p-1 h-auto"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeNotification(notification.id);
+                    }}
+                    className="text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-200 p-1 h-auto"
                   >
                     <X className="w-3 h-3" />
                   </Button>
@@ -142,7 +196,7 @@ const NotificationCenter = () => {
             </div>
           ))
         ) : (
-          <p className="text-gray-500 text-center py-8">No notifications</p>
+          <p className="text-gray-500 dark:text-slate-400 text-center py-8">No notifications</p>
         )}
       </CardContent>
     </Card>
