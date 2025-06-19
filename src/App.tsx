@@ -28,16 +28,26 @@ async function enableMocking() {
     return;
   }
 
-  const { worker } = await import('@/mocks/browser');
-  
-  return worker.start({
-    serviceWorker: {
-      url: '/mockServiceWorker.js'
-    },
-    onUnhandledRequest: 'warn',
-  }).then(() => {
-    console.log('🚀 Mock Service Worker started');
-  });
+  // Check if service worker API is available
+  if (typeof navigator === 'undefined' || !navigator.serviceWorker) {
+    console.warn('Service Worker API is not available in this environment');
+    return;
+  }
+
+  try {
+    const { worker } = await import('@/mocks/browser');
+    
+    return worker.start({
+      serviceWorker: {
+        url: '/mockServiceWorker.js'
+      },
+      onUnhandledRequest: 'warn',
+    }).then(() => {
+      console.log('🚀 Mock Service Worker started');
+    });
+  } catch (error) {
+    console.error('Error starting Mock Service Worker:', error);
+  }
 }
 
 function App() {
