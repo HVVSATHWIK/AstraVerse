@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -32,6 +31,9 @@ async function enableMocking() {
   const { worker } = await import('@/mocks/browser');
   
   return worker.start({
+    serviceWorker: {
+      url: '/mockServiceWorker.js'
+    },
     onUnhandledRequest: 'warn',
   }).then(() => {
     console.log('🚀 Mock Service Worker started');
