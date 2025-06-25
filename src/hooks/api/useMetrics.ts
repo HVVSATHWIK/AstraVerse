@@ -74,9 +74,9 @@ export const useMetricsByDate = (startDate: string, endDate: string) => {
         .from('metrics')
         .select('*')
         .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
-        .gte('timestamp', startDate)
-        .lte('timestamp', endDate)
-        .order('timestamp', { ascending: true });
+        .gte('created_at', startDate)
+        .lte('created_at', endDate)
+        .order('created_at', { ascending: true });
 
       if (error) {
         console.error('Error fetching metrics by date:', error);
