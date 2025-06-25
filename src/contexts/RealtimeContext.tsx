@@ -1,8 +1,8 @@
-
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@/hooks/use-toast';
 import { realtimeService } from '@/services/realtimeService';
+import { supabase } from '@/integrations/supabase/client';
 
 interface RealtimeContextType {
   isConnected: boolean;
@@ -32,11 +32,30 @@ export const RealtimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     console.log('Setting up realtime subscriptions...');
 
+    // Set up Supabase real-time subscriptions
+    const metricsSubscription = supabase
+      .channel('metrics_changes')
+      .on('postgres_changes', 
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'metrics' 
+        }, 
+        (payload) => {
+          console.log('Metrics table changed:', payload);
+          queryClient.invalidateQueries({ queryKey: ['metrics'] });
+          setLastUpdate(new Date());
+          setIsConnected(true);
+        }
+      )
+      .subscribe();
+
     // Subscribe to various real-time events
     const unsubscribeMetrics = realtimeService.subscribe('metrics-update', (data: any) => {
       console.log('Received metrics update:', data);
       queryClient.invalidateQueries({ queryKey: ['system-metrics'] });
       queryClient.invalidateQueries({ queryKey: ['kpis'] });
+      queryClient.invalidateQueries({ queryKey: ['metrics'] });
       setLastUpdate(new Date());
       setIsConnected(true);
     });
@@ -78,12 +97,14 @@ export const RealtimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         queryClient.invalidateQueries({ queryKey: ['activity-logs'] });
         queryClient.invalidateQueries({ queryKey: ['kpis'] });
         queryClient.invalidateQueries({ queryKey: ['user-activity-logs'] });
+        queryClient.invalidateQueries({ queryKey: ['metrics'] });
         setLastUpdate(new Date());
       }
     }, 30000);
 
     return () => {
       console.log('Cleaning up realtime subscriptions...');
+      metricsSubscription.unsubscribe();
       unsubscribeMetrics();
       unsubscribeActivity();
       unsubscribeNotifications();
@@ -109,6 +130,7 @@ export const RealtimeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       queryClient.invalidateQueries({ queryKey: ['activity-logs'] });
       queryClient.invalidateQueries({ queryKey: ['kpis'] });
       queryClient.invalidateQueries({ queryKey: ['user-activity-logs'] });
+      queryClient.invalidateQueries({ queryKey: ['metrics'] });
     }
   };
 
