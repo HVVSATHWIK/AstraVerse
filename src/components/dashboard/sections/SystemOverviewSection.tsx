@@ -17,7 +17,7 @@ const SystemOverviewSection = ({ kpis, kpisLoading }: SystemOverviewSectionProps
       </div>
       <ErrorBoundary>
         <div className="animate-bounce-in-3d stagger-4">
-          <OverviewMetrics />
+          <OverviewMetrics kpis={kpis} isLoading={kpisLoading} />
         </div>
         <div className="mt-6 animate-bounce-in-3d stagger-4">
           <SystemStatusCards kpis={kpis} isLoading={kpisLoading} />

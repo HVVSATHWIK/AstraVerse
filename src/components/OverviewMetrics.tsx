@@ -71,14 +71,17 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, icon, color, isLo
   );
 };
 
-const OverviewMetrics: React.FC = () => {
-  const { data: metrics, isLoading } = useMetrics();
+interface OverviewMetricsProps {
+  kpis?: any;
+  isLoading?: boolean;
+}
 
+const OverviewMetrics: React.FC<OverviewMetricsProps> = ({ kpis, isLoading = false }) => {
   // Default values if data is not available
-  const meetingReduction = metrics?.meetingReduction || 0;
-  const taskCompletion = metrics?.taskCompletionRate || 0;
-  const responseLatency = metrics?.avgResponseTime || 0;
-  const customerSatisfaction = metrics?.customerSatisfaction || 0;
+  const meetingReduction = kpis?.meetingReduction || 0;
+  const taskCompletion = kpis?.taskCompletionRate || 0;
+  const responseLatency = kpis?.avgResponseTime || 0;
+  const customerSatisfaction = kpis?.customerSatisfaction || 0;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
