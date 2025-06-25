@@ -13,7 +13,8 @@ import {
   Activity,
   Settings
 } from 'lucide-react';
-import { Workflow, useUpdateWorkflow, useExecuteWorkflow } from '@/hooks/api/useWorkflows';
+import { Workflow } from '@/types';
+import { useUpdateWorkflow, useExecuteWorkflow } from '@/hooks/api/useWorkflows';
 import WorkflowExecutionHistory from './WorkflowExecutionHistory';
 
 interface WorkflowDetailViewProps {

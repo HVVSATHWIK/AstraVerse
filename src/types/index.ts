@@ -7,6 +7,17 @@ export interface AIEngine {
   lastUpdated: string;
 }
 
+export interface Workflow {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string | null;
+  steps: any[];
+  status: 'draft' | 'active' | 'paused' | 'error';
+  created_at: string;
+  updated_at: string;
+}
+
 export interface WorkflowDisplay {
   id: string;
   name: string;

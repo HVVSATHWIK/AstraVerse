@@ -21,7 +21,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Workflow } from '@/hooks/api/useWorkflows';
+import { Workflow } from '@/types';
 
 interface WorkflowStep {
   id: string;
