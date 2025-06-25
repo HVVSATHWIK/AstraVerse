@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from './api';
 import { 
@@ -20,6 +19,7 @@ import {
 } from './supabaseDataService';
 import { useAuth } from '@/hooks/useAuth';
 import { AIEngine, Workflow, Integration, SystemMetrics, ActivityLog, KPIData } from '@/types';
+import { useMetrics } from '@/hooks/api/useMetrics';
 
 // Environment flag to use mock data during development
 const USE_MOCK_DATA = import.meta.env.DEV;
@@ -159,7 +159,7 @@ export const useActivityLogs = (limit: number = 50) => {
   return mockDataQuery;
 };
 
-// System metrics and KPIs - still using mock data as this is system-level
+// System metrics and KPIs - use real data when authenticated, mock data otherwise
 export const useSystemMetrics = (timeRange: '1h' | '24h' | '7d' | '30d' = '24h') => {
   return useQuery({
     queryKey: ['system-metrics', timeRange],
@@ -169,11 +169,19 @@ export const useSystemMetrics = (timeRange: '1h' | '24h' | '7d' | '30d' = '24h')
 };
 
 export const useKPIs = () => {
-  return useQuery({
-    queryKey: ['kpis'],
-    queryFn: () => USE_MOCK_DATA ? Promise.resolve(mockKPIData) : apiService.getKPIs(),
+  const { user } = useAuth();
+  const realDataQuery = useMetrics();
+  const mockDataQuery = useQuery({
+    queryKey: ['kpis-mock'],
+    queryFn: () => Promise.resolve(mockKPIData),
     staleTime: 300000,
+    enabled: !user,
   });
+
+  if (user) {
+    return realDataQuery;
+  }
+  return mockDataQuery;
 };
 
 // Export the real data mutations for authenticated users

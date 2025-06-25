@@ -1,23 +1,31 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Zap, Database, CheckCircle, AlertCircle } from 'lucide-react';
 import { useCreateWorkflow, useCreateIntegration, useLogActivity } from '@/services/dataService';
+import { useSeedInitialMetrics } from '@/hooks/api/useMetrics';
 import { toast } from '@/hooks/use-toast';
 
 const DemoDataSeeder = () => {
+  const [isSeeding, setIsSeeding] = useState(false);
   const createWorkflow = useCreateWorkflow();
   const createIntegration = useCreateIntegration();
   const logActivity = useLogActivity();
+  const seedMetrics = useSeedInitialMetrics();
 
   const seedDemoData = async () => {
     try {
+      setIsSeeding(true);
       console.log('Starting demo data setup...');
       toast({
         title: 'Setting up demo data...',
         description: 'This may take a few moments',
       });
+
+      // Seed initial metrics
+      console.log('Seeding metrics...');
+      await seedMetrics.mutateAsync();
 
       // Create sample workflows
       const workflows = [
@@ -110,19 +118,19 @@ const DemoDataSeeder = () => {
 
       toast({
         title: 'Demo data setup complete!',
-        description: `Created ${workflows.length} workflows and ${integrations.length} integrations`,
+        description: `Created ${workflows.length} workflows, ${integrations.length} integrations, and initialized metrics`,
       });
     } catch (error) {
       console.error('Error seeding demo data:', error);
       toast({
-        title: 'Demo data setup failed',
+        title: "Demo data setup failed",
         description: error instanceof Error ? error.message : 'An unexpected error occurred',
-        variant: 'destructive',
+        variant: "destructive",
       });
+    } finally {
+      setIsSeeding(false);
     }
   };
-
-  const isLoading = createWorkflow.isPending || createIntegration.isPending || logActivity.isPending;
 
   return (
     <Card className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 border-purple-500/30 dark:bg-gradient-to-br dark:from-purple-900/30 dark:to-blue-900/30">
@@ -130,15 +138,19 @@ const DemoDataSeeder = () => {
         <CardTitle className="text-white flex items-center space-x-2">
           <Database className="w-5 h-5 text-purple-400" />
           <span>Demo Data Setup</span>
-          {isLoading && <div className="w-4 h-4 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />}
+          {isSeeding && <div className="w-4 h-4 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-slate-300 text-sm">
-          Get started quickly by populating your account with sample workflows, integrations, and activity logs.
+          Get started quickly by populating your account with sample metrics, workflows, integrations, and activity logs.
         </p>
         
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div className="flex items-center space-x-2 text-slate-400">
+            <CheckCircle className="w-4 h-4 text-green-400" />
+            <span>Dashboard Metrics</span>
+          </div>
           <div className="flex items-center space-x-2 text-slate-400">
             <CheckCircle className="w-4 h-4 text-green-400" />
             <span>3 Sample Workflows</span>
@@ -147,13 +159,9 @@ const DemoDataSeeder = () => {
             <CheckCircle className="w-4 h-4 text-green-400" />
             <span>3 Integrations</span>
           </div>
-          <div className="flex items-center space-x-2 text-slate-400">
-            <CheckCircle className="w-4 h-4 text-green-400" />
-            <span>Activity Logs</span>
-          </div>
         </div>
 
-        {(createWorkflow.isError || createIntegration.isError || logActivity.isError) && (
+        {(createWorkflow.isError || createIntegration.isError || logActivity.isError || seedMetrics.isError) && (
           <div className="flex items-center space-x-2 text-red-400 text-sm">
             <AlertCircle className="w-4 h-4" />
             <span>Error occurred during setup. Please try again.</span>
@@ -162,11 +170,11 @@ const DemoDataSeeder = () => {
 
         <Button
           onClick={seedDemoData}
-          disabled={isLoading}
+          disabled={isSeeding}
           className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Zap className="w-4 h-4 mr-2" />
-          {isLoading ? 'Setting up...' : 'Setup Demo Data'}
+          {isSeeding ? 'Setting up...' : 'Setup Demo Data'}
         </Button>
       </CardContent>
     </Card>

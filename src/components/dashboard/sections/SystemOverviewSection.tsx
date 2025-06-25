@@ -1,7 +1,7 @@
-
 import React from 'react';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import SystemStatusCards from '@/components/SystemStatusCards';
+import OverviewMetrics from '@/components/OverviewMetrics';
 
 interface SystemOverviewSectionProps {
   kpis: any;
@@ -17,6 +17,9 @@ const SystemOverviewSection = ({ kpis, kpisLoading }: SystemOverviewSectionProps
       </div>
       <ErrorBoundary>
         <div className="animate-bounce-in-3d stagger-4">
+          <OverviewMetrics />
+        </div>
+        <div className="mt-6 animate-bounce-in-3d stagger-4">
           <SystemStatusCards kpis={kpis} isLoading={kpisLoading} />
         </div>
       </ErrorBoundary>
