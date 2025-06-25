@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { TabsContent } from '@/components/ui/tabs';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,12 +12,26 @@ import DocumentProcessor from '@/components/document/DocumentProcessor';
 import MeetingAutomation from '@/components/meeting/MeetingAutomation';
 import AdvancedAnalytics from '@/components/analytics/AdvancedAnalytics';
 import WorkflowTemplateManager from '@/components/workflow/WorkflowTemplateManager';
+import EnhancedWorkflowBuilder from '@/components/workflow/EnhancedWorkflowBuilder';
+import { Workflow } from '@/hooks/api/useWorkflows';
 
 const WorkflowsTab = () => {
   const [activeSubTab, setActiveSubTab] = useState('builder');
+  const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   const handleGeminiResult = (result: any) => {
     console.log('Gemini AI result received in WorkflowsTab:', result);
+  };
+
+  const handleSelectWorkflow = (workflow: Workflow) => {
+    setSelectedWorkflow(workflow);
+    setIsCreating(false);
+  };
+
+  const handleCreateWorkflow = () => {
+    setSelectedWorkflow(null);
+    setIsCreating(true);
   };
 
   return (
@@ -44,26 +57,8 @@ const WorkflowsTab = () => {
           </TabsList>
 
           <TabsContent value="builder" className="space-y-6">
-            {/* AI Chat/Completion Workflows */}
-            <div className="animate-scale-in-3d">
-              <GeminiActionCard 
-                onResult={handleGeminiResult}
-                className="mb-6"
-                initialConfig={{
-                  prompt: "Generate a workflow automation idea using AI",
-                  options: { temperature: 0.8, maxTokens: 1024 }
-                }}
-              />
-            </div>
-            
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-              <div className="animate-scale-in-3d stagger-1">
-                <WorkflowBuilder />
-              </div>
-              <div className="animate-scale-in-3d stagger-2">
-                <WorkflowControls />
-              </div>
-            </div>
+            {/* Enhanced Workflow Builder */}
+            <EnhancedWorkflowBuilder />
           </TabsContent>
 
           <TabsContent value="advanced" className="space-y-6">
