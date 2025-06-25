@@ -1,4 +1,4 @@
-import { AIEngine, Workflow, Integration, SystemMetrics, ActivityLog, KPIData } from '@/types';
+import { AIEngine, WorkflowDisplay, Integration, SystemMetrics, ActivityLog, KPIData } from '@/types';
 
 export const mockAIEngines: AIEngine[] = [
   {
@@ -35,7 +35,7 @@ export const mockAIEngines: AIEngine[] = [
   }
 ];
 
-export const mockWorkflows: Workflow[] = [
+export const mockWorkflows: WorkflowDisplay[] = [
   {
     id: 'wf-1',
     name: 'Meeting Optimization',

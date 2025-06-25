@@ -18,7 +18,7 @@ import {
   useLogActivity
 } from './supabaseDataService';
 import { useAuth } from '@/hooks/useAuth';
-import { AIEngine, Workflow, Integration, SystemMetrics, ActivityLog, KPIData } from '@/types';
+import { AIEngine, WorkflowDisplay, Integration, SystemMetrics, ActivityLog, KPIData } from '@/types';
 import { useMetrics } from '@/hooks/api/useMetrics';
 
 // Environment flag to use mock data during development

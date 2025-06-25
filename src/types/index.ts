@@ -7,7 +7,7 @@ export interface AIEngine {
   lastUpdated: string;
 }
 
-export interface Workflow {
+export interface WorkflowDisplay {
   id: string;
   name: string;
   description: string;
