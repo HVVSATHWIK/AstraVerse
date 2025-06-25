@@ -13,7 +13,7 @@ import MeetingAutomation from '@/components/meeting/MeetingAutomation';
 import AdvancedAnalytics from '@/components/analytics/AdvancedAnalytics';
 import WorkflowTemplateManager from '@/components/workflow/WorkflowTemplateManager';
 import EnhancedWorkflowBuilder from '@/components/workflow/EnhancedWorkflowBuilder';
-import { Workflow } from '@/hooks/api/useWorkflows';
+import { Workflow } from '@/types';
 
 const WorkflowsTab = () => {
   const [activeSubTab, setActiveSubTab] = useState('builder');
