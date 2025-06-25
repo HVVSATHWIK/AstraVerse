@@ -126,3 +126,5 @@ const EnhancedWorkflowBuilder = () => {
 };
 
 export default EnhancedWorkflowBuilder;
+
+export default EnhancedWorkflowBuilder
