@@ -1,1 +1,1 @@
-every time go through all the codes then only update or add the files accordingly
+Before updating or adding any files, always review the entire codebase to check for dependencies or related changes. Only proceed with updates if they maintain consistency across all relevant files.
