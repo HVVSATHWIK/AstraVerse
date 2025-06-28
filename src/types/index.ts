@@ -94,3 +94,6 @@ export type {
   WorkflowTrigger,
   WorkflowAction
 } from './api';
+
+// Explicit exports to ensure bundler compatibility
+export { Workflow };
