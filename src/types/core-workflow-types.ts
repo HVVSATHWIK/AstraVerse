@@ -1,5 +1,5 @@
 // Core workflow type definitions
-export interface Workflow {
+export interface CoreWorkflow {
   id: string;
   user_id: string;
   name: string;
