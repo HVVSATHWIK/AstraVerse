@@ -11,16 +11,18 @@ import { useToast } from '@/hooks/use-toast';
 interface WorkflowListProps {
   onSelectWorkflow?: (workflow: UserWorkflow) => void;
   onCreateWorkflow?: () => void;
+  selectedWorkflowId?: string;
 }
 
-const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow }: WorkflowListProps) => {
+const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow, selectedWorkflowId }: WorkflowListProps) => {
   const { data: workflows, isLoading, error } = useWorkflows();
   const updateWorkflow = useUpdateWorkflow();
   const deleteWorkflow = useDeleteWorkflow();
   const executeWorkflow = useExecuteWorkflow();
   const { toast } = useToast();
 
-  const handleToggleStatus = async (workflow: UserWorkflow) => {
+  const handleToggleStatus = async (workflow: UserWorkflow, e: React.MouseEvent) => {
+    e.stopPropagation();
     const newStatus = workflow.status === 'active' ? 'paused' : 'active';
     
     try {
@@ -28,26 +30,56 @@ const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow }: WorkflowListProps)
         id: workflow.id,
         updates: { status: newStatus }
       });
+      
+      toast({
+        title: `Workflow ${newStatus === 'active' ? 'Activated' : 'Paused'}`,
+        description: `${workflow.name} has been ${newStatus === 'active' ? 'activated' : 'paused'}.`,
+      });
     } catch (error) {
       console.error('Error toggling workflow status:', error);
+      toast({
+        title: 'Status Update Failed',
+        description: 'Failed to update workflow status.',
+        variant: 'destructive',
+      });
     }
   };
 
-  const handleDeleteWorkflow = async (id: string, name: string) => {
+  const handleDeleteWorkflow = async (id: string, name: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     if (confirm(`Are you sure you want to delete the workflow "${name}"?`)) {
       try {
         await deleteWorkflow.mutateAsync(id);
+        toast({
+          title: 'Workflow Deleted',
+          description: `${name} has been deleted successfully.`,
+        });
       } catch (error) {
         console.error('Error deleting workflow:', error);
+        toast({
+          title: 'Deletion Failed',
+          description: 'Failed to delete workflow.',
+          variant: 'destructive',
+        });
       }
     }
   };
 
-  const handleExecuteWorkflow = async (workflow: UserWorkflow) => {
+  const handleExecuteWorkflow = async (workflow: UserWorkflow, e: React.MouseEvent) => {
+    e.stopPropagation();
     try {
       await executeWorkflow.mutateAsync({ id: workflow.id });
+      toast({
+        title: 'Workflow Executed',
+        description: `${workflow.name} has been triggered successfully.`,
+      });
     } catch (error) {
       console.error('Error executing workflow:', error);
+      toast({
+        title: 'Execution Failed',
+        description: 'Failed to execute workflow.',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -90,7 +122,7 @@ const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow }: WorkflowListProps)
           New Workflow
         </Button>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
         {isLoading ? (
           [...Array(3)].map((_, i) => (
             <div key={i} className="p-4 border border-slate-700 rounded-lg">
@@ -112,7 +144,11 @@ const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow }: WorkflowListProps)
           workflows.map((workflow) => (
             <div 
               key={workflow.id} 
-              className="p-4 border border-slate-700 rounded-lg hover:bg-slate-800/70 transition-colors cursor-pointer"
+              className={`p-4 border rounded-lg hover:bg-slate-800/70 transition-colors cursor-pointer ${
+                selectedWorkflowId === workflow.id 
+                  ? 'border-purple-500 bg-slate-800/70' 
+                  : 'border-slate-700'
+              }`}
               onClick={() => onSelectWorkflow?.(workflow)}
             >
               <div className="flex justify-between items-center">
@@ -131,10 +167,7 @@ const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow }: WorkflowListProps)
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleStatus(workflow);
-                      }}
+                      onClick={(e) => handleToggleStatus(workflow, e)}
                       className="text-yellow-400 border-yellow-500/50"
                     >
                       <Pause className="w-4 h-4" />
@@ -143,10 +176,7 @@ const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow }: WorkflowListProps)
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleToggleStatus(workflow);
-                      }}
+                      onClick={(e) => handleToggleStatus(workflow, e)}
                       className="text-green-400 border-green-500/50"
                     >
                       <Play className="w-4 h-4" />
@@ -155,10 +185,7 @@ const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow }: WorkflowListProps)
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleExecuteWorkflow(workflow);
-                    }}
+                    onClick={(e) => handleExecuteWorkflow(workflow, e)}
                     disabled={workflow.status !== 'active'}
                     className="text-blue-400 border-blue-500/50"
                   >
@@ -167,10 +194,7 @@ const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow }: WorkflowListProps)
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteWorkflow(workflow.id, workflow.name);
-                    }}
+                    onClick={(e) => handleDeleteWorkflow(workflow.id, workflow.name, e)}
                     className="text-red-400 border-red-500/50"
                   >
                     <Trash2 className="w-4 h-4" />

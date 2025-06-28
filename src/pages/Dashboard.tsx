@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs } from '@/components/ui/tabs';
 import ErrorBoundary from '@/components/ErrorBoundary';

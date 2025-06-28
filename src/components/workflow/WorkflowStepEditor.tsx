@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Plus, 
@@ -15,6 +15,7 @@ import {
   Trash2, 
   Settings, 
   ArrowDown, 
+  ArrowUp,
   Zap, 
   Workflow, 
   GitBranch,
@@ -22,6 +23,10 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { UserWorkflow } from '@/types';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 interface WorkflowStep {
   id: string;
@@ -43,17 +48,21 @@ interface WorkflowStepEditorProps {
   isLoading?: boolean;
 }
 
+// Validation schema for the workflow form
+const workflowSchema = z.object({
+  name: z.string().min(1, 'Workflow name is required').max(100, 'Name must be 100 characters or less'),
+  description: z.string().max(500, 'Description must be 500 characters or less').optional(),
+  status: z.enum(['draft', 'active', 'paused']),
+});
+
+type WorkflowFormValues = z.infer<typeof workflowSchema>;
+
 const WorkflowStepEditor: React.FC<WorkflowStepEditorProps> = ({
   workflow,
   onSave,
   onCancel,
   isLoading = false
 }) => {
-  const [workflowName, setWorkflowName] = useState(workflow?.name || '');
-  const [workflowDescription, setWorkflowDescription] = useState(workflow?.description || '');
-  const [workflowStatus, setWorkflowStatus] = useState<'draft' | 'active' | 'paused'>(
-    (workflow?.status as any) || 'draft'
-  );
   const [steps, setSteps] = useState<WorkflowStep[]>(
     workflow?.steps || []
   );
@@ -63,8 +72,19 @@ const WorkflowStepEditor: React.FC<WorkflowStepEditorProps> = ({
   const [stepName, setStepName] = useState('');
   const [stepDescription, setStepDescription] = useState('');
   const [stepConfig, setStepConfig] = useState<Record<string, any>>({});
+  const dragItem = useRef<number | null>(null);
+  const dragOverItem = useRef<number | null>(null);
 
   const { toast } = useToast();
+
+  const form = useForm<WorkflowFormValues>({
+    resolver: zodResolver(workflowSchema),
+    defaultValues: {
+      name: workflow?.name || '',
+      description: workflow?.description || '',
+      status: (workflow?.status as 'draft' | 'active' | 'paused') || 'draft',
+    },
+  });
 
   const handleAddStep = (type: 'trigger' | 'action' | 'condition' | 'ai') => {
     setCurrentStepType(type);
@@ -136,20 +156,41 @@ const WorkflowStepEditor: React.FC<WorkflowStepEditorProps> = ({
     setSteps(newSteps);
   };
 
-  const handleSaveWorkflow = () => {
-    if (!workflowName.trim()) {
+  const handleDragStart = (position: number) => {
+    dragItem.current = position;
+  };
+
+  const handleDragEnter = (position: number) => {
+    dragOverItem.current = position;
+  };
+
+  const handleDrop = () => {
+    if (dragItem.current === null || dragOverItem.current === null) return;
+    
+    const newSteps = [...steps];
+    const draggedItemContent = newSteps[dragItem.current];
+    newSteps.splice(dragItem.current, 1);
+    newSteps.splice(dragOverItem.current, 0, draggedItemContent);
+    
+    dragItem.current = null;
+    dragOverItem.current = null;
+    setSteps(newSteps);
+  };
+
+  const onSubmit = (values: WorkflowFormValues) => {
+    if (steps.length === 0) {
       toast({
         title: 'Validation Error',
-        description: 'Workflow name is required',
+        description: 'At least one step is required',
         variant: 'destructive',
       });
       return;
     }
 
     onSave({
-      name: workflowName,
-      description: workflowDescription,
-      status: workflowStatus,
+      name: values.name,
+      description: values.description || '',
+      status: values.status,
       steps,
     });
   };
@@ -468,20 +509,6 @@ const WorkflowStepEditor: React.FC<WorkflowStepEditorProps> = ({
                 </SelectContent>
               </Select>
             </div>
-
-            <div className="space-y-2">
-              <Label className="text-slate-300">Temperature</Label>
-              <Input
-                type="number"
-                min="0"
-                max="1"
-                step="0.1"
-                value={stepConfig.temperature || 0.7}
-                onChange={(e) => setStepConfig({ ...stepConfig, temperature: parseFloat(e.target.value) })}
-                className="bg-slate-700/50 border-slate-600 text-white"
-              />
-              <p className="text-xs text-slate-400">Controls randomness (0 = deterministic, 1 = creative)</p>
-            </div>
           </div>
         );
 
@@ -498,168 +525,225 @@ const WorkflowStepEditor: React.FC<WorkflowStepEditorProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label className="text-slate-300">Workflow Name</Label>
-            <Input
-              value={workflowName}
-              onChange={(e) => setWorkflowName(e.target.value)}
-              placeholder="Enter workflow name"
-              className="bg-slate-700/50 border-slate-600 text-white"
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-slate-300">Workflow Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Enter workflow name"
+                        className="bg-slate-700/50 border-slate-600 text-white"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-slate-300">Status</FormLabel>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-slate-800 border-slate-700">
+                        <SelectItem value="draft" className="text-white hover:bg-slate-700">Draft</SelectItem>
+                        <SelectItem value="active" className="text-white hover:bg-slate-700">Active</SelectItem>
+                        <SelectItem value="paused" className="text-white hover:bg-slate-700">Paused</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-slate-300">Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      placeholder="Describe what this workflow does"
+                      className="bg-slate-700/50 border-slate-600 text-white"
+                      rows={3}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="space-y-2">
-            <Label className="text-slate-300">Status</Label>
-            <Select
-              value={workflowStatus}
-              onValueChange={(value: 'draft' | 'active' | 'paused') => setWorkflowStatus(value)}
-            >
-              <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
-                <SelectItem value="draft" className="text-white hover:bg-slate-700">Draft</SelectItem>
-                <SelectItem value="active" className="text-white hover:bg-slate-700">Active</SelectItem>
-                <SelectItem value="paused" className="text-white hover:bg-slate-700">Paused</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
 
-        <div className="space-y-2">
-          <Label className="text-slate-300">Description</Label>
-          <Textarea
-            value={workflowDescription}
-            onChange={(e) => setWorkflowDescription(e.target.value)}
-            placeholder="Describe what this workflow does"
-            className="bg-slate-700/50 border-slate-600 text-white"
-            rows={3}
-          />
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <Label className="text-slate-300">Workflow Steps</Label>
-            <div className="flex space-x-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => handleAddStep('trigger')}
-                className="text-blue-400 border-blue-500/50"
-              >
-                <Plus className="w-4 h-4 mr-1" />
-                Trigger
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => handleAddStep('action')}
-                className="text-green-400 border-green-500/50"
-              >
-                <Plus className="w-4 h-4 mr-1" />
-                Action
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => handleAddStep('condition')}
-                className="text-purple-400 border-purple-500/50"
-              >
-                <Plus className="w-4 h-4 mr-1" />
-                Condition
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => handleAddStep('ai')}
-                className="text-yellow-400 border-yellow-500/50"
-              >
-                <Plus className="w-4 h-4 mr-1" />
-                AI
-              </Button>
-            </div>
-          </div>
-
-          {steps.length === 0 ? (
-            <div className="text-center p-8 border border-dashed border-slate-600 rounded-lg">
-              <p className="text-slate-400 mb-4">Add steps to your workflow using the buttons above</p>
-              <div className="flex justify-center space-x-2">
-                <Button
-                  variant="outline"
-                  onClick={() => handleAddStep('trigger')}
-                  className="text-blue-400 border-blue-500/50"
-                >
-                  <Plus className="w-4 h-4 mr-1" />
-                  Add First Step
-                </Button>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-slate-300 text-lg">Workflow Steps</Label>
+                <div className="flex space-x-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleAddStep('trigger')}
+                    className="text-blue-400 border-blue-500/50"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Trigger
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleAddStep('action')}
+                    className="text-green-400 border-green-500/50"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Action
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleAddStep('condition')}
+                    className="text-purple-400 border-purple-500/50"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Condition
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleAddStep('ai')}
+                    className="text-yellow-400 border-yellow-500/50"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    AI
+                  </Button>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {steps.map((step, index) => (
-                <div key={step.id} className="relative">
-                  <div className="flex items-center space-x-4 p-4 bg-slate-700/50 border border-slate-600 rounded-lg">
-                    <div className="flex-shrink-0">
-                      {getStepIcon(step.type)}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <Badge variant="outline" className={getStepColor(step.type)}>
-                          {step.type}
-                        </Badge>
-                        <span className="text-white font-medium">{step.name}</span>
+
+              {steps.length === 0 ? (
+                <div className="text-center p-8 border border-dashed border-slate-600 rounded-lg">
+                  <p className="text-slate-400 mb-4">Add steps to your workflow using the buttons above</p>
+                  <div className="flex justify-center space-x-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => handleAddStep('trigger')}
+                      className="text-blue-400 border-blue-500/50"
+                    >
+                      <Plus className="w-4 h-4 mr-1" />
+                      Add First Step
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
+                  {steps.map((step, index) => (
+                    <div 
+                      key={step.id} 
+                      className="relative"
+                      draggable
+                      onDragStart={() => handleDragStart(index)}
+                      onDragEnter={() => handleDragEnter(index)}
+                      onDragEnd={handleDrop}
+                      onDragOver={(e) => e.preventDefault()}
+                    >
+                      <div className="flex items-center space-x-4 p-4 bg-slate-700/50 border border-slate-600 rounded-lg cursor-move">
+                        <div className="flex-shrink-0">
+                          {getStepIcon(step.type)}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2">
+                            <Badge variant="outline" className={getStepColor(step.type)}>
+                              {step.type}
+                            </Badge>
+                            <span className="text-white font-medium">{step.name}</span>
+                          </div>
+                          {step.description && (
+                            <p className="text-slate-400 text-sm mt-1">{step.description}</p>
+                          )}
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleMoveStep(index, 'up')}
+                            disabled={index === 0}
+                            className="text-slate-300 hover:text-white"
+                          >
+                            <ArrowUp className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleMoveStep(index, 'down')}
+                            disabled={index === steps.length - 1}
+                            className="text-slate-300 hover:text-white"
+                          >
+                            <ArrowDown className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleEditStep(index)}
+                            className="text-slate-300 hover:text-white"
+                          >
+                            <Settings className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleRemoveStep(index)}
+                            className="text-red-400 hover:text-red-300"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
-                      {step.description && (
-                        <p className="text-slate-400 text-sm mt-1">{step.description}</p>
+                      {index < steps.length - 1 && (
+                        <div className="flex justify-center my-2">
+                          <ArrowDown className="w-4 h-4 text-slate-400" />
+                        </div>
                       )}
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => handleEditStep(index)}
-                        className="text-slate-300 hover:text-white"
-                      >
-                        <Settings className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => handleRemoveStep(index)}
-                        className="text-red-400 hover:text-red-300"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  {index < steps.length - 1 && (
-                    <div className="flex justify-center my-2">
-                      <ArrowDown className="w-4 h-4 text-slate-400" />
-                    </div>
-                  )}
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-        </div>
 
-        <div className="flex justify-end space-x-2 pt-4">
-          <Button
-            variant="outline"
-            onClick={onCancel}
-            className="text-slate-300 border-slate-600"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSaveWorkflow}
-            disabled={!workflowName.trim() || isLoading}
-            className="bg-green-600 hover:bg-green-700"
-          >
-            <Save className="w-4 h-4 mr-2" />
-            Save Workflow
-          </Button>
-        </div>
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onCancel}
+                className="text-slate-300 border-slate-600"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                Save Workflow
+              </Button>
+            </div>
+          </form>
+        </Form>
       </CardContent>
 
       {/* Step Configuration Dialog */}
