@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Workflow } from '@/types';
+import { UserWorkflow } from '@/types';
 
 export interface CreateWorkflowInput {
   name: string;
@@ -43,7 +43,7 @@ export const useWorkflows = () => {
         throw error;
       }
 
-      return data as Workflow[];
+      return data as UserWorkflow[];
     },
     staleTime: 30000, // 30 seconds
   });
@@ -67,7 +67,7 @@ export const useWorkflow = (id: string) => {
         throw error;
       }
 
-      return data as Workflow;
+      return data as UserWorkflow;
     },
     enabled: !!id,
   });
@@ -98,7 +98,7 @@ export const useCreateWorkflow = () => {
         throw error;
       }
 
-      return data as Workflow;
+      return data as UserWorkflow;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: workflowKeys.lists() });
@@ -138,7 +138,7 @@ export const useUpdateWorkflow = () => {
         throw error;
       }
 
-      return data as Workflow;
+      return data as UserWorkflow;
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: workflowKeys.lists() });

@@ -13,18 +13,18 @@ import MeetingAutomation from '@/components/meeting/MeetingAutomation';
 import AdvancedAnalytics from '@/components/analytics/AdvancedAnalytics';
 import WorkflowTemplateManager from '@/components/workflow/WorkflowTemplateManager';
 import EnhancedWorkflowBuilder from '@/components/workflow/EnhancedWorkflowBuilder';
-import { Workflow } from '@/types';
+import { UserWorkflow } from '@/types';
 
 const WorkflowsTab = () => {
   const [activeSubTab, setActiveSubTab] = useState('builder');
-  const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null);
+  const [selectedWorkflow, setSelectedWorkflow] = useState<UserWorkflow | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
   const handleGeminiResult = (result: any) => {
     console.log('Gemini AI result received in WorkflowsTab:', result);
   };
 
-  const handleSelectWorkflow = (workflow: Workflow) => {
+  const handleSelectWorkflow = (workflow: UserWorkflow) => {
     setSelectedWorkflow(workflow);
     setIsCreating(false);
   };

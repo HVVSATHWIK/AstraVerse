@@ -21,7 +21,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Workflow } from '@/types';
+import { UserWorkflow } from '@/types';
 
 interface WorkflowStep {
   id: string;
@@ -32,7 +32,7 @@ interface WorkflowStep {
 }
 
 interface WorkflowStepEditorProps {
-  workflow?: Workflow;
+  workflow?: UserWorkflow;
   onSave: (workflow: {
     name: string;
     description: string;

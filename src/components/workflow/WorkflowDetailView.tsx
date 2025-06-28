@@ -13,12 +13,12 @@ import {
   Activity,
   Settings
 } from 'lucide-react';
-import { Workflow } from '@/types';
+import { UserWorkflow } from '@/types';
 import { useUpdateWorkflow, useExecuteWorkflow } from '@/hooks/api/useWorkflows';
 import WorkflowExecutionHistory from './WorkflowExecutionHistory';
 
 interface WorkflowDetailViewProps {
-  workflow: Workflow;
+  workflow: UserWorkflow;
   onEdit: () => void;
   onDelete: () => void;
 }

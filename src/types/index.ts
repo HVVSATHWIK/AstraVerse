@@ -57,8 +57,8 @@ export interface KPIData {
   storageUsage: number;
 }
 
-// Re-export workflow types from core-workflow-types.ts
-export { CoreWorkflow as Workflow, WorkflowDisplay } from './core-workflow-types';
+// Re-export workflow types from core-workflow-types.ts with renamed identifier
+export { CoreWorkflow as UserWorkflow, WorkflowDisplay } from './core-workflow-types';
 
 // Re-export workflow API types from api.ts
 export type {

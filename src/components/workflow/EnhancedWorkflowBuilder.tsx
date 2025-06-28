@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Workflow } from '@/types';
+import { UserWorkflow } from '@/types';
 import { useCreateWorkflow, useUpdateWorkflow, useExecuteWorkflow } from '@/hooks/api/useWorkflows';
 import WorkflowList from './WorkflowList';
 import WorkflowStepEditor from './WorkflowStepEditor';
@@ -10,7 +10,7 @@ import { Sparkles } from 'lucide-react';
 import GeminiActionCard from '@/components/GeminiActionCard';
 
 const EnhancedWorkflowBuilder = () => {
-  const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null);
+  const [selectedWorkflow, setSelectedWorkflow] = useState<UserWorkflow | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [showGeminiAction, setShowGeminiAction] = useState(false);
   
@@ -19,7 +19,7 @@ const EnhancedWorkflowBuilder = () => {
   const executeWorkflow = useExecuteWorkflow();
   const { toast } = useToast();
 
-  const handleSelectWorkflow = (workflow: Workflow) => {
+  const handleSelectWorkflow = (workflow: UserWorkflow) => {
     setSelectedWorkflow(workflow);
     setIsCreating(false);
   };

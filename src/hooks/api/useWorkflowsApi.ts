@@ -1,8 +1,7 @@
-
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/services/apiClient';
 import { 
-  Workflow, 
+  UserWorkflow, 
   WorkflowCreateRequest, 
   WorkflowUpdateRequest, 
   WorkflowExecuteRequest, 
@@ -25,7 +24,7 @@ export const workflowKeys = {
 export const useWorkflowsQuery = () => {
   return useQuery({
     queryKey: workflowKeys.lists(),
-    queryFn: () => apiClient.get<APIResponse<Workflow[]>>('/workflows'),
+    queryFn: () => apiClient.get<APIResponse<UserWorkflow[]>>('/workflows'),
     select: (response) => response.data?.data || [],
     staleTime: 30000,
   });
@@ -34,7 +33,7 @@ export const useWorkflowsQuery = () => {
 export const useWorkflowQuery = (id: string) => {
   return useQuery({
     queryKey: workflowKeys.detail(id),
-    queryFn: () => apiClient.get<APIResponse<Workflow>>(`/workflows/${id}`),
+    queryFn: () => apiClient.get<APIResponse<UserWorkflow>>(`/workflows/${id}`),
     select: (response) => response.data?.data,
     enabled: !!id,
   });
@@ -57,7 +56,7 @@ export const useCreateWorkflowMutation = () => {
 
   return useMutation({
     mutationFn: (data: WorkflowCreateRequest) => 
-      apiClient.post<APIResponse<Workflow>>('/workflows', data),
+      apiClient.post<APIResponse<UserWorkflow>>('/workflows', data),
     onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: workflowKeys.lists() });
       toast({
@@ -81,7 +80,7 @@ export const useUpdateWorkflowMutation = () => {
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: WorkflowUpdateRequest }) =>
-      apiClient.put<APIResponse<Workflow>>(`/workflows/${id}`, data),
+      apiClient.put<APIResponse<UserWorkflow>>(`/workflows/${id}`, data),
     onSuccess: (response, variables) => {
       queryClient.invalidateQueries({ queryKey: workflowKeys.lists() });
       queryClient.invalidateQueries({ queryKey: workflowKeys.detail(variables.id) });
@@ -147,4 +146,3 @@ export const useDeleteWorkflowMutation = () => {
     },
   });
 };
-

@@ -1,7 +1,6 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Workflow, Integration, ActivityLog } from '@/types';
+import { UserWorkflow, Integration, ActivityLog } from '@/types';
 
 // Real data service for Supabase integration
 export const useUserWorkflows = () => {

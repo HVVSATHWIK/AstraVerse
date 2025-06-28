@@ -4,12 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Play, Pause, Trash2, Edit, Plus } from 'lucide-react';
-import { Workflow } from '@/types';
+import { UserWorkflow } from '@/types';
 import { useWorkflows, useUpdateWorkflow, useDeleteWorkflow, useExecuteWorkflow } from '@/hooks/api/useWorkflows';
 import { useToast } from '@/hooks/use-toast';
 
 interface WorkflowListProps {
-  onSelectWorkflow?: (workflow: Workflow) => void;
+  onSelectWorkflow?: (workflow: UserWorkflow) => void;
   onCreateWorkflow?: () => void;
 }
 
@@ -20,7 +20,7 @@ const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow }: WorkflowListProps)
   const executeWorkflow = useExecuteWorkflow();
   const { toast } = useToast();
 
-  const handleToggleStatus = async (workflow: Workflow) => {
+  const handleToggleStatus = async (workflow: UserWorkflow) => {
     const newStatus = workflow.status === 'active' ? 'paused' : 'active';
     
     try {
@@ -43,7 +43,7 @@ const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow }: WorkflowListProps)
     }
   };
 
-  const handleExecuteWorkflow = async (workflow: Workflow) => {
+  const handleExecuteWorkflow = async (workflow: UserWorkflow) => {
     try {
       await executeWorkflow.mutateAsync({ id: workflow.id });
     } catch (error) {
