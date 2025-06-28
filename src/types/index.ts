@@ -7,34 +7,6 @@ export interface AIEngine {
   lastUpdated: string;
 }
 
-export interface Workflow {
-  id: string;
-  user_id: string;
-  name: string;
-  description: string | null;
-  steps: any[];
-  status: 'draft' | 'active' | 'paused' | 'error';
-  created_at: string;
-  updated_at: string;
-}
-
-export interface WorkflowDisplay {
-  id: string;
-  name: string;
-  description: string;
-  status: 'active' | 'paused' | 'error';
-  triggers: string[];
-  actions: string[];
-  runs: number;
-  executions?: number;
-  successRate: number;
-  averageDuration: number;
-  avgDuration?: string;
-  lastRun?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface Integration {
   id: string;
   name: string;
@@ -84,6 +56,9 @@ export interface KPIData {
   memoryUsage: number;
   storageUsage: number;
 }
+
+// Re-export workflow types from core-workflow-types.ts
+export { Workflow, WorkflowDisplay } from './core-workflow-types';
 
 // Re-export workflow API types from api.ts
 export type {
