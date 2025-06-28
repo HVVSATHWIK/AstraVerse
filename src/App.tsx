@@ -35,6 +35,9 @@ async function enableMocking() {
   }
 
   try {
+    // Wait for the service worker to be ready before starting MSW
+    await navigator.serviceWorker.ready;
+    
     const { worker } = await import('@/mocks/browser');
     
     return worker.start({
