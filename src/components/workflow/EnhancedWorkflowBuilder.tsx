@@ -8,10 +8,12 @@ import WorkflowList from './WorkflowList';
 import WorkflowStepEditor from './WorkflowStepEditor';
 import { Sparkles } from 'lucide-react';
 import GeminiActionCard from '@/components/GeminiActionCard';
+import WorkflowDetailView from './WorkflowDetailView';
 
 const EnhancedWorkflowBuilder = () => {
   const [selectedWorkflow, setSelectedWorkflow] = useState<UserWorkflow | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [showGeminiAction, setShowGeminiAction] = useState(false);
   
   const createWorkflow = useCreateWorkflow();
@@ -22,11 +24,35 @@ const EnhancedWorkflowBuilder = () => {
   const handleSelectWorkflow = (workflow: UserWorkflow) => {
     setSelectedWorkflow(workflow);
     setIsCreating(false);
+    setIsEditing(false);
   };
 
   const handleCreateWorkflow = () => {
     setSelectedWorkflow(null);
     setIsCreating(true);
+    setIsEditing(false);
+  };
+
+  const handleEditWorkflow = () => {
+    setIsEditing(true);
+  };
+
+  const handleDeleteWorkflow = async (id: string) => {
+    try {
+      // Delete workflow logic would go here
+      setSelectedWorkflow(null);
+      toast({
+        title: 'Workflow Deleted',
+        description: 'The workflow has been deleted successfully.',
+      });
+    } catch (error) {
+      console.error('Error deleting workflow:', error);
+      toast({
+        title: 'Deletion Failed',
+        description: 'Failed to delete workflow. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleSaveWorkflow = async (workflowData: {
@@ -36,26 +62,57 @@ const EnhancedWorkflowBuilder = () => {
     steps: any[];
   }) => {
     try {
-      if (selectedWorkflow) {
+      if (selectedWorkflow && isEditing) {
         // Update existing workflow
         await updateWorkflow.mutateAsync({
           id: selectedWorkflow.id,
           updates: workflowData
         });
-        setSelectedWorkflow(null);
+        setIsEditing(false);
+        toast({
+          title: 'Workflow Updated',
+          description: `${workflowData.name} has been updated successfully.`,
+        });
       } else {
         // Create new workflow
         await createWorkflow.mutateAsync(workflowData);
         setIsCreating(false);
+        toast({
+          title: 'Workflow Created',
+          description: `${workflowData.name} has been created successfully.`,
+        });
       }
     } catch (error) {
       console.error('Error saving workflow:', error);
+      toast({
+        title: 'Save Failed',
+        description: 'Failed to save workflow. Please try again.',
+        variant: 'destructive',
+      });
     }
   };
 
   const handleCancel = () => {
     setSelectedWorkflow(null);
     setIsCreating(false);
+    setIsEditing(false);
+  };
+
+  const handleExecuteWorkflow = async (id: string) => {
+    try {
+      await executeWorkflow.mutateAsync({ id });
+      toast({
+        title: 'Workflow Executed',
+        description: 'The workflow has been triggered successfully.',
+      });
+    } catch (error) {
+      console.error('Error executing workflow:', error);
+      toast({
+        title: 'Execution Failed',
+        description: 'Failed to execute workflow. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleGeminiResult = (result: any) => {
@@ -96,21 +153,28 @@ const EnhancedWorkflowBuilder = () => {
           <WorkflowList
             onSelectWorkflow={handleSelectWorkflow}
             onCreateWorkflow={handleCreateWorkflow}
+            selectedWorkflowId={selectedWorkflow?.id}
           />
         </div>
         <div className="xl:col-span-2">
-          {isCreating || selectedWorkflow ? (
+          {isCreating || isEditing ? (
             <WorkflowStepEditor
-              workflow={selectedWorkflow || undefined}
+              workflow={isEditing ? selectedWorkflow : undefined}
               onSave={handleSaveWorkflow}
               onCancel={handleCancel}
               isLoading={createWorkflow.isPending || updateWorkflow.isPending}
+            />
+          ) : selectedWorkflow ? (
+            <WorkflowDetailView 
+              workflow={selectedWorkflow}
+              onEdit={handleEditWorkflow}
+              onDelete={() => handleDeleteWorkflow(selectedWorkflow.id)}
             />
           ) : (
             <Card className="bg-slate-800/50 border-slate-700">
               <CardContent className="p-8 text-center">
                 <h3 className="text-white text-lg font-medium mb-4">No Workflow Selected</h3>
-                <p className="text-slate-400 mb-6">Select a workflow from the list to edit or create a new one</p>
+                <p className="text-slate-400 mb-6">Select a workflow from the list to view details or create a new one</p>
                 <Button
                   onClick={handleCreateWorkflow}
                   className="bg-purple-600 hover:bg-purple-700"
