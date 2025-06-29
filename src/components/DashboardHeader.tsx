@@ -100,6 +100,7 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
             <Search className="w-4 h-4" />
           </Button>
           
+          {/* Single notification bell with indicator */}
           <Button 
             variant="ghost" 
             size="sm" 
@@ -166,6 +167,6 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
       <SettingsDialog isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </>
   );
-}
+};
 
 export default DashboardHeader;
