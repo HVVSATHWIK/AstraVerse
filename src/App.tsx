@@ -28,23 +28,30 @@ async function enableMocking() {
     return;
   }
 
-  // Check if service worker API is available and navigator properties exist
-  if (typeof navigator !== 'object' || 
-      navigator === null || 
-      !navigator.serviceWorker ||
-      typeof navigator.userAgent !== 'string') {
-    console.warn('Service Worker API or navigator.userAgent is not available in this environment');
+  // Check if we're in a browser-like environment with all required APIs
+  if (typeof window === 'undefined' || 
+      typeof document === 'undefined' || 
+      typeof navigator === 'undefined' || 
+      !navigator || 
+      !navigator.serviceWorker) {
+    console.warn('Required browser APIs not available - skipping MSW initialization');
     return;
   }
 
   try {
+    // Wait for the service worker to be ready before starting MSW
+    await navigator.serviceWorker.ready;
+    
     const { worker } = await import('@/mocks/browser');
     
-    await worker.start({
+    return worker.start({
+      serviceWorker: {
+        url: '/mockServiceWorker.js'
+      },
       onUnhandledRequest: 'warn',
+    }).then(() => {
+      console.log('🚀 Mock Service Worker started');
     });
-    
-    console.log('🚀 Mock Service Worker started');
   } catch (error) {
     console.error('Error starting Mock Service Worker:', error);
   }
