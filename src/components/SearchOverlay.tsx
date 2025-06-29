@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -167,6 +167,9 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-3xl p-0 bg-slate-800 border-slate-700 text-white">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Search</DialogTitle>
+        </DialogHeader>
         <div className="flex items-center p-4 border-b border-slate-700">
           <Search className="w-5 h-5 text-slate-400 mr-2" />
           <Input
