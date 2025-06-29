@@ -1,10 +1,9 @@
-
 /* Enhanced hover effects with 3D transforms and animations */
 
 @layer components {
   /* Enhanced hover effects with 3D transforms */
   .hover-lift {
-    @apply transition-all duration-400;
+    @apply transition-all duration-300;
     transform-style: preserve-3d;
   }
 
@@ -16,7 +15,7 @@
   }
 
   .hover-glow {
-    @apply transition-all duration-400;
+    @apply transition-all duration-300;
     transform-style: preserve-3d;
   }
 
