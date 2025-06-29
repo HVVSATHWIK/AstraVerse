@@ -1,18 +1,30 @@
 <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background with rounded corners -->
-  <rect width="120" height="120" rx="20" fill="url(#gradient-bg)"/>
-  
-  <!-- Bold "A" letter -->
-  <path d="M60 30L40 90H52L56 75H64L68 90H80L60 30ZM58 65L60 55L62 65H58Z" fill="white"/>
-  
-  <!-- Decorative elements -->
-  <circle cx="60" cy="60" r="35" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
-  
-  <!-- Gradient definitions -->
   <defs>
+    <!-- Static Linear Gradient Matching Website -->
     <linearGradient id="gradient-bg" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#667EEA"/>
-      <stop offset="100%" stop-color="#764BA2"/>
+      <stop offset="0%" stop-color="#2A1B3D"/>
+      <stop offset="100%" stop-color="#6A5ACD"/>
     </linearGradient>
+    <!-- Static Dot Pattern -->
+    <pattern id="dot-pattern" x="0" y="0" width="15" height="15" patternUnits="userSpaceOnUse">
+      <circle cx="7.5" cy="7.5" r="1" fill="#87CEEB" fill-opacity="0.1"/>
+    </pattern>
+    <!-- Static Drop Shadow -->
+    <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="1" dy="1" result="offsetblur"/>
+      <feFlood flood-color="#4B0082" flood-opacity="0.3"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
+  <!-- Background with Rounded Corners -->
+  <rect width="120" height="120" rx="20" fill="url(#gradient-bg)"/>
+  <!-- Dot Overlay -->
+  <rect width="120" height="120" rx="20" fill="url(#dot-pattern)"/>
+  <!-- Stylized "A" with Drop Shadow -->
+  <path d="M60 30L40 90H52L56 75H64L68 90H80L60 30ZM58 65L60 55L62 65H58Z" fill="#FFFFFF" filter="url(#drop-shadow)"/>
 </svg>
