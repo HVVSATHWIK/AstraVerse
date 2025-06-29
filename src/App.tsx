@@ -38,6 +38,12 @@ async function enableMocking() {
     // Wait for the service worker to be ready before starting MSW
     await navigator.serviceWorker.ready;
     
+    // Check if service worker controller is available
+    if (!navigator.serviceWorker.controller) {
+      console.warn('Service Worker controller is not available, skipping MSW initialization');
+      return;
+    }
+    
     const { worker } = await import('@/mocks/browser');
     
     return worker.start({
