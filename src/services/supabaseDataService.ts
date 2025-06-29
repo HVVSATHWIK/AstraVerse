@@ -55,10 +55,48 @@ export const useUserIntegrations = () => {
       }
 
       console.log('Integrations fetched:', data);
-      return data || [];
+      
+      // Transform the data to match Integration type
+      const transformedData: Integration[] = (data || []).map(integration => ({
+        id: integration.id,
+        name: integration.name,
+        type: integration.integration_type,
+        description: `${integration.integration_type} integration`, // Generic description based on type
+        status: integration.enabled ? 'connected' : 'disconnected', // Derive status from enabled field
+        icon: getIntegrationIcon(integration.integration_type), // Get icon based on integration type
+        lastSync: integration.last_sync,
+        metrics: {
+          totalRequests: 0,
+          successRate: 100,
+          avgResponseTime: 0
+        }, // Default metrics
+        config: integration.config,
+        createdAt: integration.created_at,
+        updatedAt: integration.updated_at
+      }));
+
+      return transformedData;
     },
     staleTime: 30000,
   });
+};
+
+// Helper function to get integration icon based on type
+const getIntegrationIcon = (integrationType: string): string => {
+  const iconMap: Record<string, string> = {
+    'slack': '💬',
+    'discord': '🎮',
+    'email': '📧',
+    'webhook': '🔗',
+    'api': '🔌',
+    'database': '🗄️',
+    'file': '📁',
+    'calendar': '📅',
+    'crm': '👥',
+    'analytics': '📊'
+  };
+  
+  return iconMap[integrationType.toLowerCase()] || '🔧';
 };
 
 export const useUserActivityLogs = (limit: number = 50) => {
