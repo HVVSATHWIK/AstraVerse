@@ -29,7 +29,7 @@ const profileSchema = z.object({
   company: z.string().optional(),
   location: z.string().optional(),
   phone: z.string().optional(),
-  website: z.string().optional(),
+  website: z.string().url('Please enter a valid URL').optional().or(z.string().length(0)),
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -59,11 +59,11 @@ const UserProfileModal = ({ trigger }: UserProfileModalProps) => {
     resolver: zodResolver(profileSchema),
     defaultValues: {
       full_name: profile?.full_name || '',
-      bio: '',
-      company: '',
-      location: '',
-      phone: '',
-      website: '',
+      bio: profile?.bio || '',
+      company: profile?.company || '',
+      location: profile?.location || '',
+      phone: profile?.phone || '',
+      website: profile?.website || '',
     },
   });
 
@@ -71,11 +71,11 @@ const UserProfileModal = ({ trigger }: UserProfileModalProps) => {
     if (profile) {
       form.reset({
         full_name: profile.full_name || '',
-        bio: '',
-        company: '',
-        location: '',
-        phone: '',
-        website: '',
+        bio: profile?.bio || '',
+        company: profile?.company || '',
+        location: profile?.location || '',
+        phone: profile?.phone || '',
+        website: profile?.website || '',
       });
     }
   }, [profile, form]);
@@ -84,8 +84,11 @@ const UserProfileModal = ({ trigger }: UserProfileModalProps) => {
     try {
       await updateProfile({ 
         full_name: values.full_name,
-        // In a real implementation, you would add these fields to the profiles table
-        // and update the updateProfile function to handle them
+        bio: values.bio,
+        company: values.company,
+        location: values.location,
+        phone: values.phone,
+        website: values.website,
       });
       setIsEditing(false);
       toast({
@@ -324,12 +327,12 @@ const UserProfileModal = ({ trigger }: UserProfileModalProps) => {
                     
                     <div>
                       <Label className="text-slate-300">Bio</Label>
-                      <p className="text-slate-400 text-sm">No bio added yet</p>
+                      <p className="text-slate-400 text-sm">{profile.bio || 'No bio added yet'}</p>
                     </div>
 
                     <div>
                       <Label className="text-slate-300">Company</Label>
-                      <p className="text-slate-400 text-sm">No company specified</p>
+                      <p className="text-slate-400 text-sm">{profile.company || 'No company specified'}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -349,12 +352,28 @@ const UserProfileModal = ({ trigger }: UserProfileModalProps) => {
 
                     <div>
                       <Label className="text-slate-300">Phone</Label>
-                      <p className="text-slate-400 text-sm">No phone number added</p>
+                      <p className="text-slate-400 text-sm">{profile.phone || 'No phone number added'}</p>
                     </div>
 
                     <div>
                       <Label className="text-slate-300">Location</Label>
-                      <p className="text-slate-400 text-sm">No location specified</p>
+                      <p className="text-slate-400 text-sm">{profile.location || 'No location specified'}</p>
+                    </div>
+
+                    <div>
+                      <Label className="text-slate-300">Website</Label>
+                      <p className="text-slate-400 text-sm">
+                        {profile.website ? (
+                          <a 
+                            href={profile.website} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:underline"
+                          >
+                            {profile.website}
+                          </a>
+                        ) : 'No website added'}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>

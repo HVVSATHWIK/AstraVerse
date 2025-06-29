@@ -1,14 +1,14 @@
-
 import React, { useState } from 'react';
 import LoginForm from '@/components/auth/LoginForm';
 import SignupForm from '@/components/auth/SignupForm';
+import ForgotPasswordForm from '@/components/auth/ForgotPasswordForm';
 import AstraLogo from '@/components/AstraLogo';
 
 const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [authMode, setAuthMode] = useState<'login' | 'signup' | 'forgot-password'>('login');
 
-  const toggleMode = () => {
-    setIsLogin(!isLogin);
+  const toggleMode = (mode: 'login' | 'signup' | 'forgot-password') => {
+    setAuthMode(mode);
   };
 
   return (
@@ -26,10 +26,16 @@ const AuthPage = () => {
           <p className="text-slate-400">Enterprise AI Orchestration Platform</p>
         </div>
         
-        {isLogin ? (
-          <LoginForm onToggleMode={toggleMode} />
-        ) : (
-          <SignupForm onToggleMode={toggleMode} />
+        {authMode === 'login' && (
+          <LoginForm onToggleMode={() => toggleMode('signup')} onForgotPassword={() => toggleMode('forgot-password')} />
+        )}
+        
+        {authMode === 'signup' && (
+          <SignupForm onToggleMode={() => toggleMode('login')} />
+        )}
+        
+        {authMode === 'forgot-password' && (
+          <ForgotPasswordForm onToggleMode={() => toggleMode('login')} />
         )}
       </div>
     </div>

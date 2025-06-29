@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,9 +19,10 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 interface LoginFormProps {
   onToggleMode: () => void;
+  onForgotPassword: () => void;
 }
 
-const LoginForm = ({ onToggleMode }: LoginFormProps) => {
+const LoginForm = ({ onToggleMode, onForgotPassword }: LoginFormProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
@@ -113,7 +113,20 @@ const LoginForm = ({ onToggleMode }: LoginFormProps) => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-slate-300">Password</FormLabel>
+                  <div className="flex items-center justify-between">
+                    <FormLabel className="text-slate-300">Password</FormLabel>
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="text-xs text-purple-400 hover:text-purple-300 p-0 h-auto"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onForgotPassword();
+                      }}
+                    >
+                      Forgot password?
+                    </Button>
+                  </div>
                   <FormControl>
                     <div className="relative">
                       <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />

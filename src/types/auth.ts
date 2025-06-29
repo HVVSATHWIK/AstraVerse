@@ -1,4 +1,3 @@
-
 import { User, Session } from '@supabase/supabase-js';
 
 export interface UserProfile {
@@ -6,6 +5,11 @@ export interface UserProfile {
   email: string;
   full_name: string;
   avatar_url?: string;
+  bio?: string;
+  company?: string;
+  location?: string;
+  phone?: string;
+  website?: string;
   created_at: string;
   updated_at: string;
 }
@@ -18,6 +22,7 @@ export interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, metadata?: { fullName: string }) => Promise<void>;
   signOut: () => Promise<void>;
+  resetPasswordForEmail: (email: string) => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
 }
 

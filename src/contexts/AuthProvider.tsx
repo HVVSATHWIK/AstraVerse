@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -158,6 +157,22 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     console.log('Sign out successful');
   };
 
+  const resetPasswordForEmail = async (email: string): Promise<void> => {
+    console.log('Attempting password reset for:', email);
+    const redirectUrl = `${window.location.origin}/reset-password`;
+    
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: redirectUrl,
+    });
+    
+    if (error) {
+      console.error('Password reset error:', error);
+      throw error;
+    }
+    
+    console.log('Password reset email sent successfully');
+  };
+
   const updateProfile = async (updates: Partial<UserProfile>): Promise<void> => {
     if (!user) {
       throw new Error('No user logged in');
@@ -187,6 +202,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     signIn,
     signUp,
     signOut,
+    resetPasswordForEmail,
     updateProfile,
   };
 

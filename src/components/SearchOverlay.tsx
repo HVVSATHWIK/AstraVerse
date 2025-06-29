@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { Search, X, Workflow, Users, Settings, Zap, Calendar } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Search, X, Workflow, Users, Settings, Zap, Calendar, Filter, SlidersHorizontal } from 'lucide-react';
 import { UserWorkflow } from '@/types';
 import { Agent } from '@/types/agents';
 import { Integration } from '@/types';
@@ -17,6 +19,9 @@ interface SearchResult {
   type: 'workflow' | 'agent' | 'integration' | 'setting';
   icon: React.ReactNode;
   badge?: string;
+  createdAt?: string;
+  category?: string;
+  status?: string;
 }
 
 interface SearchOverlayProps {
@@ -39,7 +44,30 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [showFilters, setShowFilters] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [dateFilter, setDateFilter] = useState<string>('all');
+  const [categoryFilters, setCategoryFilters] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Extract all available categories from data
+  const availableCategories = useMemo(() => {
+    const categories = new Set<string>();
+    
+    workflows?.forEach(w => {
+      if (w.status) categories.add(`workflow-${w.status}`);
+    });
+    
+    agents?.forEach(a => {
+      if (a.type) categories.add(`agent-${a.type}`);
+    });
+    
+    integrations?.forEach(i => {
+      if (i.status) categories.add(`integration-${i.status}`);
+    });
+    
+    return Array.from(categories);
+  }, [workflows, agents, integrations]);
 
   // Focus input when overlay opens
   useEffect(() => {
@@ -50,9 +78,9 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
     }
   }, [isOpen]);
 
-  // Search logic
+  // Search logic with filters
   useEffect(() => {
-    if (!searchTerm.trim()) {
+    if (!searchTerm.trim() && activeTab === 'all' && statusFilter === 'all' && dateFilter === 'all' && categoryFilters.length === 0) {
       setResults([]);
       return;
     }
@@ -60,12 +88,46 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
     const term = searchTerm.toLowerCase();
     const searchResults: SearchResult[] = [];
 
+    // Helper function to check if an item passes the date filter
+    const passesDateFilter = (createdAt?: string) => {
+      if (dateFilter === 'all' || !createdAt) return true;
+      
+      const date = new Date(createdAt);
+      const now = new Date();
+      const daysDiff = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+      
+      switch (dateFilter) {
+        case 'today':
+          return daysDiff < 1;
+        case 'week':
+          return daysDiff < 7;
+        case 'month':
+          return daysDiff < 30;
+        default:
+          return true;
+      }
+    };
+
+    // Helper function to check if an item passes the category filter
+    const passesCategoryFilter = (type: string, category?: string) => {
+      if (categoryFilters.length === 0) return true;
+      return categoryFilters.some(filter => filter.startsWith(`${type}-`) && (filter === `${type}-${category}`));
+    };
+
+    // Helper function to check if an item passes the status filter
+    const passesStatusFilter = (status?: string) => {
+      if (statusFilter === 'all' || !status) return true;
+      return status === statusFilter;
+    };
+
     // Search workflows
     if (activeTab === 'all' || activeTab === 'workflows') {
       const matchedWorkflows = workflows
         .filter(w => 
-          w.name.toLowerCase().includes(term) || 
-          (w.description && w.description.toLowerCase().includes(term))
+          (term === '' || w.name.toLowerCase().includes(term) || (w.description && w.description.toLowerCase().includes(term))) &&
+          passesDateFilter(w.created_at) &&
+          passesCategoryFilter('workflow', w.status) &&
+          passesStatusFilter(w.status)
         )
         .map(w => ({
           id: w.id,
@@ -73,7 +135,9 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
           description: w.description || '',
           type: 'workflow' as const,
           icon: <Workflow className="w-4 h-4 text-blue-400" />,
-          badge: w.status
+          badge: w.status,
+          createdAt: w.created_at,
+          category: w.status,
         }));
       searchResults.push(...matchedWorkflows);
     }
@@ -82,8 +146,10 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
     if (activeTab === 'all' || activeTab === 'agents') {
       const matchedAgents = agents
         .filter(a => 
-          a.name.toLowerCase().includes(term) || 
-          a.description.toLowerCase().includes(term)
+          (term === '' || a.name.toLowerCase().includes(term) || a.description.toLowerCase().includes(term)) &&
+          passesDateFilter(a.createdAt) &&
+          passesCategoryFilter('agent', a.type) &&
+          passesStatusFilter(a.status)
         )
         .map(a => ({
           id: a.id,
@@ -91,7 +157,9 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
           description: a.description,
           type: 'agent' as const,
           icon: <Users className="w-4 h-4 text-purple-400" />,
-          badge: a.status
+          badge: a.status,
+          createdAt: a.createdAt,
+          category: a.type,
         }));
       searchResults.push(...matchedAgents);
     }
@@ -100,8 +168,9 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
     if (activeTab === 'all' || activeTab === 'integrations') {
       const matchedIntegrations = integrations
         .filter(i => 
-          i.name.toLowerCase().includes(term) || 
-          i.description.toLowerCase().includes(term)
+          (term === '' || i.name.toLowerCase().includes(term) || i.description.toLowerCase().includes(term)) &&
+          passesStatusFilter(i.status) &&
+          passesCategoryFilter('integration', i.status)
         )
         .map(i => ({
           id: i.id,
@@ -109,13 +178,14 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
           description: i.description,
           type: 'integration' as const,
           icon: <Zap className="w-4 h-4 text-green-400" />,
-          badge: i.status
+          badge: i.status,
+          category: i.status,
         }));
       searchResults.push(...matchedIntegrations);
     }
 
-    // Add settings search (static for now)
-    if (activeTab === 'all' || activeTab === 'settings') {
+    // Settings search (static for now)
+    if ((activeTab === 'all' || activeTab === 'settings') && term) {
       const settingsItems = [
         { id: 'profile', name: 'User Profile', description: 'Manage your profile settings' },
         { id: 'appearance', name: 'Appearance', description: 'Customize the look and feel' },
@@ -140,7 +210,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
     }
 
     setResults(searchResults);
-  }, [searchTerm, activeTab, workflows, agents, integrations]);
+  }, [searchTerm, activeTab, workflows, agents, integrations, statusFilter, dateFilter, categoryFilters]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -164,6 +234,20 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
     }
   };
 
+  const toggleCategoryFilter = (category: string) => {
+    setCategoryFilters(prev => 
+      prev.includes(category)
+        ? prev.filter(c => c !== category)
+        : [...prev, category]
+    );
+  };
+
+  const clearFilters = () => {
+    setStatusFilter('all');
+    setDateFilter('all');
+    setCategoryFilters([]);
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-3xl p-0 bg-slate-800 border-slate-700 text-white">
@@ -180,12 +264,90 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
           <Button 
             variant="ghost" 
             size="sm" 
+            onClick={() => setShowFilters(!showFilters)}
+            className="text-slate-400 hover:text-white mr-2"
+          >
+            <SlidersHorizontal className="w-5 h-5" />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm" 
             onClick={onClose}
             className="text-slate-400 hover:text-white"
           >
             <X className="w-5 h-5" />
           </Button>
         </div>
+
+        {showFilters && (
+          <div className="p-4 border-b border-slate-700 bg-slate-700/30">
+            <div className="flex flex-wrap gap-4">
+              <div className="space-y-1">
+                <label className="text-sm text-slate-300">Status</label>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-32 bg-slate-700 border-slate-600 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-slate-800 border-slate-700">
+                    <SelectItem value="all" className="text-white">All</SelectItem>
+                    <SelectItem value="active" className="text-white">Active</SelectItem>
+                    <SelectItem value="paused" className="text-white">Paused</SelectItem>
+                    <SelectItem value="error" className="text-white">Error</SelectItem>
+                    <SelectItem value="connected" className="text-white">Connected</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-1">
+                <label className="text-sm text-slate-300">Date</label>
+                <Select value={dateFilter} onValueChange={setDateFilter}>
+                  <SelectTrigger className="w-32 bg-slate-700 border-slate-600 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-slate-800 border-slate-700">
+                    <SelectItem value="all" className="text-white">All Time</SelectItem>
+                    <SelectItem value="today" className="text-white">Today</SelectItem>
+                    <SelectItem value="week" className="text-white">This Week</SelectItem>
+                    <SelectItem value="month" className="text-white">This Month</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="flex-1 space-y-1">
+                <label className="text-sm text-slate-300">Categories</label>
+                <div className="flex flex-wrap gap-2">
+                  {availableCategories.map((category) => (
+                    <div key={category} className="flex items-center space-x-2">
+                      <Checkbox 
+                        id={category} 
+                        checked={categoryFilters.includes(category)}
+                        onCheckedChange={() => toggleCategoryFilter(category)}
+                        className="bg-slate-700 border-slate-600"
+                      />
+                      <label 
+                        htmlFor={category} 
+                        className="text-sm text-slate-300 cursor-pointer"
+                      >
+                        {category.split('-')[1]}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex justify-end mt-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={clearFilters}
+                className="text-slate-300 border-slate-600"
+              >
+                Clear Filters
+              </Button>
+            </div>
+          </div>
+        )}
 
         <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
           <div className="px-4 pt-2">
@@ -199,7 +361,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
           </div>
 
           <div className="p-4">
-            {searchTerm.trim() === '' ? (
+            {searchTerm.trim() === '' && activeTab === 'all' && statusFilter === 'all' && dateFilter === 'all' && categoryFilters.length === 0 ? (
               <div className="text-center py-12">
                 <Search className="w-12 h-12 text-slate-500 mx-auto mb-4" />
                 <p className="text-slate-400">Start typing to search...</p>
@@ -212,7 +374,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                 <Calendar className="w-12 h-12 text-slate-500 mx-auto mb-4" />
                 <p className="text-slate-400">No results found for "{searchTerm}"</p>
                 <p className="text-slate-500 text-sm mt-2">
-                  Try different keywords or check your spelling
+                  Try different keywords or adjust your filters
                 </p>
               </div>
             ) : (
@@ -245,6 +407,7 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({
                           )}
                           <div className="text-xs text-slate-500 mt-1">
                             {result.type.charAt(0).toUpperCase() + result.type.slice(1)}
+                            {result.createdAt && ` • Created ${new Date(result.createdAt).toLocaleDateString()}`}
                           </div>
                         </div>
                       </div>
