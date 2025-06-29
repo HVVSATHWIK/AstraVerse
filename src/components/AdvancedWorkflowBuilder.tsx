@@ -6,6 +6,8 @@ import AdvancedWorkflowHeader from './workflow/advanced/AdvancedWorkflowHeader';
 import NodePalette from './workflow/advanced/NodePalette';
 import WorkflowCanvas from './workflow/advanced/WorkflowCanvas';
 import NodeConfiguration from './workflow/advanced/NodeConfiguration';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 
 const AdvancedWorkflowBuilder = () => {
   const [nodes, setNodes] = useState<WorkflowNode[]>([]);
@@ -21,12 +23,20 @@ const AdvancedWorkflowBuilder = () => {
     const newNode: WorkflowNode = {
       id: `node-${Date.now()}`,
       type: type,
-      name: `New ${type}`,
+      name: `New ${type.charAt(0).toUpperCase() + type.slice(1).replace('_', ' ')}`,
       config: {},
       position: { x: 50 + Math.random() * 300, y: 50 + Math.random() * 200 },
       connections: []
     };
     setNodes(prev => [...prev, newNode]);
+    
+    // Select the newly created node
+    setSelectedNode(newNode);
+    
+    toast({
+      title: 'Node Added',
+      description: `Added new ${type.replace('_', ' ')} node to workflow`,
+    });
   };
 
   const removeNode = (nodeId: string) => {
@@ -35,6 +45,11 @@ const AdvancedWorkflowBuilder = () => {
     if (selectedNode?.id === nodeId) {
       setSelectedNode(null);
     }
+    
+    toast({
+      title: 'Node Removed',
+      description: 'Node has been removed from the workflow',
+    });
   };
 
   const updateNode = (nodeId: string, updates: Partial<WorkflowNode>) => {
@@ -117,25 +132,50 @@ const AdvancedWorkflowBuilder = () => {
         onExecuteWorkflow={executeWorkflow}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <NodePalette onAddNode={addNode} />
-
-        <div className="lg:col-span-2">
-          <WorkflowCanvas
-            nodes={nodes}
-            selectedNode={selectedNode}
-            onSelectNode={setSelectedNode}
-            onRemoveNode={removeNode}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-          />
-        </div>
-
-        <NodeConfiguration
-          selectedNode={selectedNode}
-          onUpdateNode={updateNode}
-        />
-      </div>
+      <ResizablePanelGroup direction="horizontal" className="min-h-[600px] rounded-lg border border-slate-700">
+        <ResizablePanel defaultSize={20} minSize={15} maxSize={25}>
+          <Card className="h-full rounded-none border-0 bg-slate-800/50">
+            <CardHeader className="px-4 py-3">
+              <CardTitle className="text-white text-base">Node Palette</CardTitle>
+            </CardHeader>
+            <CardContent className="px-4 py-0">
+              <NodePalette onAddNode={addNode} />
+            </CardContent>
+          </Card>
+        </ResizablePanel>
+        
+        <ResizablePanel defaultSize={50} minSize={40}>
+          <Card className="h-full rounded-none border-0 bg-slate-800/50">
+            <CardHeader className="px-4 py-3">
+              <CardTitle className="text-white text-base">Workflow Canvas</CardTitle>
+            </CardHeader>
+            <CardContent className="px-4 py-0">
+              <WorkflowCanvas
+                nodes={nodes}
+                selectedNode={selectedNode}
+                onSelectNode={setSelectedNode}
+                onRemoveNode={removeNode}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+              />
+            </CardContent>
+          </Card>
+        </ResizablePanel>
+        
+        <ResizablePanel defaultSize={30} minSize={25}>
+          <Card className="h-full rounded-none border-0 bg-slate-800/50">
+            <CardHeader className="px-4 py-3">
+              <CardTitle className="text-white text-base">Node Configuration</CardTitle>
+            </CardHeader>
+            <CardContent className="px-4 py-0">
+              <NodeConfiguration
+                selectedNode={selectedNode}
+                onUpdateNode={updateNode}
+              />
+            </CardContent>
+          </Card>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </div>
   );
 };
