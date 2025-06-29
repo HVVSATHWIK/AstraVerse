@@ -166,6 +166,6 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
       <SettingsDialog isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </>
   );
-};
+}
 
 export default DashboardHeader;
