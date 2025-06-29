@@ -42,7 +42,12 @@ export const mockWorkflows: WorkflowDisplay[] = [
     description: 'Automated transcription, analysis, and action item generation',
     status: 'active',
     triggers: ['Zoom Meeting Start', 'Calendar Event'],
-    actions: ['Transcribe Audio', 'Generate Summary', 'Create Action Items', 'Send Slack Notification'],
+    actions: [
+      { name: 'Transcribe Audio', type: 'transcription' },
+      { name: 'Generate Summary', type: 'generation' },
+      { name: 'Create Action Items', type: 'extraction' },
+      { name: 'Send Slack Notification', type: 'notification' }
+    ],
     runs: 156,
     successRate: 94,
     averageDuration: 2.3,
@@ -56,7 +61,12 @@ export const mockWorkflows: WorkflowDisplay[] = [
     description: 'Customer sentiment analysis and proactive outreach',
     status: 'active',
     triggers: ['Support Ticket', 'Customer Survey', 'Usage Analytics'],
-    actions: ['Sentiment Analysis', 'Risk Scoring', 'Alert Sales Team', 'Schedule Follow-up'],
+    actions: [
+      { name: 'Sentiment Analysis', type: 'analysis' },
+      { name: 'Risk Scoring', type: 'scoring' },
+      { name: 'Alert Sales Team', type: 'notification' },
+      { name: 'Schedule Follow-up', type: 'calendar' }
+    ],
     runs: 43,
     successRate: 87,
     averageDuration: 4.1,
@@ -70,7 +80,12 @@ export const mockWorkflows: WorkflowDisplay[] = [
     description: 'AI-powered meeting scheduling and coordination',
     status: 'paused',
     triggers: ['Email Request', 'Slack Command'],
-    actions: ['Check Availability', 'Propose Times', 'Send Invites', 'Add to Calendar'],
+    actions: [
+      { name: 'Check Availability', type: 'calendar' },
+      { name: 'Propose Times', type: 'generation' },
+      { name: 'Send Invites', type: 'email' },
+      { name: 'Add to Calendar', type: 'calendar' }
+    ],
     runs: 89,
     successRate: 91,
     averageDuration: 1.8,
@@ -89,7 +104,8 @@ export const mockIntegrations: Integration[] = [
     icon: '🎥',
     metrics: { meetings: 45, transcriptions: 42 },
     config: { apiKey: '***', webhookUrl: 'https://api.astra.ai/webhooks/zoom' },
-    lastSync: '2024-06-14T11:45:00Z'
+    lastSync: '2024-06-14T11:45:00Z',
+    type: 'video'
   },
   {
     id: 'slack-1',
@@ -99,7 +115,8 @@ export const mockIntegrations: Integration[] = [
     icon: '💬',
     metrics: { channels: 12, notifications: 156 },
     config: { botToken: '***', signingSecret: '***' },
-    lastSync: '2024-06-14T11:40:00Z'
+    lastSync: '2024-06-14T11:40:00Z',
+    type: 'messaging'
   },
   {
     id: 'jira-1',
@@ -109,7 +126,8 @@ export const mockIntegrations: Integration[] = [
     icon: '📋',
     metrics: { tickets: 23, automated: 18 },
     config: { domain: 'company.atlassian.net', apiToken: '***' },
-    lastSync: '2024-06-14T11:30:00Z'
+    lastSync: '2024-06-14T11:30:00Z',
+    type: 'project-management'
   },
   {
     id: 'mongodb-1',
@@ -119,7 +137,8 @@ export const mockIntegrations: Integration[] = [
     icon: '🗄️',
     metrics: { documents: '2.3M', size: '45GB' },
     config: { connectionString: '***', database: 'astraai' },
-    lastSync: '2024-06-14T11:50:00Z'
+    lastSync: '2024-06-14T11:50:00Z',
+    type: 'database'
   },
   {
     id: 'influxdb-1',
@@ -129,7 +148,8 @@ export const mockIntegrations: Integration[] = [
     icon: '📊',
     metrics: { points: '890K', queries: 1200 },
     config: { url: 'http://influxdb:8086', token: '***' },
-    lastSync: '2024-06-14T11:55:00Z'
+    lastSync: '2024-06-14T11:55:00Z',
+    type: 'database'
   },
   {
     id: 'milvus-1',
@@ -139,7 +159,8 @@ export const mockIntegrations: Integration[] = [
     icon: '🔍',
     metrics: { vectors: '1.2M', searches: 450 },
     config: { host: 'milvus-server', port: 19530 },
-    lastSync: '2024-06-14T10:30:00Z'
+    lastSync: '2024-06-14T10:30:00Z',
+    type: 'vector-database'
   }
 ];
 

@@ -17,6 +17,7 @@ export interface Integration {
   config: Record<string, any>;
   lastSync?: string;
   type?: string;
+  integration_type?: string;
 }
 
 export interface SystemMetrics {

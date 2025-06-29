@@ -64,7 +64,7 @@ const WorkflowStepEditor: React.FC<WorkflowStepEditorProps> = ({
   isLoading = false
 }) => {
   const [steps, setSteps] = useState<WorkflowStep[]>(
-    workflow?.steps || []
+    workflow?.config?.steps || []
   );
   const [isStepDialogOpen, setIsStepDialogOpen] = useState(false);
   const [currentStepType, setCurrentStepType] = useState<'trigger' | 'action' | 'condition' | 'ai'>('trigger');

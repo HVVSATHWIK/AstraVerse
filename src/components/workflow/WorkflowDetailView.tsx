@@ -172,17 +172,17 @@ const WorkflowDetailView: React.FC<WorkflowDetailViewProps> = ({
                 <h4 className="text-white font-medium">Steps Summary</h4>
               </div>
               <p className="text-slate-300">
-                {workflow.steps && workflow.steps.length > 0
-                  ? `This workflow has ${workflow.steps.length} steps`
+                {workflow.config?.steps && workflow.config.steps.length > 0
+                  ? `This workflow has ${workflow.config.steps.length} steps`
                   : 'This workflow has no steps defined yet'}
               </p>
             </div>
           </TabsContent>
 
           <TabsContent value="steps" className="space-y-4 mt-4">
-            {workflow.steps && workflow.steps.length > 0 ? (
+            {workflow.config?.steps && workflow.config.steps.length > 0 ? (
               <div className="space-y-2">
-                {workflow.steps.map((step: any, index: number) => (
+                {workflow.config.steps.map((step: any, index: number) => (
                   <div key={step.id} className="relative">
                     <div className="flex items-center space-x-4 p-4 bg-slate-700/50 border border-slate-600 rounded-lg">
                       <div className="flex-1">
@@ -197,7 +197,7 @@ const WorkflowDetailView: React.FC<WorkflowDetailViewProps> = ({
                         )}
                       </div>
                     </div>
-                    {index < workflow.steps.length - 1 && (
+                    {index < workflow.config.steps.length - 1 && (
                       <div className="flex justify-center my-2">
                         <div className="w-0.5 h-4 bg-slate-600"></div>
                       </div>
