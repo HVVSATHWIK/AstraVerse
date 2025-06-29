@@ -12,7 +12,7 @@ interface AIEngineStatusProps {
 
 const AIEngineStatus = ({ aiEngines, isLoading }: AIEngineStatusProps) => {
   return (
-    <Card className="bg-white border border-gray-200 rounded-3xl">
+    <Card className="bg-white border border-gray-200 rounded-3xl" data-tutorial="ai-engines">
       <CardHeader className="pb-4">
         <CardTitle className="text-gray-900 text-lg flex items-center">
           <Brain className="w-5 h-5 mr-2 text-blue-600" />
