@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,7 +9,7 @@ interface IntegrationCardProps {
   name: string;
   description: string;
   status: 'connected' | 'disconnected' | 'warning';
-  icon: string;
+  icon: React.ReactNode;
   metrics: Record<string, string | number>;
 }
 
@@ -26,7 +25,9 @@ const IntegrationCard = ({ name, description, status, icon, metrics }: Integrati
       <CardHeader className="pb-3 relative">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="text-2xl p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl shadow-lg text-gray-100 animate-float-3d btn-3d">{icon}</div>
+            <div className="text-2xl p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl shadow-lg text-gray-100 animate-float-3d btn-3d">
+              {icon}
+            </div>
             <div>
               <CardTitle className="text-gray-950 text-lg font-semibold text-3d">{name}</CardTitle>
             </div>

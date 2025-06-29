@@ -1,7 +1,7 @@
-
 import React from 'react';
 import IntegrationCard from '@/components/IntegrationCard';
 import GeminiIntegrationCard from '@/components/GeminiIntegrationCard';
+import { Video, MessageSquare, ClipboardList, Database, LineChart, Search } from 'lucide-react';
 
 const IntegrationsGrid = () => {
   return (
@@ -11,42 +11,42 @@ const IntegrationsGrid = () => {
         name="Zoom"
         description="Video transcription and meeting insights"
         status="connected"
-        icon="🎥"
+        icon={<Video className="w-6 h-6" />}
         metrics={{ meetings: 45, transcriptions: 42 }}
       />
       <IntegrationCard
         name="Slack"
         description="Real-time notifications and slash commands"
         status="connected"
-        icon="💬"
+        icon={<MessageSquare className="w-6 h-6" />}
         metrics={{ channels: 12, notifications: 156 }}
       />
       <IntegrationCard
         name="Jira"
         description="Automated ticket creation and updates"
         status="connected"
-        icon="📋"
+        icon={<ClipboardList className="w-6 h-6" />}
         metrics={{ tickets: 23, automated: 18 }}
       />
       <IntegrationCard
         name="MongoDB"
         description="Metadata and document storage"
         status="connected"
-        icon="🗄️"
+        icon={<Database className="w-6 h-6" />}
         metrics={{ documents: "2.3M", size: "45GB" }}
       />
       <IntegrationCard
         name="InfluxDB"
         description="Time-series metrics and analytics"
         status="connected"
-        icon="📊"
+        icon={<LineChart className="w-6 h-6" />}
         metrics={{ points: "890K", queries: 1200 }}
       />
       <IntegrationCard
         name="Milvus"
         description="Vector embeddings and similarity search"
         status="warning"
-        icon="🔍"
+        icon={<Search className="w-6 h-6" />}
         metrics={{ vectors: "1.2M", searches: 450 }}
       />
     </div>
