@@ -12,6 +12,8 @@ import SettingsDialog from '@/components/SettingsDialog';
 import { useWorkflows } from '@/services/dataService';
 import { useAgents } from '@/hooks/useAgents';
 import { useIntegrations } from '@/services/dataService';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import NotificationCenter from '@/components/NotificationCenter';
 
 interface DashboardHeaderProps {
   activeTab: string;
@@ -23,6 +25,7 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
   const isMobile = useIsMobile();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   
   // Fetch data for search
   const { data: workflows } = useWorkflows();
@@ -100,15 +103,24 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
             <Search className="w-4 h-4" />
           </Button>
           
-          {/* Single notification bell with indicator */}
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-2xl relative"
-          >
-            <Bell className="w-4 h-4" />
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
-          </Button>
+          <Dialog open={isNotificationsOpen} onOpenChange={setIsNotificationsOpen}>
+            <DialogTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-2xl relative"
+              >
+                <Bell className="w-4 h-4" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md bg-transparent border-0 p-0 shadow-none">
+              <DialogHeader className="sr-only">
+                <DialogTitle>Notifications</DialogTitle>
+              </DialogHeader>
+              <NotificationCenter />
+            </DialogContent>
+          </Dialog>
 
           <Button 
             variant="ghost" 
