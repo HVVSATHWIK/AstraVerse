@@ -1,4 +1,5 @@
 import React from 'react';
+import { TabsContent } from '@/components/ui/tabs';
 import HeroSection from './sections/HeroSection';
 import QuickStartSection from './sections/QuickStartSection';
 import SystemOverviewSection from './sections/SystemOverviewSection';
