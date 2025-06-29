@@ -30,10 +30,10 @@ const LiveOperationsSection = ({
         <div className="lg:col-span-3 animate-scale-in-3d stagger-6">
           <RecentActivity activityLogs={activityLogs} isLoading={activityLoading} />
         </div>
-        <div className="lg:col-span-3 animate-bounce-in-3d stagger-6">
+        <div className="lg:col-span-3 animate-bounce-in-3d stagger-7">
           <LiveMetrics />
         </div>
-        <div className="lg:col-span-3 animate-scale-in-3d stagger-5">
+        <div className="lg:col-span-3 animate-scale-in-3d stagger-8">
           <WorkflowControls />
         </div>
       </div>
