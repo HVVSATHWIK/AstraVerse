@@ -1,11 +1,11 @@
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Import modular CSS files */
+/* Import modular CSS files first */
 @import './styles/variables.css';
 @import './styles/base.css';
 @import './styles/components.css';
 @import './styles/animations.css';
 @import './styles/utilities.css';
+
+/* Then apply Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
