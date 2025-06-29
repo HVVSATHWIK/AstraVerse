@@ -18,7 +18,7 @@ import {
   useLogActivity
 } from './supabaseDataService';
 import { useAuth } from '@/hooks/useAuth';
-import { AIEngine, WorkflowDisplay, Integration, SystemMetrics, ActivityLog, KPIData } from '@/types';
+import { AIEngine, WorkflowDisplay, Integration, SystemMetrics, ActivityLog, KPIData, UserWorkflow } from '@/types';
 import { useMetrics } from '@/hooks/api/useMetrics';
 
 // Environment flag to use mock data during development
@@ -58,24 +58,20 @@ const enhancedMockAIEngines = [
   }
 ];
 
-// Enhanced mock workflows to include Gemini-powered workflows
-const enhancedMockWorkflows = [
-  ...mockWorkflows,
+// Enhanced mock workflows to match UserWorkflow type with steps property
+const enhancedMockWorkflows: UserWorkflow[] = [
   {
     id: 'gemini-content-workflow',
     name: 'AI Content Generation (Gemini)',
     description: 'Generate high-quality content using Gemini AI',
     status: 'active',
-    triggers: ['Manual', 'Schedule', 'Webhook'],
-    actions: [
-      { name: 'Content Analysis', type: 'gemini_ai' },
-      { name: 'Content Generation', type: 'gemini_ai' },
-      { name: 'Quality Review', type: 'gemini_ai' },
-      { name: 'Content Delivery', type: 'integration' }
+    steps: [
+      { id: '1', type: 'trigger', name: 'Manual Trigger', config: {} },
+      { id: '2', type: 'action', name: 'Content Analysis', config: { type: 'gemini_ai' } },
+      { id: '3', type: 'action', name: 'Content Generation', config: { type: 'gemini_ai' } },
+      { id: '4', type: 'action', name: 'Quality Review', config: { type: 'gemini_ai' } },
+      { id: '5', type: 'action', name: 'Content Delivery', config: { type: 'integration' } }
     ],
-    executions: 89,
-    successRate: 97,
-    avgDuration: '3.2s',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -84,19 +80,41 @@ const enhancedMockWorkflows = [
     name: 'AI Analysis Pipeline',
     description: 'Automated content analysis using Gemini AI',
     status: 'active',
-    triggers: ['Data Upload', 'API Call'],
-    actions: [
-      { name: 'Data Preprocessing', type: 'data_transform' },
-      { name: 'Gemini Analysis', type: 'gemini_ai' },
-      { name: 'Results Processing', type: 'data_analysis' },
-      { name: 'Report Generation', type: 'document_generation' }
+    steps: [
+      { id: '1', type: 'trigger', name: 'Data Upload', config: {} },
+      { id: '2', type: 'action', name: 'Data Preprocessing', config: { type: 'data_transform' } },
+      { id: '3', type: 'action', name: 'Gemini Analysis', config: { type: 'gemini_ai' } },
+      { id: '4', type: 'action', name: 'Results Processing', config: { type: 'data_analysis' } },
+      { id: '5', type: 'action', name: 'Report Generation', config: { type: 'document_generation' } }
     ],
-    executions: 67,
-    successRate: 92,
-    avgDuration: '5.5s',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-  }
+  },
+  // Convert existing mockWorkflows to UserWorkflow format
+  ...mockWorkflows.map((workflow): UserWorkflow => ({
+    id: workflow.id,
+    name: workflow.name,
+    description: workflow.description,
+    status: workflow.status as 'active' | 'inactive' | 'draft',
+    steps: [
+      // Convert triggers to trigger steps
+      ...workflow.triggers.map((trigger, index) => ({
+        id: `trigger-${index}`,
+        type: 'trigger' as const,
+        name: trigger,
+        config: {}
+      })),
+      // Convert actions to action steps
+      ...workflow.actions.map((action, index) => ({
+        id: `action-${index}`,
+        type: 'action' as const,
+        name: action.name,
+        config: { type: action.type }
+      }))
+    ],
+    createdAt: workflow.createdAt,
+    updatedAt: workflow.updatedAt,
+  }))
 ];
 
 // AI Engines - enhanced with Gemini

@@ -19,7 +19,21 @@ export const useUserWorkflows = () => {
       }
 
       console.log('Workflows fetched:', data);
-      return data || [];
+      
+      // Transform the data to match UserWorkflow type
+      const transformedData: UserWorkflow[] = (data || []).map(workflow => ({
+        id: workflow.id,
+        name: workflow.name,
+        description: workflow.description || '',
+        status: workflow.status as 'active' | 'inactive' | 'draft',
+        steps: workflow.config?.steps || [], // Extract steps from config or default to empty array
+        createdAt: workflow.created_at,
+        updatedAt: workflow.updated_at,
+        userId: workflow.user_id,
+        config: workflow.config
+      }));
+
+      return transformedData;
     },
     staleTime: 30000,
   });
