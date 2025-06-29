@@ -46,10 +46,19 @@ async function enableMocking() {
     
     const { worker } = await import('@/mocks/browser');
     
-    return worker.start({
-      onUnhandledRequest: 'warn',
-    }).then(() => {
-      console.log('🚀 Mock Service Worker started');
+    // Add a small delay to ensure service worker is fully established
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        worker.start({
+          onUnhandledRequest: 'warn',
+        }).then(() => {
+          console.log('🚀 Mock Service Worker started');
+          resolve(undefined);
+        }).catch((error) => {
+          console.error('Error starting Mock Service Worker:', error);
+          resolve(undefined);
+        });
+      }, 100);
     });
   } catch (error) {
     console.error('Error starting Mock Service Worker:', error);
