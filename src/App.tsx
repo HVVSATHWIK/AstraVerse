@@ -33,7 +33,9 @@ async function enableMocking() {
       typeof document === 'undefined' || 
       typeof navigator === 'undefined' || 
       !navigator || 
-      !navigator.serviceWorker) {
+      !navigator.serviceWorker || 
+      typeof navigator.userAgent === 'undefined' || 
+      !navigator.userAgent) {
     console.warn('Required browser APIs not available - skipping MSW initialization');
     return;
   }
