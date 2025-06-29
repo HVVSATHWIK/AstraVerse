@@ -1,53 +1,18 @@
 <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background with rounded corners -->
+  <rect width="120" height="120" rx="20" fill="url(#gradient-bg)"/>
+  
+  <!-- Bold "A" letter -->
+  <path d="M60 30L40 90H52L56 75H64L68 90H80L60 30ZM58 65L60 55L62 65H58Z" fill="white"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="60" cy="60" r="35" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-dasharray="4 4" fill="none"/>
+  
+  <!-- Gradient definitions -->
   <defs>
-    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stopColor="#3b82f6" />
-      <stop offset="50%" stopColor="#8b5cf6" />
-      <stop offset="100%" stopColor="#06b6d4" />
-    </linearGradient>
-    <linearGradient id="frameGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stopColor="#6366f1" />
-      <stop offset="100%" stopColor="#8b5cf6" />
-    </linearGradient>
-    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stopColor="#06b6d4" />
-      <stop offset="100%" stopColor="#3b82f6" />
+    <linearGradient id="gradient-bg" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#667EEA"/>
+      <stop offset="100%" stop-color="#764BA2"/>
     </linearGradient>
   </defs>
-  
-  <!-- Outer frame -->
-  <rect 
-    x="20" 
-    y="20" 
-    width="80" 
-    height="80" 
-    fill="none" 
-    stroke="url(#frameGradient)" 
-    strokeWidth="2" 
-    rx="8"
-  />
-  
-  <!-- Corner accent marks -->
-  <g stroke="url(#accentGradient)" strokeWidth="2" fill="none">
-    <path d="M25 30 L25 25 L30 25" />
-    <path d="M95 30 L95 25 L90 25" />
-    <path d="M25 90 L25 95 L30 95" />
-    <path d="M95 90 L95 95 L90 95" />
-  </g>
-  
-  <!-- Main Brand "A" -->
-  <path
-    d="M60 35 L50 65 L54 65 L56 58 L64 58 L66 65 L70 65 L60 35 Z M58 48 L62 52 L58 52 Z"
-    fill="url(#brandGradient)"
-  />
-  
-  <!-- Geometric accent lines -->
-  <line x1="45" y1="50" x2="75" y2="50" stroke="url(#accentGradient)" strokeWidth="2" opacity="0.8" />
-  <line x1="52" y1="42" x2="68" y2="42" stroke="url(#accentGradient)" strokeWidth="1.5" opacity="0.6" />
-  
-  <!-- Neural connection nodes -->
-  <circle cx="45" cy="50" r="2" fill="url(#accentGradient)" />
-  <circle cx="75" cy="50" r="2" fill="url(#accentGradient)" />
-  <circle cx="52" cy="42" r="1.5" fill="url(#accentGradient)" />
-  <circle cx="68" cy="42" r="1.5" fill="url(#accentGradient)" />
 </svg>
