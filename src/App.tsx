@@ -29,7 +29,7 @@ async function enableMocking() {
   }
 
   // Check if service worker API is available
-  if (typeof navigator === 'undefined' || !navigator.serviceWorker) {
+  if (typeof navigator !== 'object' || navigator === null || !navigator.serviceWorker) {
     console.warn('Service Worker API is not available in this environment');
     return;
   }
