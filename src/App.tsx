@@ -35,31 +35,13 @@ async function enableMocking() {
   }
 
   try {
-    // Wait for the service worker to be ready before starting MSW
-    await navigator.serviceWorker.ready;
-    
-    // Check if service worker controller is available
-    if (!navigator.serviceWorker.controller) {
-      console.warn('Service Worker controller is not available, skipping MSW initialization');
-      return;
-    }
-    
     const { worker } = await import('@/mocks/browser');
     
-    // Add a small delay to ensure service worker is fully established
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        worker.start({
-          onUnhandledRequest: 'warn',
-        }).then(() => {
-          console.log('🚀 Mock Service Worker started');
-          resolve(undefined);
-        }).catch((error) => {
-          console.error('Error starting Mock Service Worker:', error);
-          resolve(undefined);
-        });
-      }, 100);
+    await worker.start({
+      onUnhandledRequest: 'warn',
     });
+    
+    console.log('🚀 Mock Service Worker started');
   } catch (error) {
     console.error('Error starting Mock Service Worker:', error);
   }
