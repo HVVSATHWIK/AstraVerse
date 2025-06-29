@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { UserWorkflow } from '@/types';
-import { useCreateWorkflow, useUpdateWorkflow, useExecuteWorkflow } from '@/hooks/api/useWorkflows';
+import { useWorkflows, useCreateWorkflow, useUpdateWorkflow, useExecuteWorkflow } from '@/hooks/api/useWorkflows';
 import WorkflowList from './WorkflowList';
 import WorkflowStepEditor from './WorkflowStepEditor';
 import { Sparkles } from 'lucide-react';
@@ -16,6 +16,7 @@ const EnhancedWorkflowBuilder = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showGeminiAction, setShowGeminiAction] = useState(false);
   
+  const { data: workflows, isLoading } = useWorkflows();
   const createWorkflow = useCreateWorkflow();
   const updateWorkflow = useUpdateWorkflow();
   const executeWorkflow = useExecuteWorkflow();
@@ -151,6 +152,7 @@ const EnhancedWorkflowBuilder = () => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-1">
           <WorkflowList
+            workflows={workflows}
             onSelectWorkflow={handleSelectWorkflow}
             onCreateWorkflow={handleCreateWorkflow}
             selectedWorkflowId={selectedWorkflow?.id}

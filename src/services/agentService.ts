@@ -186,8 +186,8 @@ class AgentService {
       priority: task.priority as any,
       title: task.title,
       description: task.description,
-      input: task.input,
-      output: task.output,
+      input: typeof task.input === 'object' ? task.input : {},
+      output: typeof task.output === 'object' ? task.output : {},
       progress: task.progress || 0,
       estimatedDuration: task.estimated_duration,
       actualDuration: task.actual_duration,
@@ -269,8 +269,8 @@ class AgentService {
       priority: data.priority as any,
       title: data.title,
       description: data.description,
-      input: data.input,
-      output: data.output,
+      input: typeof data.input === 'object' ? data.input : {},
+      output: typeof data.output === 'object' ? data.output : {},
       progress: data.progress || 0,
       estimatedDuration: data.estimated_duration,
       actualDuration: data.actual_duration,
@@ -317,8 +317,8 @@ class AgentService {
       priority: data.priority as any,
       title: data.title,
       description: data.description,
-      input: data.input,
-      output: data.output,
+      input: typeof data.input === 'object' ? data.input : {},
+      output: typeof data.output === 'object' ? data.output : {},
       progress: data.progress || 0,
       estimatedDuration: data.estimated_duration,
       actualDuration: data.actual_duration,
@@ -354,7 +354,7 @@ class AgentService {
       message: event.message,
       timestamp: event.created_at,
       severity: event.severity as any,
-      metadata: event.metadata
+      metadata: typeof event.metadata === 'object' ? event.metadata : {}
     }));
   }
 
@@ -392,7 +392,7 @@ class AgentService {
       message: data.message,
       timestamp: data.created_at,
       severity: data.severity as any,
-      metadata: data.metadata
+      metadata: typeof data.metadata === 'object' ? data.metadata : {}
     };
   }
 

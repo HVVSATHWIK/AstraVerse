@@ -471,7 +471,7 @@ const UserProfileModal = ({ trigger }: UserProfileModalProps) => {
                             </div>
                             <div>
                               <h4 className="text-white font-medium">{integration.name}</h4>
-                              <p className="text-slate-400 text-xs">{integration.integration_type}</p>
+                              <p className="text-slate-400 text-xs">{integration.type}</p>
                             </div>
                           </div>
                           <Badge className={integration.status === 'connected' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}>

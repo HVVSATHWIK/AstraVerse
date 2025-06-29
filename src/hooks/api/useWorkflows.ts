@@ -192,7 +192,8 @@ export const useUpdateWorkflow = () => {
           .single();
           
         const currentConfig = currentWorkflow?.config || {};
-        updateData.config = { ...currentConfig, steps: updates.steps };
+        // Ensure currentConfig is an object before spreading
+        updateData.config = { ...(typeof currentConfig === 'object' ? currentConfig : {}), steps: updates.steps };
       }
       
       const { data, error } = await supabase
