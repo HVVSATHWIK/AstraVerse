@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { User, Mail, Phone, MapPin, Calendar, Shield, Settings, Bell, Briefcase, Globe, Clock, Activity } from 'lucide-react';
+import { User, Mail, Phone, MapPin, Calendar, Shield, Settings, Bell, Briefcase, Globe, Clock, Activity, Zap } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useUserActivityLogs } from '@/services/supabaseDataService';
