@@ -27,6 +27,8 @@ export const useUserWorkflows = () => {
         description: workflow.description || '',
         status: workflow.status as 'active' | 'inactive' | 'draft',
         steps: workflow.config?.steps || [], // Extract steps from config or default to empty array
+        runs: 0, // Default value for runs
+        successRate: 0, // Default value for success rate
         createdAt: workflow.created_at,
         updatedAt: workflow.updated_at,
         userId: workflow.user_id,

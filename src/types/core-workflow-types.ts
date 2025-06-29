@@ -6,6 +6,8 @@ export interface CoreWorkflow {
   description: string | null;
   steps: any[];
   status: 'draft' | 'active' | 'paused' | 'error';
+  runs?: number;
+  successRate?: number;
   created_at: string;
   updated_at: string;
 }
