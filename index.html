@@ -4,25 +4,43 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>astra-orchestration-nexus</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
+    <meta name="description" content="AstraAI: Enterprise-grade AI orchestration platform" />
+    <meta name="author" content="AstraAI Team" />
 
     <meta property="og:title" content="astra-orchestration-nexus" />
-    <meta property="og:description" content="Lovable Generated Project" />
+    <meta property="og:description" content="AstraAI: Enterprise-grade AI orchestration platform" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta property="og:image" content="/public/astra-og-image.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="twitter:image" content="/public/astra-og-image.png" />
     
     <!-- Custom AstraAI favicon -->
     <link rel="icon" type="image/svg+xml" href="/astra-favicon.svg" />
     <link rel="apple-touch-icon" href="/astra-favicon.svg" />
+
+    <!-- Bolt badge styling -->
+    <style>
+      .bolt-badge {
+        width: 150px;
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        z-index: 1000;
+      }
+      @media (max-width: 600px) {
+        .bolt-badge {
+          width: 100px;
+        }
+      }
+    </style>
   </head>
 
   <body>
     <div id="root"></div>
+    <a href="https://bolt.new/" target="_blank" rel="noopener noreferrer">
+      <img src="/public/built-on-bolt-white-circle.png" alt="Built on Bolt" class="bolt-badge" />
+    </a>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
