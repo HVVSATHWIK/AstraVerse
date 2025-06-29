@@ -1,9 +1,8 @@
-
 /* CSS Custom Properties and Design System Variables */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 240 10% 95%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -33,7 +32,7 @@
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 240 10% 95%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
     --sidebar-primary-foreground: 0 0% 98%;

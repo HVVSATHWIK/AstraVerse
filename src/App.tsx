@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Index from '@/pages/Index';
@@ -52,8 +52,35 @@ async function enableMocking() {
 
 function App() {
   // Initialize mocking before rendering the app
-  React.useEffect(() => {
+  useEffect(() => {
     enableMocking();
+  }, []);
+
+  // Initialize theme from localStorage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    
+    // Listen for theme change events
+    const handleThemeChange = (event: CustomEvent) => {
+      if (event.detail.theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+    
+    window.addEventListener('themeChange', handleThemeChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('themeChange', handleThemeChange as EventListener);
+    };
   }, []);
 
   return (
