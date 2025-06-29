@@ -21,21 +21,20 @@ export const useUserWorkflows = () => {
       console.log('Workflows fetched:', data);
       
       // Transform the data to match UserWorkflow type
-      const transformedData: UserWorkflow[] = (data || []).map(workflow => ({
+      const transformedData = (data || []).map(workflow => ({
         id: workflow.id,
+        user_id: workflow.user_id,
         name: workflow.name,
         description: workflow.description || '',
-        status: workflow.status as 'active' | 'inactive' | 'draft',
-        steps: workflow.config?.steps || [], // Extract steps from config or default to empty array
+        config: workflow.config || { steps: [] },
+        status: workflow.status as 'active' | 'paused' | 'draft' | 'error',
         runs: 0, // Default value for runs
         successRate: 0, // Default value for success rate
-        createdAt: workflow.created_at,
-        updatedAt: workflow.updated_at,
-        userId: workflow.user_id,
-        config: workflow.config
+        created_at: workflow.created_at,
+        updated_at: workflow.updated_at
       }));
 
-      return transformedData;
+      return transformedData as UserWorkflow[];
     },
     staleTime: 30000,
   });
@@ -59,10 +58,11 @@ export const useUserIntegrations = () => {
       console.log('Integrations fetched:', data);
       
       // Transform the data to match Integration type
-      const transformedData: Integration[] = (data || []).map(integration => ({
+      const transformedData = (data || []).map(integration => ({
         id: integration.id,
         name: integration.name,
         type: integration.integration_type,
+        integration_type: integration.integration_type,
         description: `${integration.integration_type} integration`, // Generic description based on type
         status: integration.enabled ? 'connected' : 'disconnected', // Derive status from enabled field
         icon: getIntegrationIcon(integration.integration_type), // Get icon based on integration type
@@ -72,12 +72,12 @@ export const useUserIntegrations = () => {
           successRate: 100,
           avgResponseTime: 0
         }, // Default metrics
-        config: integration.config,
+        config: integration.config || {},
         createdAt: integration.created_at,
         updatedAt: integration.updated_at
       }));
 
-      return transformedData;
+      return transformedData as Integration[];
     },
     staleTime: 30000,
   });
@@ -220,11 +220,17 @@ export const useLogActivity = () => {
   return useMutation({
     mutationFn: async (activity: { action: string; description: string; metadata?: any }) => {
       console.log('Logging activity:', activity);
+      const userId = (await supabase.auth.getUser()).data.user?.id;
+      
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+      
       const { data, error } = await supabase
         .from('user_activity_logs')
         .insert([{
           ...activity,
-          user_id: (await supabase.auth.getUser()).data.user?.id,
+          user_id: userId,
         }])
         .select()
         .single();

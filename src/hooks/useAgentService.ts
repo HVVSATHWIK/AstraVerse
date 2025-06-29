@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { agentService } from '@/services/agentService';
 import { Agent, AgentTask, AgentEvent } from '@/types/agents';
 import { useToast } from '@/hooks/use-toast';
@@ -202,7 +202,7 @@ export const useUpdateAgentTaskMutation = () => {
     mutationFn: ({ id, updates }: { id: string; updates: Partial<AgentTask> }) => 
       agentService.updateTask(id, updates),
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: agentKeys.tasks(data.agent_id) });
+      queryClient.invalidateQueries({ queryKey: agentKeys.tasks(data.agentId) });
       toast({
         title: 'Task Updated',
         description: `${data.title} has been updated successfully.`,

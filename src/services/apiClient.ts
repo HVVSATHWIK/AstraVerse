@@ -1,4 +1,3 @@
-
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import env from '@/config/environment';
 
@@ -139,4 +138,3 @@ export const apiClient = new APIClient();
 apiClient.loadTokenFromStorage();
 
 export default apiClient;
-

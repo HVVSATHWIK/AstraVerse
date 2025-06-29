@@ -5,17 +5,18 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Play, Pause, Trash2, Edit, Plus } from 'lucide-react';
 import { UserWorkflow } from '@/types';
-import { useWorkflows, useUpdateWorkflow, useDeleteWorkflow, useExecuteWorkflow } from '@/hooks/api/useWorkflows';
+import { useUpdateWorkflow, useDeleteWorkflow, useExecuteWorkflow } from '@/hooks/api/useWorkflows';
 import { useToast } from '@/hooks/use-toast';
 
 interface WorkflowListProps {
+  workflows?: UserWorkflow[];
   onSelectWorkflow?: (workflow: UserWorkflow) => void;
   onCreateWorkflow?: () => void;
   selectedWorkflowId?: string;
 }
 
-const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow, selectedWorkflowId }: WorkflowListProps) => {
-  const { data: workflows, isLoading, error } = useWorkflows();
+const WorkflowList = ({ workflows, onSelectWorkflow, onCreateWorkflow, selectedWorkflowId }: WorkflowListProps) => {
+  const { data: workflowsData, isLoading, error } = { data: workflows, isLoading: false, error: null };
   const updateWorkflow = useUpdateWorkflow();
   const deleteWorkflow = useDeleteWorkflow();
   const executeWorkflow = useExecuteWorkflow();
@@ -140,8 +141,8 @@ const WorkflowList = ({ onSelectWorkflow, onCreateWorkflow, selectedWorkflowId }
               </div>
             </div>
           ))
-        ) : workflows && workflows.length > 0 ? (
-          workflows.map((workflow) => (
+        ) : workflowsData && workflowsData.length > 0 ? (
+          workflowsData.map((workflow) => (
             <div 
               key={workflow.id} 
               className={`p-4 border rounded-lg hover:bg-slate-800/70 transition-colors cursor-pointer ${

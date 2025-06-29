@@ -65,55 +65,64 @@ const enhancedMockWorkflows: UserWorkflow[] = [
     name: 'AI Content Generation (Gemini)',
     description: 'Generate high-quality content using Gemini AI',
     status: 'active',
-    steps: [
-      { id: '1', type: 'trigger', name: 'Manual Trigger', config: {} },
-      { id: '2', type: 'action', name: 'Content Analysis', config: { type: 'gemini_ai' } },
-      { id: '3', type: 'action', name: 'Content Generation', config: { type: 'gemini_ai' } },
-      { id: '4', type: 'action', name: 'Quality Review', config: { type: 'gemini_ai' } },
-      { id: '5', type: 'action', name: 'Content Delivery', config: { type: 'integration' } }
-    ],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    config: {
+      steps: [
+        { id: '1', type: 'trigger', name: 'Manual Trigger', config: {} },
+        { id: '2', type: 'action', name: 'Content Analysis', config: { type: 'gemini_ai' } },
+        { id: '3', type: 'action', name: 'Content Generation', config: { type: 'gemini_ai' } },
+        { id: '4', type: 'action', name: 'Quality Review', config: { type: 'gemini_ai' } },
+        { id: '5', type: 'action', name: 'Content Delivery', config: { type: 'integration' } }
+      ]
+    },
+    user_id: 'mock-user-id',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: 'ai-analysis-workflow',
     name: 'AI Analysis Pipeline',
     description: 'Automated content analysis using Gemini AI',
     status: 'active',
-    steps: [
-      { id: '1', type: 'trigger', name: 'Data Upload', config: {} },
-      { id: '2', type: 'action', name: 'Data Preprocessing', config: { type: 'data_transform' } },
-      { id: '3', type: 'action', name: 'Gemini Analysis', config: { type: 'gemini_ai' } },
-      { id: '4', type: 'action', name: 'Results Processing', config: { type: 'data_analysis' } },
-      { id: '5', type: 'action', name: 'Report Generation', config: { type: 'document_generation' } }
-    ],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    config: {
+      steps: [
+        { id: '1', type: 'trigger', name: 'Data Upload', config: {} },
+        { id: '2', type: 'action', name: 'Data Preprocessing', config: { type: 'data_transform' } },
+        { id: '3', type: 'action', name: 'Gemini Analysis', config: { type: 'gemini_ai' } },
+        { id: '4', type: 'action', name: 'Results Processing', config: { type: 'data_analysis' } },
+        { id: '5', type: 'action', name: 'Report Generation', config: { type: 'document_generation' } }
+      ]
+    },
+    user_id: 'mock-user-id',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   // Convert existing mockWorkflows to UserWorkflow format
   ...mockWorkflows.map((workflow): UserWorkflow => ({
     id: workflow.id,
     name: workflow.name,
     description: workflow.description,
-    status: workflow.status as 'active' | 'inactive' | 'draft',
-    steps: [
-      // Convert triggers to trigger steps
-      ...workflow.triggers.map((trigger, index) => ({
-        id: `trigger-${index}`,
-        type: 'trigger' as const,
-        name: trigger,
-        config: {}
-      })),
-      // Convert actions to action steps
-      ...workflow.actions.map((action, index) => ({
-        id: `action-${index}`,
-        type: 'action' as const,
-        name: action.name,
-        config: { type: action.type }
-      }))
-    ],
-    createdAt: workflow.createdAt,
-    updatedAt: workflow.updatedAt,
+    status: workflow.status as 'active' | 'paused' | 'error',
+    config: {
+      steps: [
+        // Convert triggers to trigger steps
+        ...workflow.triggers.map((trigger, index) => ({
+          id: `trigger-${index}`,
+          type: 'trigger' as const,
+          name: trigger,
+          config: {}
+        })),
+        // Convert actions to action steps
+        ...workflow.actions.map((action, index) => ({
+          id: `action-${index}`,
+          type: 'action' as const,
+          name: typeof action === 'string' ? action : action.name,
+          config: { type: typeof action === 'string' ? 'default' : action.type }
+        }))
+      ]
+    },
+    user_id: 'mock-user-id',
+    created_at: workflow.createdAt,
+    updated_at: workflow.updatedAt,
   }))
 ];
 

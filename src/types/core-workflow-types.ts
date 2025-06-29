@@ -4,7 +4,9 @@ export interface CoreWorkflow {
   user_id: string;
   name: string;
   description: string | null;
-  steps: any[];
+  config: {
+    steps?: any[];
+  };
   status: 'draft' | 'active' | 'paused' | 'error';
   runs?: number;
   successRate?: number;
@@ -18,7 +20,7 @@ export interface WorkflowDisplay {
   description: string;
   status: 'active' | 'paused' | 'error';
   triggers: string[];
-  actions: string[];
+  actions: Array<{name: string; type: string}>;
   runs: number;
   executions?: number;
   successRate: number;

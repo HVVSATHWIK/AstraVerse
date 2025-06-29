@@ -17,6 +17,11 @@ export type Database = {
           full_name: string | null
           id: string
           updated_at: string
+          bio: string | null
+          company: string | null
+          location: string | null
+          phone: string | null
+          website: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -25,6 +30,11 @@ export type Database = {
           full_name?: string | null
           id: string
           updated_at?: string
+          bio?: string | null
+          company?: string | null
+          location?: string | null
+          phone?: string | null
+          website?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -33,6 +43,11 @@ export type Database = {
           full_name?: string | null
           id?: string
           updated_at?: string
+          bio?: string | null
+          company?: string | null
+          location?: string | null
+          phone?: string | null
+          website?: string | null
         }
         Relationships: []
       }
@@ -132,12 +147,222 @@ export type Database = {
         }
         Relationships: []
       }
+      metrics: {
+        Row: {
+          id: string
+          user_id: string
+          metric_name: string
+          metric_value: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          metric_name: string
+          metric_value: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          metric_name?: string
+          metric_value?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      workflow_executions: {
+        Row: {
+          id: string
+          workflow_id: string
+          user_id: string
+          status: string
+          started_at: string
+          completed_at: string | null
+          result: Json | null
+          error: string | null
+          execution_time: number | null
+        }
+        Insert: {
+          id?: string
+          workflow_id: string
+          user_id: string
+          status: string
+          started_at?: string
+          completed_at?: string | null
+          result?: Json | null
+          error?: string | null
+          execution_time?: number | null
+        }
+        Update: {
+          id?: string
+          workflow_id?: string
+          user_id?: string
+          status?: string
+          started_at?: string
+          completed_at?: string | null
+          result?: Json | null
+          error?: string | null
+          execution_time?: number | null
+        }
+        Relationships: []
+      }
+      agents: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          type: string
+          status: string
+          description: string
+          capabilities: Json | null
+          current_task_id: string | null
+          performance: Json | null
+          config: Json | null
+          metrics: Json | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          type: string
+          status: string
+          description: string
+          capabilities?: Json | null
+          current_task_id?: string | null
+          performance?: Json | null
+          config?: Json | null
+          metrics?: Json | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          name?: string
+          type?: string
+          status?: string
+          description?: string
+          capabilities?: Json | null
+          current_task_id?: string | null
+          performance?: Json | null
+          config?: Json | null
+          metrics?: Json | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      agent_tasks: {
+        Row: {
+          id: string
+          agent_id: string
+          type: string
+          status: string
+          priority: string
+          title: string
+          description: string
+          input: Json | null
+          output: Json | null
+          progress: number | null
+          estimated_duration: number | null
+          actual_duration: number | null
+          error: string | null
+          retry_count: number | null
+          max_retries: number | null
+          created_at: string
+          started_at: string | null
+          completed_at: string | null
+        }
+        Insert: {
+          id?: string
+          agent_id: string
+          type: string
+          status: string
+          priority: string
+          title: string
+          description: string
+          input?: Json | null
+          output?: Json | null
+          progress?: number | null
+          estimated_duration?: number | null
+          actual_duration?: number | null
+          error?: string | null
+          retry_count?: number | null
+          max_retries?: number | null
+          created_at?: string
+          started_at?: string | null
+          completed_at?: string | null
+        }
+        Update: {
+          id?: string
+          agent_id?: string
+          type?: string
+          status?: string
+          priority?: string
+          title?: string
+          description?: string
+          input?: Json | null
+          output?: Json | null
+          progress?: number | null
+          estimated_duration?: number | null
+          actual_duration?: number | null
+          error?: string | null
+          retry_count?: number | null
+          max_retries?: number | null
+          created_at?: string
+          started_at?: string | null
+          completed_at?: string | null
+        }
+        Relationships: []
+      }
+      agent_events: {
+        Row: {
+          id: string
+          agent_id: string
+          type: string
+          message: string
+          severity: string
+          metadata: Json | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          agent_id: string
+          type: string
+          message: string
+          severity: string
+          metadata?: Json | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          agent_id?: string
+          type?: string
+          message?: string
+          severity?: string
+          metadata?: Json | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_latest_metrics: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: {
+          metric_name: string
+          metric_value: number
+          created_at: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

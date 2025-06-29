@@ -1,5 +1,4 @@
-
-import { AIEngine, Workflow, Integration, SystemMetrics, ActivityLog, KPIData } from '@/types';
+import { AIEngine, WorkflowDisplay, Integration, SystemMetrics, ActivityLog, KPIData } from '@/types';
 
 class APIService {
   private baseURL = '/api';
@@ -34,19 +33,19 @@ class APIService {
   }
 
   // Workflow methods
-  async getWorkflows(): Promise<Workflow[]> {
-    return this.request<Workflow[]>('/workflows');
+  async getWorkflows(): Promise<WorkflowDisplay[]> {
+    return this.request<WorkflowDisplay[]>('/workflows');
   }
 
-  async createWorkflow(workflow: Omit<Workflow, 'id' | 'createdAt' | 'updatedAt'>): Promise<Workflow> {
-    return this.request<Workflow>('/workflows', {
+  async createWorkflow(workflow: Omit<WorkflowDisplay, 'id' | 'createdAt' | 'updatedAt'>): Promise<WorkflowDisplay> {
+    return this.request<WorkflowDisplay>('/workflows', {
       method: 'POST',
       body: JSON.stringify(workflow),
     });
   }
 
-  async updateWorkflow(id: string, data: Partial<Workflow>): Promise<Workflow> {
-    return this.request<Workflow>(`/workflows/${id}`, {
+  async updateWorkflow(id: string, data: Partial<WorkflowDisplay>): Promise<WorkflowDisplay> {
+    return this.request<WorkflowDisplay>(`/workflows/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });

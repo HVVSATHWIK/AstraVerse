@@ -16,7 +16,7 @@ class AgentService {
       throw error;
     }
 
-    return data || [];
+    return (data || []) as unknown as Agent[];
   }
 
   /**
@@ -34,29 +34,36 @@ class AgentService {
       throw error;
     }
 
-    return data;
+    return data as unknown as Agent;
   }
 
   /**
    * Create a new agent
    */
   async createAgent(agent: Partial<Agent>): Promise<Agent> {
+    const userId = (await supabase.auth.getUser()).data.user?.id;
+    
+    if (!userId) {
+      throw new Error('User not authenticated');
+    }
+    
     const { data, error } = await supabase
       .from('agents')
       .insert([{
+        user_id: userId,
         name: agent.name,
         type: agent.type,
         status: agent.status || 'idle',
-        description: agent.description,
+        description: agent.description || '',
         capabilities: agent.capabilities || [],
         config: agent.config || {},
-        performance: {
+        performance: agent.performance || {
           tasksCompleted: 0,
           successRate: 0,
           averageResponseTime: 0,
           uptime: 0
         },
-        metrics: {
+        metrics: agent.metrics || {
           cpuUsage: 0,
           memoryUsage: 0,
           taskQueue: 0
@@ -70,7 +77,7 @@ class AgentService {
       throw error;
     }
 
-    return data;
+    return data as unknown as Agent;
   }
 
   /**
@@ -89,7 +96,7 @@ class AgentService {
       throw error;
     }
 
-    return data;
+    return data as unknown as Agent;
   }
 
   /**
@@ -171,13 +178,50 @@ class AgentService {
       throw error;
     }
 
-    return data || [];
+    return (data || []).map(task => ({
+      id: task.id,
+      agentId: task.agent_id,
+      type: task.type as any,
+      status: task.status as any,
+      priority: task.priority as any,
+      title: task.title,
+      description: task.description,
+      input: task.input,
+      output: task.output,
+      progress: task.progress || 0,
+      estimatedDuration: task.estimated_duration,
+      actualDuration: task.actual_duration,
+      error: task.error,
+      retryCount: task.retry_count || 0,
+      maxRetries: task.max_retries,
+      createdAt: task.created_at,
+      startedAt: task.started_at,
+      completedAt: task.completed_at
+    }));
   }
 
   /**
    * Create a new task for an agent
    */
   async createTask(task: Partial<AgentTask>): Promise<AgentTask> {
+    const userId = (await supabase.auth.getUser()).data.user?.id;
+    
+    if (!userId) {
+      throw new Error('User not authenticated');
+    }
+    
+    // Verify the agent belongs to the user
+    const { data: agent, error: agentError } = await supabase
+      .from('agents')
+      .select('id')
+      .eq('id', task.agentId)
+      .eq('user_id', userId)
+      .single();
+
+    if (agentError || !agent) {
+      throw new Error('Agent not found or not authorized');
+    }
+    
     const { data, error } = await supabase
       .from('agent_tasks')
       .insert([{
@@ -200,28 +244,62 @@ class AgentService {
       throw error;
     }
 
-    // Update the agent status
-    await this.updateAgent(task.agentId!, { status: 'busy' });
+    // Update the agent status if needed
+    await supabase
+      .from('agents')
+      .update({ status: 'busy' })
+      .eq('id', task.agentId);
 
     // Log an event
-    await this.createEvent(
-      task.agentId!,
-      'task_created',
-      `New task created: ${task.title}`,
-      'info',
-      { task_id: data.id }
-    );
+    await supabase
+      .from('agent_events')
+      .insert([{
+        agent_id: task.agentId,
+        type: 'task_created',
+        message: `New task created: ${task.title}`,
+        severity: 'info',
+        metadata: { task_id: data.id }
+      }]);
 
-    return data;
+    return {
+      id: data.id,
+      agentId: data.agent_id,
+      type: data.type as any,
+      status: data.status as any,
+      priority: data.priority as any,
+      title: data.title,
+      description: data.description,
+      input: data.input,
+      output: data.output,
+      progress: data.progress || 0,
+      estimatedDuration: data.estimated_duration,
+      actualDuration: data.actual_duration,
+      error: data.error,
+      retryCount: data.retry_count || 0,
+      maxRetries: data.max_retries,
+      createdAt: data.created_at,
+      startedAt: data.started_at,
+      completedAt: data.completed_at
+    };
   }
 
   /**
    * Update a task
    */
   async updateTask(id: string, updates: Partial<AgentTask>): Promise<AgentTask> {
+    // Convert camelCase to snake_case for database
+    const dbUpdates: any = {};
+    
+    if (updates.status !== undefined) dbUpdates.status = updates.status;
+    if (updates.progress !== undefined) dbUpdates.progress = updates.progress;
+    if (updates.output !== undefined) dbUpdates.output = updates.output;
+    if (updates.error !== undefined) dbUpdates.error = updates.error;
+    if (updates.retryCount !== undefined) dbUpdates.retry_count = updates.retryCount;
+    if (updates.completedAt !== undefined) dbUpdates.completed_at = updates.completedAt;
+    
     const { data, error } = await supabase
       .from('agent_tasks')
-      .update(updates)
+      .update(dbUpdates)
       .eq('id', id)
       .select()
       .single();
@@ -231,7 +309,26 @@ class AgentService {
       throw error;
     }
 
-    return data;
+    return {
+      id: data.id,
+      agentId: data.agent_id,
+      type: data.type as any,
+      status: data.status as any,
+      priority: data.priority as any,
+      title: data.title,
+      description: data.description,
+      input: data.input,
+      output: data.output,
+      progress: data.progress || 0,
+      estimatedDuration: data.estimated_duration,
+      actualDuration: data.actual_duration,
+      error: data.error,
+      retryCount: data.retry_count || 0,
+      maxRetries: data.max_retries,
+      createdAt: data.created_at,
+      startedAt: data.started_at,
+      completedAt: data.completed_at
+    };
   }
 
   /**
@@ -250,7 +347,15 @@ class AgentService {
       throw error;
     }
 
-    return data || [];
+    return (data || []).map(event => ({
+      id: event.id,
+      agentId: event.agent_id,
+      type: event.type as any,
+      message: event.message,
+      timestamp: event.created_at,
+      severity: event.severity as any,
+      metadata: event.metadata
+    }));
   }
 
   /**
@@ -280,7 +385,15 @@ class AgentService {
       throw error;
     }
 
-    return data;
+    return {
+      id: data.id,
+      agentId: data.agent_id,
+      type: data.type as any,
+      message: data.message,
+      timestamp: data.created_at,
+      severity: data.severity as any,
+      metadata: data.metadata
+    };
   }
 
   /**

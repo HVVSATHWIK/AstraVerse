@@ -46,7 +46,7 @@ export const useWorkflowExecutions = (workflowId?: string, limit: number = 10) =
         throw error;
       }
 
-      return data as WorkflowExecution[];
+      return data as unknown as WorkflowExecution[];
     },
     staleTime: 30000, // 30 seconds
     refetchInterval: workflowId ? 5000 : false, // Poll for updates if viewing a specific workflow
@@ -71,7 +71,7 @@ export const useWorkflowExecution = (id: string) => {
         throw error;
       }
 
-      return data as WorkflowExecution;
+      return data as unknown as WorkflowExecution;
     },
     enabled: !!id,
   });

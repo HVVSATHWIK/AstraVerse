@@ -43,7 +43,21 @@ export const useWorkflows = () => {
         throw error;
       }
 
-      return data as UserWorkflow[];
+      // Convert to UserWorkflow format
+      const workflows = data.map(workflow => ({
+        id: workflow.id,
+        user_id: workflow.user_id,
+        name: workflow.name,
+        description: workflow.description || '',
+        config: workflow.config || { steps: [] },
+        status: workflow.status as 'draft' | 'active' | 'paused' | 'error',
+        runs: 0,
+        successRate: 0,
+        created_at: workflow.created_at,
+        updated_at: workflow.updated_at
+      }));
+
+      return workflows as unknown as UserWorkflow[];
     },
     staleTime: 30000, // 30 seconds
   });
@@ -67,7 +81,21 @@ export const useWorkflow = (id: string) => {
         throw error;
       }
 
-      return data as UserWorkflow;
+      // Convert to UserWorkflow format
+      const workflow = {
+        id: data.id,
+        user_id: data.user_id,
+        name: data.name,
+        description: data.description || '',
+        config: data.config || { steps: [] },
+        status: data.status as 'draft' | 'active' | 'paused' | 'error',
+        runs: 0,
+        successRate: 0,
+        created_at: data.created_at,
+        updated_at: data.updated_at
+      };
+
+      return workflow as unknown as UserWorkflow;
     },
     enabled: !!id,
   });
@@ -82,13 +110,20 @@ export const useCreateWorkflow = () => {
 
   return useMutation({
     mutationFn: async (input: CreateWorkflowInput) => {
+      const userId = (await supabase.auth.getUser()).data.user?.id;
+      
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+      
       const { data, error } = await supabase
         .from('user_workflows')
         .insert([{
           name: input.name,
           description: input.description || null,
-          steps: input.steps || [],
+          config: { steps: input.steps || [] },
           status: input.status || 'draft',
+          user_id: userId
         }])
         .select()
         .single();
@@ -98,7 +133,21 @@ export const useCreateWorkflow = () => {
         throw error;
       }
 
-      return data as UserWorkflow;
+      // Convert to UserWorkflow format
+      const workflow = {
+        id: data.id,
+        user_id: data.user_id,
+        name: data.name,
+        description: data.description || '',
+        config: data.config || { steps: [] },
+        status: data.status as 'draft' | 'active' | 'paused' | 'error',
+        runs: 0,
+        successRate: 0,
+        created_at: data.created_at,
+        updated_at: data.updated_at
+      };
+
+      return workflow as unknown as UserWorkflow;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: workflowKeys.lists() });
@@ -126,9 +175,29 @@ export const useUpdateWorkflow = () => {
 
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: UpdateWorkflowInput }) => {
+      // Prepare the update object
+      const updateData: any = {};
+      
+      if (updates.name !== undefined) updateData.name = updates.name;
+      if (updates.description !== undefined) updateData.description = updates.description;
+      if (updates.status !== undefined) updateData.status = updates.status;
+      
+      // If steps are provided, update the config
+      if (updates.steps !== undefined) {
+        // Get the current config first
+        const { data: currentWorkflow } = await supabase
+          .from('user_workflows')
+          .select('config')
+          .eq('id', id)
+          .single();
+          
+        const currentConfig = currentWorkflow?.config || {};
+        updateData.config = { ...currentConfig, steps: updates.steps };
+      }
+      
       const { data, error } = await supabase
         .from('user_workflows')
-        .update(updates)
+        .update(updateData)
         .eq('id', id)
         .select()
         .single();
@@ -138,7 +207,21 @@ export const useUpdateWorkflow = () => {
         throw error;
       }
 
-      return data as UserWorkflow;
+      // Convert to UserWorkflow format
+      const workflow = {
+        id: data.id,
+        user_id: data.user_id,
+        name: data.name,
+        description: data.description || '',
+        config: data.config || { steps: [] },
+        status: data.status as 'draft' | 'active' | 'paused' | 'error',
+        runs: 0,
+        successRate: 0,
+        created_at: data.created_at,
+        updated_at: data.updated_at
+      };
+
+      return workflow as unknown as UserWorkflow;
     },
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: workflowKeys.lists() });
@@ -206,6 +289,12 @@ export const useExecuteWorkflow = () => {
 
   return useMutation({
     mutationFn: async ({ id, payload }: { id: string; payload?: Record<string, any> }) => {
+      const userId = (await supabase.auth.getUser()).data.user?.id;
+      
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+      
       // In a real implementation, this would call a Supabase Edge Function
       // For now, we'll simulate execution with a direct update
       const { data, error } = await supabase
@@ -227,6 +316,7 @@ export const useExecuteWorkflow = () => {
       await supabase
         .from('user_activity_logs')
         .insert([{
+          user_id: userId,
           action: 'workflow_executed',
           description: `Executed workflow: ${data.name}`,
           metadata: { workflow_id: id, payload }

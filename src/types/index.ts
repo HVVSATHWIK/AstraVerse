@@ -16,6 +16,7 @@ export interface Integration {
   metrics: Record<string, string | number>;
   config: Record<string, any>;
   lastSync?: string;
+  type?: string;
 }
 
 export interface SystemMetrics {
@@ -58,7 +59,7 @@ export interface KPIData {
 }
 
 // Re-export workflow types from core-workflow-types.ts with renamed identifier
-export { CoreWorkflow as UserWorkflow, WorkflowDisplay } from './core-workflow-types';
+export type { CoreWorkflow as UserWorkflow, WorkflowDisplay } from './core-workflow-types';
 
 // Re-export workflow API types from api.ts
 export type {

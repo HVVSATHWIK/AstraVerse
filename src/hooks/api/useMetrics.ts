@@ -34,10 +34,9 @@ export const useMetrics = () => {
     queryKey: metricsKeys.latest(),
     queryFn: async () => {
       // Get the latest metrics for each metric_name
-      const { data, error } = await supabase
-        .rpc('get_latest_metrics', {
-          p_user_id: (await supabase.auth.getUser()).data.user?.id
-        });
+      const { data, error } = await supabase.rpc('get_latest_metrics', {
+        p_user_id: (await supabase.auth.getUser()).data.user?.id || ''
+      });
 
       if (error) {
         console.error('Error fetching metrics:', error);
@@ -52,9 +51,11 @@ export const useMetrics = () => {
         customerSatisfaction: 0
       };
 
-      data?.forEach(metric => {
-        metricsObject[metric.metric_name] = Number(metric.metric_value);
-      });
+      if (data) {
+        data.forEach(metric => {
+          metricsObject[metric.metric_name] = Number(metric.metric_value);
+        });
+      }
 
       return metricsObject;
     },
@@ -73,7 +74,7 @@ export const useMetricsByDate = (startDate: string, endDate: string) => {
       const { data, error } = await supabase
         .from('metrics')
         .select('*')
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id || '')
         .gte('created_at', startDate)
         .lte('created_at', endDate)
         .order('created_at', { ascending: true });
@@ -107,7 +108,7 @@ export const useUpdateMetric = () => {
       const { data, error } = await supabase
         .from('metrics')
         .insert([{
-          user_id: (await supabase.auth.getUser()).data.user?.id,
+          user_id: (await supabase.auth.getUser()).data.user?.id || '',
           metric_name: metricName,
           metric_value: value
         }]);
