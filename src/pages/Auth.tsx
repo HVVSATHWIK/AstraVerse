@@ -27,7 +27,10 @@ const AuthPage = () => {
         </div>
         
         {authMode === 'login' && (
-          <LoginForm onToggleMode={() => toggleMode('signup')} onForgotPassword={() => toggleMode('forgot-password')} />
+          <LoginForm 
+            onToggleMode={() => toggleMode('signup')} 
+            onForgotPassword={() => toggleMode('forgot-password')} 
+          />
         )}
         
         {authMode === 'signup' && (

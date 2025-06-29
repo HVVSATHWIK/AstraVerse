@@ -110,7 +110,7 @@ const ForgotPasswordForm = ({ onToggleMode }: ForgotPasswordFormProps) => {
         <div className="mt-6 text-center">
           <Button 
             variant="link" 
-            className="text-purple-400 hover:text-purple-300 p-0 flex items-center" 
+            className="text-purple-400 hover:text-purple-300 p-0 flex items-center justify-center mx-auto" 
             onClick={onToggleMode}
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
@@ -123,3 +123,5 @@ const ForgotPasswordForm = ({ onToggleMode }: ForgotPasswordFormProps) => {
 };
 
 export default ForgotPasswordForm;
+
+export default ForgotPasswordForm
