@@ -471,15 +471,15 @@ const UserProfileModal = ({ trigger }: UserProfileModalProps) => {
                             </div>
                             <div>
                               <h4 className="text-white font-medium">{integration.name}</h4>
-                              <p className="text-slate-400 text-xs">{integration.integration_type}</p>
+                              <p className="text-slate-400 text-xs">{integration.type}</p>
                             </div>
                           </div>
-                          <Badge className={integration.enabled ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}>
-                            {integration.enabled ? 'Active' : 'Inactive'}
+                          <Badge className={integration.status === 'connected' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}>
+                            {integration.status === 'connected' ? 'Active' : 'Inactive'}
                           </Badge>
                         </div>
                         <div className="mt-2 text-xs text-slate-400">
-                          Last synced: {integration.last_sync ? new Date(integration.last_sync).toLocaleString() : 'Never'}
+                          Last synced: {integration.lastSync ? new Date(integration.lastSync).toLocaleString() : 'Never'}
                         </div>
                       </div>
                     ))}
