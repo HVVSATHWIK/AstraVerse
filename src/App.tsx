@@ -28,9 +28,12 @@ async function enableMocking() {
     return;
   }
 
-  // Check if service worker API is available
-  if (typeof navigator !== 'object' || navigator === null || !navigator.serviceWorker) {
-    console.warn('Service Worker API is not available in this environment');
+  // Check if service worker API is available and navigator properties exist
+  if (typeof navigator !== 'object' || 
+      navigator === null || 
+      !navigator.serviceWorker ||
+      typeof navigator.userAgent !== 'string') {
+    console.warn('Service Worker API or navigator.userAgent is not available in this environment');
     return;
   }
 
