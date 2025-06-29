@@ -100,7 +100,11 @@ const DashboardHeader = ({ activeTab, onTabChange }: DashboardHeaderProps) => {
             <Search className="w-4 h-4" />
           </Button>
           
-          <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-2xl relative">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-2xl relative"
+          >
             <Bell className="w-4 h-4" />
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
           </Button>

@@ -51,7 +51,10 @@ const SettingsDialog = ({ isOpen, onClose }: SettingsDialogProps) => {
   const { user } = useAuth();
   
   // User preferences
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme || 'dark';
+  });
   const [language, setLanguage] = useState('en');
   const [defaultView, setDefaultView] = useState('overview');
   const [timezone, setTimezone] = useState('UTC');
@@ -124,6 +127,14 @@ const SettingsDialog = ({ isOpen, onClose }: SettingsDialogProps) => {
     // Save to localStorage for persistence
     localStorage.setItem('astraai-settings', JSON.stringify(settings));
     
+    // Update theme
+    localStorage.setItem('theme', theme);
+    
+    // Dispatch theme change event
+    window.dispatchEvent(new CustomEvent('themeChange', { 
+      detail: { theme } 
+    }));
+    
     toast({
       title: 'Settings Saved',
       description: 'Your preferences have been updated successfully.',
@@ -190,7 +201,9 @@ const SettingsDialog = ({ isOpen, onClose }: SettingsDialogProps) => {
                       <Sun className="w-4 h-4 text-slate-400" />
                       <Switch 
                         checked={theme === 'dark'} 
-                        onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                        onCheckedChange={(checked) => {
+                          setTheme(checked ? 'dark' : 'light');
+                        }}
                       />
                       <Moon className="w-4 h-4 text-slate-400" />
                     </div>
