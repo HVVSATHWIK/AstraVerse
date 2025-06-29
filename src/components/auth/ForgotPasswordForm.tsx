@@ -123,5 +123,3 @@ const ForgotPasswordForm = ({ onToggleMode }: ForgotPasswordFormProps) => {
 };
 
 export default ForgotPasswordForm;
-
-export default ForgotPasswordForm
