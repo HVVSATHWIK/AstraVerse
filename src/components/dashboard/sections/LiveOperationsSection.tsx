@@ -1,8 +1,8 @@
-
 import React from 'react';
 import AIEngineStatus from '@/components/AIEngineStatus';
 import RecentActivity from '@/components/RecentActivity';
 import LiveMetrics from '@/components/LiveMetrics';
+import WorkflowControls from '@/components/WorkflowControls';
 
 interface LiveOperationsSectionProps {
   aiEngines: any;
@@ -24,14 +24,17 @@ const LiveOperationsSection = ({
         <div className="h-px bg-gradient-to-r from-green-500/50 to-transparent flex-1 ml-6"></div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-4 animate-scale-in-3d stagger-5">
+        <div className="lg:col-span-3 animate-scale-in-3d stagger-5">
           <AIEngineStatus aiEngines={aiEngines} isLoading={aiEnginesLoading} />
         </div>
-        <div className="lg:col-span-5 animate-scale-in-3d stagger-6">
+        <div className="lg:col-span-3 animate-scale-in-3d stagger-6">
           <RecentActivity activityLogs={activityLogs} isLoading={activityLoading} />
         </div>
         <div className="lg:col-span-3 animate-bounce-in-3d stagger-6">
           <LiveMetrics />
+        </div>
+        <div className="lg:col-span-3 animate-scale-in-3d stagger-5">
+          <WorkflowControls />
         </div>
       </div>
     </section>
