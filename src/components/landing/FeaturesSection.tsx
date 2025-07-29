@@ -2,51 +2,51 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Brain, Zap, Shield, Workflow, BarChart3, Cog } from 'lucide-react';
+import { TrendingUp, Package, Zap, BarChart3, Users, Shield } from 'lucide-react';
 import InteractiveCard3D from '@/components/3D/InteractiveCard3D';
 
 const FeaturesSection = () => {
   const features = [
     {
-      icon: Brain,
-      title: "AI-Powered Automation",
-      description: "Intelligent workflows that adapt and learn from your business patterns",
-      badge: "Smart",
-      color: "from-purple-600/10 to-purple-800/10 border-purple-500/30"
-    },
-    {
-      icon: Zap,
-      title: "Real-time Processing",
-      description: "Lightning-fast data processing and instant insights across all channels",
-      badge: "Fast",
+      icon: TrendingUp,
+      title: "AI-Powered Demand Forecasting",
+      description: "Predict EV component demand with 95% accuracy using advanced machine learning algorithms",
+      badge: "Predictive",
       color: "from-blue-600/10 to-blue-800/10 border-blue-500/30"
     },
     {
-      icon: Shield,
-      title: "Enterprise Security",
-      description: "Bank-grade security with end-to-end encryption and compliance",
-      badge: "Secure",
+      icon: Package,
+      title: "Automated Inventory Optimization",
+      description: "Automatically adjust stock levels based on production schedules and market demand",
+      badge: "Smart",
       color: "from-green-600/10 to-green-800/10 border-green-500/30"
     },
     {
-      icon: Workflow,
-      title: "Seamless Integration",
-      description: "Connect with 1000+ tools and platforms without any code",
+      icon: Zap,
+      title: "Real-time Stock Monitoring",
+      description: "Instant alerts for low stock, overstock situations, and supply chain disruptions",
+      badge: "Real-time",
+      color: "from-purple-600/10 to-purple-800/10 border-purple-500/30"
+    },
+    {
+      icon: BarChart3,
+      title: "Advanced Analytics Dashboard",
+      description: "Deep insights into inventory patterns, cost optimization, and production efficiency",
+      badge: "Analytics",
+      color: "from-cyan-600/10 to-cyan-800/10 border-cyan-500/30"
+    },
+    {
+      icon: Users,
+      title: "Supplier Integration",
+      description: "Seamlessly connect with EV parts suppliers for automated procurement and delivery",
       badge: "Connected",
       color: "from-orange-600/10 to-orange-800/10 border-orange-500/30"
     },
     {
-      icon: BarChart3,
-      title: "Advanced Analytics",
-      description: "Deep insights and predictive analytics for better decision making",
-      badge: "Insights",
-      color: "from-cyan-600/10 to-cyan-800/10 border-cyan-500/30"
-    },
-    {
-      icon: Cog,
-      title: "Custom Workflows",
-      description: "Build and deploy custom AI workflows tailored to your needs",
-      badge: "Custom",
+      icon: Shield,
+      title: "Compliance & Traceability",
+      description: "Ensure regulatory compliance and full component traceability for EV manufacturing",
+      badge: "Compliant",
       color: "from-pink-600/10 to-pink-800/10 border-pink-500/30"
     }
   ];
@@ -55,10 +55,10 @@ const FeaturesSection = () => {
     <div className="max-w-7xl mx-auto px-6 py-24 relative">
       <div className="text-center mb-16 animate-fade-in-3d">
         <h2 className="text-4xl font-bold text-white mb-4 text-3d">
-          Powerful Features for Modern Enterprises
+          Key Features for EV Manufacturing Excellence
         </h2>
         <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-          Everything you need to orchestrate AI workflows at enterprise scale
+          Everything you need to optimize inventory management for Electric Vehicle production
         </p>
       </div>
 
