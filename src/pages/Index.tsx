@@ -6,6 +6,7 @@ import PricingSection from '@/components/landing/PricingSection';
 import CTASection from '@/components/landing/CTASection';
 import Enhanced3DBackground from '@/components/Background3D/Enhanced3DBackground';
 import OptimizedScrollEffects from '@/components/3D/OptimizedScrollEffects';
+import InvenChatbot from '@/components/InvenChatbot';
 import { detectPerformance, PerformanceLevel } from '@/utils/performanceDetector';
 
 const Index = () => {
@@ -65,6 +66,9 @@ const Index = () => {
       <div className="relative z-10">
         <CTASection />
       </div>
+
+      {/* Inven AI Chatbot */}
+      <InvenChatbot />
     </div>
   );
 };
