@@ -17,6 +17,13 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     userEmail: user?.email 
   });
 
+  // Development bypass for testing 3D model viewer
+  const isDevelopment = import.meta.env.DEV;
+  if (isDevelopment && window.location.search.includes('bypass=true')) {
+    console.log('ProtectedRoute - Development bypass activated');
+    return <>{children}</>;
+  }
+
   // Show loading state while authentication is being determined
   if (loading) {
     return (

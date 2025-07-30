@@ -23,6 +23,9 @@ const DashboardTabs = ({ activeTab, onTabChange }: DashboardTabsProps) => {
         <TabsTrigger value="integrations" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl btn-3d transition-all duration-300">
           Integrations
         </TabsTrigger>
+        <TabsTrigger value="model-viewer" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl btn-3d transition-all duration-300">
+          3D Model Viewer
+        </TabsTrigger>
         <TabsTrigger value="analytics" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white text-slate-300 font-medium rounded-3xl btn-3d transition-all duration-300">
           Analytics
         </TabsTrigger>

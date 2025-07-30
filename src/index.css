@@ -8,3 +8,17 @@
 @import './styles/components.css';
 @import './styles/animations.css';
 @import './styles/utilities.css';
+
+/* 3D Model Container Fix */
+.three-model-container {
+  height: 100% !important;
+  width: 100% !important;
+  min-height: 500px;
+  display: flex !important;
+}
+
+.three-model-container canvas {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}

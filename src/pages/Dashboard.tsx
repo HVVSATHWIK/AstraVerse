@@ -15,6 +15,7 @@ import AgentsTab from '@/components/dashboard/AgentsTab';
 import IntegrationsTab from '@/components/dashboard/IntegrationsTab';
 import AnalyticsTab from '@/components/dashboard/AnalyticsTab';
 import PilotTab from '@/components/dashboard/PilotTab';
+import ModelViewerTab from '@/components/dashboard/ModelViewerTab';
 import MobileOptimizedView from '@/components/mobile/MobileOptimizedView';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -62,6 +63,7 @@ const DashboardContent = () => {
             <WorkflowsTab />
             <AgentsTab />
             <IntegrationsTab />
+            <ModelViewerTab />
             <AnalyticsTab />
             <PilotTab />
           </Tabs>
