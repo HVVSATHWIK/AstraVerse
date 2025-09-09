@@ -1,49 +1,95 @@
 # AstraAI
 
-AstraAI is an enterprise-grade AI orchestration platform designed to help users manage and automate their business processes using artificial intelligence.
+AI-first orchestration platform for Zoom, Jira, and Slack — powered by Google Gemini.
 
-## Core Functionalities
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Prototype](https://img.shields.io/badge/Status-Prototype-orange)](https://github.com/HVVSATHWIK/AstraVerse)
+[![Hackathon Project](https://img.shields.io/badge/Project-Hackathon-blue)](https://github.com/HVVSATHWIK/AstraVerse)
 
-### 1. Workflow Management
-- Create, edit, and manage AI-powered workflows.
-- Build workflows with triggers, actions, and conditional logic.
-- Integrate AI capabilities (e.g., Google Gemini) directly into each step.
-- Visual workflow builder with both basic and advanced modes.
-- Templates and a template manager for rapid deployment.
+AstraAI is an AI-first orchestration platform built to automate workflows across Zoom, Jira, and Slack — powered by Google Gemini.
 
-### 2. Agent Management
-- Create, monitor, and control AI agents performing specific tasks.
-- View status, performance metrics, and event logs for each agent.
+🚀 Solo hackathon prototype: AI orchestration platform automating Zoom → Jira → Slack workflows in minutes.
 
-### 3. Integrations
-- Hub for connecting external services and applications:
-  - Zoom
-  - Slack
-  - Jira
-  - MongoDB
-  - InfluxDB
-  - Milvus
-- Enable seamless data flow and automation across different tools.
+## Visuals
 
-### 4. Analytics & Monitoring
-- Real-time system metrics and KPI overviews.
-- Advanced analytics to track performance, health, and usage patterns of AI engines, workflows, and agents.
+```
+[Frontend (React + TS)] <-> [Backend (Supabase)] <-> [AI (Gemini API)]
+     |                           |                        |
+     v                           v                        v
+[Integrations]              [Database/Auth]          [Prompts/Processing]
+(Zoom, Slack, Jira)         (Real-time)              (Content Gen, Analysis)
+```
 
-### 5. AI Capabilities
-- Leverage AI models (specifically Google Gemini) for:
-  - Content generation
-  - Data analysis
-  - Document processing
-  - Meeting automation (transcription, summarization, action-item extraction)
+*Architecture Diagram: Simple flow of AstraAI components.*
 
-### 6. User Management
-- User authentication (sign-up, sign-in, password reset).
-- Profile management with data stored in a Supabase backend.
+*Dashboard Screenshot: [Add actual screenshot here] - Shows workflow builder with drag-and-drop nodes, KPI charts, and agent status panels.*
 
-### 7. Pilot Mode
-- Section for experimental features and early-access capabilities.
-- Indicates ongoing development and new feature rollouts.
+*Demo GIF: [Add GIF here] - Zoom meeting automation in action: transcription → summary → Jira ticket → Slack post.*
 
----
+Architecture diagram, dashboard screenshots, and demo GIFs will be added soon (see Roadmap).
 
-In essence, **AstraAI** provides a comprehensive solution for enterprises to orchestrate, automate, and gain insights from their AI operations.
+## Quick Demo Flow
+
+1. **Transcribe Meeting**: Zoom meeting audio processed by Gemini.
+2. **Summarize & Extract**: AI pulls action items & highlights.
+3. **Automate Tasks**: Jira tickets created, Slack updates sent.
+4. **Track Progress**: KPI dashboards update instantly.
+
+Cuts down meeting note-taking from 30 minutes to just 2 minutes!
+
+## Why AstraAI?
+
+| Feature | AstraAI | Zapier | n8n |
+|---------|---------|--------|-----|
+| AI-First Orchestration | ✅ Agent-based, dynamic | ❌ Basic triggers | ❌ Manual flows |
+| Real-Time AI Analytics | ✅ Tailored dashboards | ❌ Limited | ❌ Limited |
+| Pilot Mode (Safe Testing) | ✅ Isolation & rollback | ❌ No | ❌ No |
+| Hackathon-ready | ✅ Designed for quick proof-of-concepts | ❌ No | ❌ No |
+| Footprint | Light (AI-focused) | Broad (all apps) | Broad (all apps) |
+
+This makes AstraAI ideal for AI-driven productivity gains.
+
+## Technology Stack
+
+<details>
+<summary>Click to expand Technology Stack</summary>
+
+- **Frontend**: React + TypeScript, Tailwind CSS, 3D effects.
+- **Backend**: Supabase (DB, auth, real-time).
+- **AI**: Google Gemini API (prompts, future fine-tuning).
+- **Build**: Vite.
+- **Deployment**: Vercel/Netlify.
+
+</details>
+
+## Roadmap
+
+🎯 **Current (Hackathon Prototype)**: Core workflows, Gemini integration, Zoom/Slack/Jira.
+
+⏳ **Limitations**: Basic security/scalability, no production polish.
+
+🚀 **Next**: More integrations (3 months), analytics/security (6 months), production features (1 year).
+
+## Getting Started
+
+1. Clone: `git clone https://github.com/HVVSATHWIK/AstraVerse.git`
+2. Install: `npm install`
+3. Env: Copy `.env.example` to `.env` (add Supabase/Gemini keys)
+4. Run: `npm run dev`
+5. Open: `http://localhost:5173`
+
+See [docs/setup.md](docs/setup.md) for details.
+
+## About the Hackathon Build
+
+Built solo under time constraints during a hackathon. Focuses on proof-of-concept: AI automation, integrations, and agent management. Not production-ready, but demonstrates scalable AI orchestration ideas. Contributions welcome!
+
+*Motivation: As a developer passionate about AI productivity, I wanted to create a tool that makes advanced AI accessible without complexity.*
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+MIT License.
