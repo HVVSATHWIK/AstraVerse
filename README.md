@@ -22,9 +22,9 @@ AstraAI is an AI-first orchestration platform built to automate workflows across
 
 *Architecture Diagram: Simple flow of AstraAI components.*
 
-*Dashboard Screenshot: [Add actual screenshot here] - Shows workflow builder with drag-and-drop nodes, KPI charts, and agent status panels.*
+*Dashboard Screenshot: [] - Shows workflow builder with drag-and-drop nodes, KPI charts, and agent status panels.*
 
-*Demo GIF: [Add GIF here] - Zoom meeting automation in action: transcription → summary → Jira ticket → Slack post.*
+*Demo GIF: [] - Zoom meeting automation in action: transcription → summary → Jira ticket → Slack post.*
 
 Architecture diagram, dashboard screenshots, and demo GIFs will be added soon (see Roadmap).
 
