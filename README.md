@@ -8,7 +8,7 @@ AI-first orchestration platform for Zoom, Jira, and Slack — powered by Google 
 
 AstraAI is an AI-first orchestration platform built to automate workflows across Zoom, Jira, and Slack — powered by Google Gemini.
 
-🚀 Solo hackathon prototype: AI orchestration platform automating Zoom → Jira → Slack workflows in minutes.
+🚀hackathon prototype: AI orchestration platform automating Zoom → Jira → Slack workflows in minutes.
 
 ## Visuals
 
